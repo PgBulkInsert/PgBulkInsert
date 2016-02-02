@@ -7,9 +7,14 @@ package de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.pgsql;
 import de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.exceptions.BinaryWriteFailedException;
 import de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.functional.Action0;
 
-import java.io.*;
+import java.io.BufferedOutputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.math.BigInteger;
-import java.time.*;
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.concurrent.TimeUnit;
 
 public class PgBinaryWriter implements AutoCloseable {

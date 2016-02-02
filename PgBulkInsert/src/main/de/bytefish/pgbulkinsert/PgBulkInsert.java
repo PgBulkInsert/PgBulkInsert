@@ -18,6 +18,7 @@ import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -177,8 +178,6 @@ public class PgBulkInsert<TEntity> {
                 });
             });
         }
-
-        long a = copyIn.getHandledRowCount();
     }
 
     private String getCopyCommand()

@@ -5,10 +5,8 @@ package de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert;
 
 import de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.util.PostgreSqlUtils;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
-import java.io.ByteArrayOutputStream;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.ResultSet;
@@ -18,10 +16,9 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class PgBulkInsertTest extends TransactionalTestBase {
-
-
 
     private class SampleEntity {
 
@@ -33,6 +30,7 @@ public class PgBulkInsertTest extends TransactionalTestBase {
         private String col_text;
         private Long col_long;
         private Short col_short;
+        private UUID col_uuid;
 
         public Integer get_col_integer() {
             return col_integer;
@@ -96,6 +94,14 @@ public class PgBulkInsertTest extends TransactionalTestBase {
 
         public void set_col_short(Short col_short) {
             this.col_short = col_short;
+        }
+
+        public UUID get_col_uuid() {
+            return col_uuid;
+        }
+
+        public void set_col_uuid(UUID col_uuid) {
+            this.col_uuid = col_uuid;
         }
     }
 
