@@ -286,6 +286,18 @@ public class PgBulkInsertTest extends TransactionalTestBase {
         pgBulkInsert.saveAll(PostgreSqlUtils.getPGConnection(connection), entities.stream());
 
         Assert.assertEquals(2, getRowCount());
+
+        ResultSet rs = getAll();
+
+        // Turn it into a List:
+        ArrayList<Long> values = new ArrayList<>();
+
+        while(rs.next()) {
+            values.add(rs.getLong("col_bigint"));
+        }
+
+        Assert.assertTrue(values.stream().anyMatch(x -> x == 1));
+        Assert.assertTrue(values.stream().anyMatch(x -> x == 2));
     }
 
     private ResultSet getAll() throws SQLException {
