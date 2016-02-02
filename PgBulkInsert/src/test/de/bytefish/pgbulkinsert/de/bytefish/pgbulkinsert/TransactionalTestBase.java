@@ -16,16 +16,22 @@ public abstract class TransactionalTestBase {
     protected Connection connection;
 
     @Before
-    public void setUp() throws SQLException {
+    public void setUp() throws Exception {
         connection = DriverManager.getConnection("jdbc:postgresql://127.0.0.1:5432/sampledb", "philipp", "test_pwd");
 
+        onSetUpBeforeTransaction();
         connection.setAutoCommit(false); //transaction block start
+        onSetUpInTransaction();
     }
 
     @After
     public void tearDown() throws SQLException {
         connection.close();
     }
+
+    protected abstract void onSetUpInTransaction() throws Exception;
+
+    protected abstract void onSetUpBeforeTransaction() throws Exception;
 
 
 }

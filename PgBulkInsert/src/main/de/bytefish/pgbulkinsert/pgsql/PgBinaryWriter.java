@@ -8,6 +8,7 @@ import de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.exceptions.BinaryWriteF
 import de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.functional.Action0;
 
 import java.io.*;
+import java.math.BigInteger;
 import java.time.*;
 import java.util.concurrent.TimeUnit;
 
@@ -70,6 +71,15 @@ public class PgBinaryWriter implements AutoCloseable {
         });
     }
 
+    public void write(final BigInteger value) throws IOException {
+        write(() -> {
+            Long longValue = value.longValue();
+
+            buffer.writeInt(8);
+            buffer.writeLong(longValue);
+        });
+    }
+
     public void write(final Double value) throws IOException {
         write(() -> {
             buffer.writeInt(8);
@@ -87,6 +97,20 @@ public class PgBinaryWriter implements AutoCloseable {
     public void write(final Integer value) throws IOException {
         write(() -> {
             buffer.writeInt(4);
+            buffer.writeInt(value);
+        });
+    }
+
+    public void write(final Short value) throws IOException {
+        write(() -> {
+            buffer.writeInt(2);
+            buffer.writeShort(value);
+        });
+    }
+
+    public void write(final byte value) throws IOException {
+        write(() -> {
+            buffer.writeInt(1);
             buffer.writeInt(value);
         });
     }

@@ -13,6 +13,7 @@ import org.postgresql.copy.CopyIn;
 import org.postgresql.copy.CopyManager;
 import org.postgresql.copy.PGCopyOutputStream;
 
+import java.math.BigInteger;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -108,6 +109,20 @@ public class PgBulkInsert<TEntity> {
         });
     }
 
+    public PgBulkInsert<TEntity> MapShort(String columnName, Func2<TEntity, Short> propertyGetter)
+    {
+        return AddColumn(columnName, (binaryWriter, entity) -> {
+            binaryWriter.write(propertyGetter.invoke(entity));
+        });
+    }
+
+    public PgBulkInsert<TEntity> MapBigInt(String columnName, Func2<TEntity, BigInteger> propertyGetter)
+    {
+        return AddColumn(columnName, (binaryWriter, entity) -> {
+            binaryWriter.write(propertyGetter.invoke(entity));
+        });
+    }
+
     public PgBulkInsert<TEntity> MapLong(String columnName, Func2<TEntity, Long> propertyGetter)
     {
         return AddColumn(columnName, (binaryWriter, entity) -> {
@@ -116,6 +131,13 @@ public class PgBulkInsert<TEntity> {
     }
 
     public PgBulkInsert<TEntity> MapLocalDateTime(String columnName, Func2<TEntity, LocalDateTime> propertyGetter)
+    {
+        return AddColumn(columnName, (binaryWriter, entity) -> {
+            binaryWriter.write(propertyGetter.invoke(entity));
+        });
+    }
+
+    public PgBulkInsert<TEntity> MapString(String columnName, Func2<TEntity, String> propertyGetter)
     {
         return AddColumn(columnName, (binaryWriter, entity) -> {
             binaryWriter.write(propertyGetter.invoke(entity));
