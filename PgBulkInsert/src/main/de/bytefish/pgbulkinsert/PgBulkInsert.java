@@ -163,11 +163,11 @@ public class PgBulkInsert<TEntity> {
             // Wrap the CopyOutputStream in our own Writer:
             bw.open(new PGCopyOutputStream(copyIn));
 
-            // Start a New Row:
-            bw.startRow(columnCount);
-
             // Insert Each Column:
             entities.forEach(entity -> {
+                // Start a New Row:
+                bw.startRow(columnCount);
+
                 columns.forEach(column -> {
                     try {
                         column.getWrite().invoke(bw, entity);
@@ -177,6 +177,8 @@ public class PgBulkInsert<TEntity> {
                 });
             });
         }
+
+        long a = copyIn.getHandledRowCount();
     }
 
     private String getCopyCommand()

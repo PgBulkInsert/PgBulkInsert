@@ -45,8 +45,6 @@ public class PgBinaryWriter implements AutoCloseable {
         try {
 
             action.invoke();
-
-            buffer.writeShort(-1);
         } catch (Exception e) {
             throw new BinaryWriteFailedException(e);
         }
@@ -181,6 +179,8 @@ public class PgBinaryWriter implements AutoCloseable {
     @Override
     public void close() {
         try {
+            buffer.writeShort(-1); // EOF
+
             buffer.flush();
             buffer.close();
         } catch(Exception e) {

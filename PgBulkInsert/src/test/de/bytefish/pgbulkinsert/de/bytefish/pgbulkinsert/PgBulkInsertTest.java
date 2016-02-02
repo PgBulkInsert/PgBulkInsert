@@ -264,6 +264,30 @@ public class PgBulkInsertTest extends TransactionalTestBase {
         }
     }
 
+    @Test
+    public void saveAll_Multiple_Entities_Test() throws SQLException {
+
+        // This list will be inserted.
+        List<SampleEntity> entities = new ArrayList<>();
+
+        // Create the Entities to insert:
+        SampleEntity entity0 = new SampleEntity();
+        entity0.col_long = 1L;
+
+        SampleEntity entity1 = new SampleEntity();
+        entity1.col_long = 2L;
+
+        entities.add(entity0);
+        entities.add(entity1);
+
+        PgBulkInsert<SampleEntity> pgBulkInsert = new PgBulkInsert<SampleEntity>("sample", "unit_test")
+                .MapLong("col_bigint", SampleEntity::get_col_long);
+
+        pgBulkInsert.saveAll(PostgreSqlUtils.getPGConnection(connection), entities.stream());
+
+        Assert.assertEquals(2, getRowCount());
+    }
+
     private ResultSet getAll() throws SQLException {
         String sqlStatement = "SELECT * FROM sample.unit_test";
 
@@ -295,6 +319,18 @@ public class PgBulkInsertTest extends TransactionalTestBase {
         Statement statement = connection.createStatement();
 
         return statement.execute(sqlStatement);
+    }
+
+    private int getRowCount() throws SQLException {
+
+        Statement s = connection.createStatement();
+
+        ResultSet r = s.executeQuery("SELECT COUNT(*) AS rowcount FROM sample.unit_test");
+        r.next();
+        int count = r.getInt("rowcount");
+        r.close();
+
+        return count;
     }
 
 }
