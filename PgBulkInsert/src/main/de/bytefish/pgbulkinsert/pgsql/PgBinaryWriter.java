@@ -6,6 +6,7 @@ package de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.pgsql;
 
 import de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.exceptions.BinaryWriteFailedException;
 import de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.functional.Action0;
+import de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.util.StringUtils;
 
 import java.io.BufferedOutputStream;
 import java.io.DataOutputStream;
@@ -48,7 +49,6 @@ public class PgBinaryWriter implements AutoCloseable {
 
     private <T> void write(Action0 action) {
         try {
-
             action.invoke();
         } catch (Exception e) {
             throw new BinaryWriteFailedException(e);
@@ -65,6 +65,10 @@ public class PgBinaryWriter implements AutoCloseable {
 
     public void write(final Boolean value) {
         write(() -> {
+            if(value == null) {
+                buffer.writeInt(-1);
+                return;
+            }
             buffer.writeInt(1);
             if (value) {
                 buffer.writeByte(1);
@@ -76,6 +80,11 @@ public class PgBinaryWriter implements AutoCloseable {
 
     public void write(final BigInteger value) throws IOException {
         write(() -> {
+            if(value == null) {
+                buffer.writeInt(-1);
+                return;
+            }
+
             Long longValue = value.longValue();
 
             buffer.writeInt(8);
@@ -85,6 +94,10 @@ public class PgBinaryWriter implements AutoCloseable {
 
     public void write(final Double value) throws IOException {
         write(() -> {
+            if(value == null) {
+                buffer.writeInt(-1);
+                return;
+            }
             buffer.writeInt(8);
             buffer.writeDouble(value);
         });
@@ -92,6 +105,10 @@ public class PgBinaryWriter implements AutoCloseable {
 
     public void write(final Float value) throws IOException {
         write(() -> {
+            if(value == null) {
+                buffer.writeInt(-1);
+                return;
+            }
             buffer.writeInt(4);
             buffer.writeFloat(value);
         });
@@ -99,6 +116,10 @@ public class PgBinaryWriter implements AutoCloseable {
 
     public void write(final Integer value) throws IOException {
         write(() -> {
+            if(value == null) {
+                buffer.writeInt(-1);
+                return;
+            }
             buffer.writeInt(4);
             buffer.writeInt(value);
         });
@@ -106,13 +127,21 @@ public class PgBinaryWriter implements AutoCloseable {
 
     public void write(final Short value) throws IOException {
         write(() -> {
+            if(value == null) {
+                buffer.writeInt(-1);
+                return;
+            }
             buffer.writeInt(2);
             buffer.writeShort(value);
         });
     }
 
-    public void write(final byte value) throws IOException {
+    public void write(final Byte value) throws IOException {
         write(() -> {
+            if(value == null) {
+                buffer.writeInt(-1);
+                return;
+            }
             buffer.writeInt(1);
             buffer.writeInt(value);
         });
@@ -120,6 +149,10 @@ public class PgBinaryWriter implements AutoCloseable {
 
     public void write(final Long value) throws IOException {
         write(() -> {
+            if(value == null) {
+                buffer.writeInt(-1);
+                return;
+            }
             buffer.writeInt(8);
             buffer.writeLong(value);
         });
@@ -127,7 +160,11 @@ public class PgBinaryWriter implements AutoCloseable {
 
     public void write(final String value) throws IOException {
         write(() -> {
-            final byte[] utf8Bytes = value.getBytes("UTF-8");
+            if(value == null) {
+                buffer.writeInt(-1);
+                return;
+            }
+            byte[] utf8Bytes = value.getBytes("UTF-8");
 
             buffer.writeInt(utf8Bytes.length);
             buffer.write(utf8Bytes);
@@ -136,6 +173,10 @@ public class PgBinaryWriter implements AutoCloseable {
 
     public void write(final LocalDateTime value) throws IOException {
         write(() -> {
+            if(value == null) {
+                buffer.writeInt(-1);
+                return;
+            }
             buffer.writeInt(8);
             buffer.writeLong(toPgSecs(value));
         });

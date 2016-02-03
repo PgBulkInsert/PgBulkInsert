@@ -115,6 +115,20 @@ public class PgBulkInsertTest extends TransactionalTestBase {
 
     }
 
+    private class SampleEntityBulkInsert extends PgBulkInsert<SampleEntity> {
+
+        public SampleEntityBulkInsert() {
+            super("sample", "unit_test");
+
+            MapString("col_text", SampleEntity::get_col_text);
+            MapInt("col_integer", SampleEntity::get_col_integer);
+            MapShort("col_smallint", SampleEntity::get_col_short);
+            MapLocalDateTime("col_timestamp", SampleEntity::get_col_datetime);
+            MapLong("col_long", SampleEntity::get_col_long);
+            MapBigInt("col_bigint", SampleEntity::get_col_big_int);
+        }
+    }
+
     @Test
     public void saveAll_Short_Test() throws SQLException {
 
@@ -127,8 +141,7 @@ public class PgBulkInsertTest extends TransactionalTestBase {
 
         entities.add(entity);
 
-        PgBulkInsert<SampleEntity> pgBulkInsert = new PgBulkInsert<SampleEntity>("sample", "unit_test")
-                .MapShort("col_smallint", SampleEntity::get_col_short);
+        SampleEntityBulkInsert pgBulkInsert = new SampleEntityBulkInsert();
 
         pgBulkInsert.saveAll(PostgreSqlUtils.getPGConnection(connection), entities.stream());
 
@@ -153,8 +166,7 @@ public class PgBulkInsertTest extends TransactionalTestBase {
 
         entities.add(entity);
 
-        PgBulkInsert<SampleEntity> pgBulkInsert = new PgBulkInsert<SampleEntity>("sample", "unit_test")
-                .MapInt("col_integer", SampleEntity::get_col_integer);
+        SampleEntityBulkInsert pgBulkInsert = new SampleEntityBulkInsert();
 
         pgBulkInsert.saveAll(PostgreSqlUtils.getPGConnection(connection), entities.stream());
 
@@ -179,8 +191,7 @@ public class PgBulkInsertTest extends TransactionalTestBase {
 
         entities.add(entity);
 
-        PgBulkInsert<SampleEntity> pgBulkInsert = new PgBulkInsert<SampleEntity>("sample", "unit_test")
-                .MapLocalDateTime("col_timestamp", SampleEntity::get_col_datetime);
+        SampleEntityBulkInsert pgBulkInsert = new SampleEntityBulkInsert();
 
         pgBulkInsert.saveAll(PostgreSqlUtils.getPGConnection(connection), entities.stream());
 
@@ -205,8 +216,7 @@ public class PgBulkInsertTest extends TransactionalTestBase {
 
         entities.add(entity);
 
-        PgBulkInsert<SampleEntity> pgBulkInsert = new PgBulkInsert<SampleEntity>("sample", "unit_test")
-                .MapString("col_text", SampleEntity::get_col_text);
+        SampleEntityBulkInsert pgBulkInsert = new SampleEntityBulkInsert();
 
         pgBulkInsert.saveAll(PostgreSqlUtils.getPGConnection(connection), entities.stream());
 
@@ -232,8 +242,8 @@ public class PgBulkInsertTest extends TransactionalTestBase {
 
         entities.add(entity);
 
-        PgBulkInsert<SampleEntity> pgBulkInsert = new PgBulkInsert<SampleEntity>("sample", "unit_test")
-                .MapBigInt("col_bigint", SampleEntity::get_col_big_int);
+        SampleEntityBulkInsert pgBulkInsert = new SampleEntityBulkInsert();
+
 
         pgBulkInsert.saveAll(PostgreSqlUtils.getPGConnection(connection), entities.stream());
 
@@ -257,15 +267,14 @@ public class PgBulkInsertTest extends TransactionalTestBase {
 
         entities.add(entity);
 
-        PgBulkInsert<SampleEntity> pgBulkInsert = new PgBulkInsert<SampleEntity>("sample", "unit_test")
-                .MapLong("col_bigint", SampleEntity::get_col_long);
+        SampleEntityBulkInsert pgBulkInsert = new SampleEntityBulkInsert();
 
         pgBulkInsert.saveAll(PostgreSqlUtils.getPGConnection(connection), entities.stream());
 
         ResultSet rs = getAll();
 
         while(rs.next()) {
-            long v = rs.getLong("col_bigint");
+            long v = rs.getLong("col_long");
             Assert.assertEquals(1, v);
         }
     }
@@ -286,8 +295,7 @@ public class PgBulkInsertTest extends TransactionalTestBase {
         entities.add(entity0);
         entities.add(entity1);
 
-        PgBulkInsert<SampleEntity> pgBulkInsert = new PgBulkInsert<SampleEntity>("sample", "unit_test")
-                .MapLong("col_bigint", SampleEntity::get_col_long);
+        SampleEntityBulkInsert pgBulkInsert = new SampleEntityBulkInsert();
 
         pgBulkInsert.saveAll(PostgreSqlUtils.getPGConnection(connection), entities.stream());
 
@@ -299,7 +307,7 @@ public class PgBulkInsertTest extends TransactionalTestBase {
         ArrayList<Long> values = new ArrayList<>();
 
         while(rs.next()) {
-            values.add(rs.getLong("col_bigint"));
+            values.add(rs.getLong("col_long"));
         }
 
         Assert.assertTrue(values.stream().anyMatch(x -> x == 1));
@@ -321,6 +329,7 @@ public class PgBulkInsertTest extends TransactionalTestBase {
                 "                col_integer integer,\n" +
                 "                col_money money,\n" +
                 "                col_bigint bigint,\n" +
+                "                col_long bigint,\n" +
                 "                col_timestamp timestamp,\n" +
                 "                col_real real,\n" +
                 "                col_double double precision,\n" +
