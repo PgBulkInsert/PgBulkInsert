@@ -89,6 +89,10 @@ public class PgBinaryWriter implements AutoCloseable {
         bigIntegerValueHandler.handle(buffer, value);
     }
 
+    public void write(final Byte value) {
+        byteValueHandler.handle(buffer, value);
+    }
+
     public void write(final Double value) {
         doubleValueHandler.handle(buffer, value);
     }
@@ -103,10 +107,6 @@ public class PgBinaryWriter implements AutoCloseable {
 
     public void write(final Short value) {
         shortValueHandler.handle(buffer, value);
-    }
-
-    public void write(final Byte value) {
-        byteValueHandler.handle(buffer, value);
     }
 
     public void write(final Long value) {

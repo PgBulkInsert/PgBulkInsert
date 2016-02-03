@@ -15,6 +15,7 @@ import org.postgresql.copy.PGCopyOutputStream;
 
 import java.math.BigInteger;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -138,35 +139,49 @@ public abstract class PgBulkInsert<TEntity> {
         });
     }
 
-    protected void MapInt(String columnName, Func2<TEntity, Integer> propertyGetter)
+    protected void MapSmallInt(String columnName, Func2<TEntity, Short> propertyGetter)
     {
         AddColumn(columnName, (binaryWriter, entity) -> {
             binaryWriter.write(propertyGetter.invoke(entity));
         });
     }
 
-    protected void MapShort(String columnName, Func2<TEntity, Short> propertyGetter)
+    protected void MapInteger(String columnName, Func2<TEntity, Integer> propertyGetter)
     {
         AddColumn(columnName, (binaryWriter, entity) -> {
             binaryWriter.write(propertyGetter.invoke(entity));
         });
     }
 
-    protected void MapBigInt(String columnName, Func2<TEntity, BigInteger> propertyGetter)
+    protected void MapBigInt(String columnName, Func2<TEntity, Long> propertyGetter)
     {
         AddColumn(columnName, (binaryWriter, entity) -> {
             binaryWriter.write(propertyGetter.invoke(entity));
         });
     }
 
-    protected void MapLong(String columnName, Func2<TEntity, Long> propertyGetter)
+    protected void MapReal(String columnName, Func2<TEntity, Float> propertyGetter)
     {
         AddColumn(columnName, (binaryWriter, entity) -> {
             binaryWriter.write(propertyGetter.invoke(entity));
         });
     }
 
-    protected void MapLocalDateTime(String columnName, Func2<TEntity, LocalDateTime> propertyGetter)
+    protected void MapDouble(String columnName, Func2<TEntity, Double> propertyGetter)
+    {
+        AddColumn(columnName, (binaryWriter, entity) -> {
+            binaryWriter.write(propertyGetter.invoke(entity));
+        });
+    }
+
+    protected void MapDate(String columnName, Func2<TEntity, LocalDate> propertyGetter)
+    {
+        AddColumn(columnName, (binaryWriter, entity) -> {
+            binaryWriter.write(propertyGetter.invoke(entity));
+        });
+    }
+
+    protected void MapTimeStamp(String columnName, Func2<TEntity, LocalDateTime> propertyGetter)
     {
         AddColumn(columnName, (binaryWriter, entity) -> {
             binaryWriter.write(propertyGetter.invoke(entity));
