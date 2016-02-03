@@ -5,25 +5,51 @@ package de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.pgsql;
 
 
 import de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.exceptions.BinaryWriteFailedException;
-import de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.functional.Action0;
-import de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.util.StringUtils;
+import de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.pgsql.converter.LocalDateConverter;
+import de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.pgsql.converter.LocalDateTimeConverter;
+import de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.pgsql.handlers.*;
 
 import java.io.BufferedOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.math.BigInteger;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
-import java.util.concurrent.TimeUnit;
+import java.util.Map;
 
 public class PgBinaryWriter implements AutoCloseable {
 
     /** The ByteBuffer to write the output. */
     private transient DataOutputStream buffer;
 
+    // We don't want to resolve the handlers at runtime, so make them explicitly available:
+    private IValueHandler<Boolean> booleanValueHandler;
+    private IValueHandler<BigInteger> bigIntegerValueHandler;
+    private IValueHandler<Byte> byteValueHandler;
+    private IValueHandler<Double> doubleValueHandler;
+    private IValueHandler<Float> floatValueHandler;
+    private IValueHandler<LocalDate> localDateValueHandler;
+    private IValueHandler<LocalDateTime> localDateTimeValueHandler;
+    private IValueHandler<Integer> integerValueHandler;
+    private IValueHandler<Short> shortValueHandler;
+    private IValueHandler<Long> longValueHandler;
+    private IValueHandler<String> stringValueHandler;
+
     public PgBinaryWriter() {
+
+        // Initialize sane defaults:
+        bigIntegerValueHandler = new BigIntegerHandler();
+        booleanValueHandler = new BooleanHandler();
+        byteValueHandler = new ByteHandler();
+        doubleValueHandler = new DoubleHandler();
+        floatValueHandler = new FloatHandler();
+        localDateValueHandler = new LocalDateHandler(new LocalDateConverter());
+        localDateTimeValueHandler = new LocalDateTimeHandler(new LocalDateTimeConverter());
+        integerValueHandler = new IntegerHandler();
+        shortValueHandler = new ShortHandler();
+        longValueHandler = new LongHandler();
+        stringValueHandler = new StringHandler();
     }
 
     public void open(final OutputStream out) {
@@ -47,14 +73,6 @@ public class PgBinaryWriter implements AutoCloseable {
         }
     }
 
-    private <T> void write(Action0 action) {
-        try {
-            action.invoke();
-        } catch (Exception e) {
-            throw new BinaryWriteFailedException(e);
-        }
-    }
-
     public void startRow(int numColumns) {
         try {
             buffer.writeShort(numColumns);
@@ -64,163 +82,48 @@ public class PgBinaryWriter implements AutoCloseable {
     }
 
     public void write(final Boolean value) {
-        write(() -> {
-            if(value == null) {
-                buffer.writeInt(-1);
-                return;
-            }
-            buffer.writeInt(1);
-            if (value) {
-                buffer.writeByte(1);
-            } else {
-                buffer.writeByte(0);
-            }
-        });
+        booleanValueHandler.handle(buffer, value);
     }
 
-    public void write(final BigInteger value) throws IOException {
-        write(() -> {
-            if(value == null) {
-                buffer.writeInt(-1);
-                return;
-            }
-
-            Long longValue = value.longValue();
-
-            buffer.writeInt(8);
-            buffer.writeLong(longValue);
-        });
+    public void write(final BigInteger value) {
+        bigIntegerValueHandler.handle(buffer, value);
     }
 
-    public void write(final Double value) throws IOException {
-        write(() -> {
-            if(value == null) {
-                buffer.writeInt(-1);
-                return;
-            }
-            buffer.writeInt(8);
-            buffer.writeDouble(value);
-        });
+    public void write(final Double value) {
+        doubleValueHandler.handle(buffer, value);
     }
 
-    public void write(final Float value) throws IOException {
-        write(() -> {
-            if(value == null) {
-                buffer.writeInt(-1);
-                return;
-            }
-            buffer.writeInt(4);
-            buffer.writeFloat(value);
-        });
+    public void write(final Float value) {
+        floatValueHandler.handle(buffer, value);
     }
 
-    public void write(final Integer value) throws IOException {
-        write(() -> {
-            if(value == null) {
-                buffer.writeInt(-1);
-                return;
-            }
-            buffer.writeInt(4);
-            buffer.writeInt(value);
-        });
+    public void write(final Integer value) {
+        integerValueHandler.handle(buffer, value);
     }
 
-    public void write(final Short value) throws IOException {
-        write(() -> {
-            if(value == null) {
-                buffer.writeInt(-1);
-                return;
-            }
-            buffer.writeInt(2);
-            buffer.writeShort(value);
-        });
+    public void write(final Short value) {
+        shortValueHandler.handle(buffer, value);
     }
 
-    public void write(final Byte value) throws IOException {
-        write(() -> {
-            if(value == null) {
-                buffer.writeInt(-1);
-                return;
-            }
-            buffer.writeInt(1);
-            buffer.writeInt(value);
-        });
+    public void write(final Byte value) {
+        byteValueHandler.handle(buffer, value);
     }
 
-    public void write(final Long value) throws IOException {
-        write(() -> {
-            if(value == null) {
-                buffer.writeInt(-1);
-                return;
-            }
-            buffer.writeInt(8);
-            buffer.writeLong(value);
-        });
+    public void write(final Long value) {
+        longValueHandler.handle(buffer, value);
     }
 
-    public void write(final String value) throws IOException {
-        write(() -> {
-            if(value == null) {
-                buffer.writeInt(-1);
-                return;
-            }
-            byte[] utf8Bytes = value.getBytes("UTF-8");
-
-            buffer.writeInt(utf8Bytes.length);
-            buffer.write(utf8Bytes);
-        });
+    public void write(final LocalDate value) {
+        localDateValueHandler.handle(buffer, value);
     }
 
-    public void write(final LocalDateTime value) throws IOException {
-        write(() -> {
-            if(value == null) {
-                buffer.writeInt(-1);
-                return;
-            }
-            buffer.writeInt(8);
-            buffer.writeLong(toPgSecs(value));
-        });
+    public void write(final LocalDateTime value) {
+        localDateTimeValueHandler.handle(buffer, value);
     }
 
-    private static long toPgSecs(LocalDateTime dateTime) {
-        // Adjust TimeZone Offset:
-        OffsetDateTime zdt = dateTime.atOffset(ZoneOffset.UTC);
-        // Get the Epoch Millisecodns:
-        long milliseconds = zdt.toInstant().toEpochMilli();
-        // pg time 0 is 2000-01-01 00:00:00:
-        long secs = toPgSecs(TimeUnit.MILLISECONDS.toSeconds(milliseconds));
-        // Needs Microseconds:
-        return TimeUnit.SECONDS.toMicros(secs);
+    public void write(final String value) {
+        stringValueHandler.handle(buffer, value);
     }
-
-    /**
-     * Converts the given java seconds to postgresql seconds. The conversion is valid for any year 100 BC onwards.
-     *
-     * from /org/postgresql/jdbc2/TimestampUtils.java
-     *
-     * @param seconds Postgresql seconds.
-     * @return Java seconds.
-     */
-    @SuppressWarnings("checkstyle:magicnumber")
-    private static long toPgSecs(final long seconds) {
-        long secs = seconds;
-        // java epoc to postgres epoc
-        secs -= 946684800L;
-
-        // Julian/Greagorian calendar cutoff point
-        if (secs < -13165977600L) { // October 15, 1582 -> October 4, 1582
-            secs -= 86400 * 10;
-            if (secs < -15773356800L) { // 1500-03-01 -> 1500-02-28
-                int years = (int) ((secs + 15773356800L) / -3155823050L);
-                years++;
-                years -= years / 4;
-                secs += years * 86400;
-            }
-        }
-
-        return secs;
-    }
-
 
     @Override
     public void close() {
