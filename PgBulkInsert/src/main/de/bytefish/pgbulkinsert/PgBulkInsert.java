@@ -131,6 +131,13 @@ public abstract class PgBulkInsert<TEntity> {
         });
     }
 
+    protected void MapByte(String columnName, Func2<TEntity, Byte> propertyGetter)
+    {
+        AddColumn(columnName, (binaryWriter, entity) -> {
+            binaryWriter.write(propertyGetter.invoke(entity));
+        });
+    }
+
     protected void MapInt(String columnName, Func2<TEntity, Integer> propertyGetter)
     {
         AddColumn(columnName, (binaryWriter, entity) -> {

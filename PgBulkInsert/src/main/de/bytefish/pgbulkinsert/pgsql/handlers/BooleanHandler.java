@@ -1,0 +1,19 @@
+// Copyright (c) Philipp Wagner. All rights reserved.
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
+
+package de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.pgsql.handlers;
+
+import java.io.DataOutputStream;
+
+public class BooleanHandler extends BaseValueHandler<Boolean> {
+
+    @Override
+    protected void internalHandle(DataOutputStream buffer, final Boolean value) throws Exception {
+        buffer.writeInt(1);
+        if (value) {
+            buffer.writeByte(1);
+        } else {
+            buffer.writeByte(0);
+        }
+    }
+}
