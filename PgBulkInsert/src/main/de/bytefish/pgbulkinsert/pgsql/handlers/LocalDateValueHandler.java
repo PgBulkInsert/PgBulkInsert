@@ -7,17 +7,18 @@ import de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.pgsql.converter.IValueC
 import de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.pgsql.converter.LocalDateConverter;
 
 import java.io.DataOutputStream;
+import java.lang.reflect.Type;
 import java.time.LocalDate;
 
-public class LocalDateHandler extends BaseValueHandler<LocalDate> {
+public class LocalDateValueHandler extends BaseValueHandler<LocalDate> {
 
     private IValueConverter<LocalDate, Long> dateTimeConverter;
 
-    public LocalDateHandler() {
+    public LocalDateValueHandler() {
         this(new LocalDateConverter());
     }
 
-    public LocalDateHandler(IValueConverter<LocalDate, Long> dateTimeConverter) {
+    public LocalDateValueHandler(IValueConverter<LocalDate, Long> dateTimeConverter) {
 
         this.dateTimeConverter = dateTimeConverter;
     }
@@ -28,4 +29,8 @@ public class LocalDateHandler extends BaseValueHandler<LocalDate> {
         buffer.writeLong(dateTimeConverter.convert(value));
     }
 
+    @Override
+    public Type getTargetType() {
+        return LocalDate.class;
+    }
 }

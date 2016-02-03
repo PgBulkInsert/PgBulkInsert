@@ -4,12 +4,18 @@
 package de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.pgsql.handlers;
 
 import java.io.DataOutputStream;
+import java.lang.reflect.Type;
 
-public class DoubleHandler extends BaseValueHandler<Double> {
+public class LongValueHandler extends BaseValueHandler<Long> {
 
     @Override
-    protected void internalHandle(DataOutputStream buffer, final Double value) throws Exception {
+    protected void internalHandle(DataOutputStream buffer, final Long value) throws Exception {
         buffer.writeInt(8);
-        buffer.writeDouble(value);
+        buffer.writeLong(value);
+    }
+
+    @Override
+    public Type getTargetType() {
+        return Long.class;
     }
 }

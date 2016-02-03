@@ -11,21 +11,17 @@ import de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.pgsql.handlers.*;
 
 import java.io.BufferedOutputStream;
 import java.io.DataOutputStream;
-import java.io.IOException;
 import java.io.OutputStream;
 import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Map;
 
 public class PgBinaryWriter implements AutoCloseable {
 
     /** The ByteBuffer to write the output. */
     private transient DataOutputStream buffer;
 
-    // We don't want to resolve the handlers at runtime, so make them explicitly available:
     private IValueHandler<Boolean> booleanValueHandler;
-    private IValueHandler<BigInteger> bigIntegerValueHandler;
     private IValueHandler<Byte> byteValueHandler;
     private IValueHandler<Double> doubleValueHandler;
     private IValueHandler<Float> floatValueHandler;
@@ -37,19 +33,24 @@ public class PgBinaryWriter implements AutoCloseable {
     private IValueHandler<String> stringValueHandler;
 
     public PgBinaryWriter() {
+        this(new ValueHandlerProvider());
+    }
 
-        // Initialize sane defaults:
-        bigIntegerValueHandler = new BigIntegerHandler();
-        booleanValueHandler = new BooleanHandler();
-        byteValueHandler = new ByteHandler();
-        doubleValueHandler = new DoubleHandler();
-        floatValueHandler = new FloatHandler();
-        localDateValueHandler = new LocalDateHandler(new LocalDateConverter());
-        localDateTimeValueHandler = new LocalDateTimeHandler(new LocalDateTimeConverter());
-        integerValueHandler = new IntegerHandler();
-        shortValueHandler = new ShortHandler();
-        longValueHandler = new LongHandler();
-        stringValueHandler = new StringHandler();
+
+    public PgBinaryWriter(IValueHandlerProvider provider) {
+
+        // We want some speed, so resolve the used handlers one time only:
+        booleanValueHandler = provider.resolve(Boolean.class);
+        byteValueHandler = provider.resolve(Byte.class);
+        doubleValueHandler = provider.resolve(Double.class);
+        floatValueHandler = provider.resolve(Float.class);
+        localDateValueHandler = provider.resolve(LocalDate.class);
+        localDateTimeValueHandler = provider.resolve(LocalDateTime.class);
+        integerValueHandler = provider.resolve(Integer.class);
+        shortValueHandler = provider.resolve(Short.class);
+        longValueHandler = provider.resolve(Long.class);
+        stringValueHandler = provider.resolve(String.class);
+
     }
 
     public void open(final OutputStream out) {
@@ -83,10 +84,6 @@ public class PgBinaryWriter implements AutoCloseable {
 
     public void write(final Boolean value) {
         booleanValueHandler.handle(buffer, value);
-    }
-
-    public void write(final BigInteger value) {
-        bigIntegerValueHandler.handle(buffer, value);
     }
 
     public void write(final Byte value) {

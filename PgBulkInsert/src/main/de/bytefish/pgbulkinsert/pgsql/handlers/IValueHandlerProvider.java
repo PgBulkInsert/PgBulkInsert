@@ -3,13 +3,10 @@
 
 package de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.pgsql.handlers;
 
-import java.io.DataOutputStream;
 import java.lang.reflect.Type;
 
-public interface IValueHandler<TTargetType> extends ValueHandler {
+public interface IValueHandlerProvider {
 
-    void handle(DataOutputStream buffer, final TTargetType value);
-
-    Type getTargetType();
+    <TTargetType> IValueHandler<TTargetType> resolve(Type targetType);
 
 }

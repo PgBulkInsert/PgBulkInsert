@@ -4,12 +4,18 @@
 package de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.pgsql.handlers;
 
 import java.io.DataOutputStream;
+import java.lang.reflect.Type;
 
-public class ShortHandler extends BaseValueHandler<Short> {
+public class ShortValueHandler extends BaseValueHandler<Short> {
 
     @Override
     protected void internalHandle(DataOutputStream buffer, final Short value) throws Exception {
         buffer.writeInt(2);
         buffer.writeShort(value);
+    }
+
+    @Override
+    public Type getTargetType() {
+        return Short.class;
     }
 }

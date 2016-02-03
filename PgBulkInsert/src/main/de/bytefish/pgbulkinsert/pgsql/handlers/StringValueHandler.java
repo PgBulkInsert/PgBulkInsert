@@ -6,8 +6,9 @@ package de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.pgsql.handlers;
 import de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.pgsql.handlers.BaseValueHandler;
 
 import java.io.DataOutputStream;
+import java.lang.reflect.Type;
 
-public class StringHandler extends BaseValueHandler<String> {
+public class StringValueHandler extends BaseValueHandler<String> {
 
     @Override
     protected void internalHandle(DataOutputStream buffer, final String value) throws Exception {
@@ -15,5 +16,10 @@ public class StringHandler extends BaseValueHandler<String> {
 
         buffer.writeInt(utf8Bytes.length);
         buffer.write(utf8Bytes);
+    }
+
+    @Override
+    public Type getTargetType() {
+        return String.class;
     }
 }
