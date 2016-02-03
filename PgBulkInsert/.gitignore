@@ -3,7 +3,8 @@
 .idea/workspace.xml
 .idea/libraries
 .DS_Store
-/out
+/out/production
+/out/test
 /captures
 .iws
 workspace.xml
