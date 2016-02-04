@@ -112,7 +112,7 @@ public class IntegrationTest extends TransactionalTestBase {
 
     @Test
     public void bulkInsertWeatherDataTest() throws SQLException {
-        // Not in parallel:
+        // Do not process the CSV file in parallel (Java 1.8 bug!):
         CsvParserOptions options = new CsvParserOptions(true, ",", false);
         // The Mapping to employ:
         LocalWeatherDataMapper mapping = new LocalWeatherDataMapper(() -> new LocalWeatherData());
