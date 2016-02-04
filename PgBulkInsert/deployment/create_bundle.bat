@@ -26,7 +26,7 @@ set ARTIFACTS_DIR=artifacts
 set BASE_DIR=%ARTIFACTS_DIR%\%VERSION%
 
 :: Set the Filename for artifacts to use:
-set FILENAME=jtinycsvparser-%VERSION%
+set FILENAME=pgbulkinsert-%VERSION%
 
 set JAR_FILE=%FILENAME%.jar
 set JAR_SOURCES_FILE=%FILENAME%-sources.jar
@@ -56,7 +56,7 @@ set /p PASSPHRASE="Signing Passphrase: "
     echo %PASSPHRASE%|%GPG_EXECUTABLE% --batch --yes --passphrase-fd 0  -b -a -s "%BASE_DIR%\%JAR_JAVADOC_FILE%"
 
     :: Create the Bundle File for manual upload:
-    %JAR_EXECUTABLE% -cf "%TARGET_BUNDLE%" -C "%BASE_DIR%" "%JAR_FILE%" -C "%BASE_DIR%" "%JAR_FILE_ASC%" -C "%BASE_DIR%" "%POM_FILE%" -C "%BASE_DIR%" "%POM_FILE_ASC%" -C "%BASE_DIR%" "%JAR_SOURCES_FILE%" -C "%BASE_DIR%" "%JAR_JAVADOC_FILE%" -C "%BASE_DIR%" "%JAR_SOURCES_FILE_ASC% -C "%BASE_DIR%" %JAR_JAVADOC_FILE_ASC%"
+    %JAR_EXECUTABLE% -cf "%TARGET_BUNDLE%" -C "%BASE_DIR%" "%JAR_FILE%" -C "%BASE_DIR%" "%JAR_FILE_ASC%" -C "%BASE_DIR%" "%POM_FILE%" -C "%BASE_DIR%" "%POM_FILE_ASC%" -C "%BASE_DIR%" "%JAR_SOURCES_FILE%" -C "%BASE_DIR%" "%JAR_JAVADOC_FILE%" -C "%BASE_DIR%" "%JAR_SOURCES_FILE_ASC%" -C "%BASE_DIR%" "%JAR_JAVADOC_FILE_ASC%"
     
 )
 
