@@ -16,7 +16,7 @@ set STDOUT=stdout.log
 set STDERR=stderr.log
 
 :: Version to build the bundle for:
-set VERSION=0.1
+set VERSION=0.2
 
 :: Set the Target Bundle file:
 set TARGET_BUNDLE=bundle\pgbulkinsert-bundle-%VERSION%.jar

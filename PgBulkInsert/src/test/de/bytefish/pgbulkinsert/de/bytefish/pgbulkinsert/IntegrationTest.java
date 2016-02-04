@@ -17,28 +17,13 @@ import java.util.List;
 
 public class IntegrationTest extends TransactionalTestBase {
 
-    private boolean createTable() throws SQLException {
-
-        String sqlStatement = "CREATE TABLE sample.unit_test\n" +
-                "            (\n" +
-                "                first_name text,\n" +
-                "                last_name text,\n" +
-                "                birth_date timestamp\n" +
-                "            );";
-
-        Statement statement = connection.createStatement();
-
-        return statement.execute(sqlStatement);
-    }
-
-
     private class Person {
 
         private String firstName;
 
         private String lastName;
 
-        private LocalDateTime birthDate;
+        private LocalDate birthDate;
 
         public Person() {}
 
@@ -58,11 +43,11 @@ public class IntegrationTest extends TransactionalTestBase {
             this.lastName = lastName;
         }
 
-        public LocalDateTime getBirthDate() {
+        public LocalDate getBirthDate() {
             return birthDate;
         }
 
-        public void setBirthDate(LocalDateTime birthDate) {
+        public void setBirthDate(LocalDate birthDate) {
             this.birthDate = birthDate;
         }
     }
@@ -74,7 +59,7 @@ public class IntegrationTest extends TransactionalTestBase {
 
             MapString("first_name", Person::getFirstName);
             MapString("last_name", Person::getLastName);
-            MapTimeStamp("birth_date", Person::getBirthDate);
+            MapDate("birth_date", Person::getBirthDate);
         }
     }
 
@@ -85,12 +70,13 @@ public class IntegrationTest extends TransactionalTestBase {
 
     @Test
     public void bulkInsertPersonDataTest() throws SQLException {
+        // Create a large list of Persons:
         List<Person> persons = getPersonList(100000);
-
+        // Create the BulkInserter:
         PersonBulkInserter personBulkInserter = new PersonBulkInserter();
-
+        // Now save all entities of a given stream:
         personBulkInserter.saveAll(PostgreSqlUtils.getPGConnection(connection), persons.stream());
-
+        // And assert all have been written to the database:
         Assert.assertEquals(100000, getRowCount());
     }
 
@@ -102,12 +88,26 @@ public class IntegrationTest extends TransactionalTestBase {
 
             p.setFirstName("Philipp");
             p.setLastName("Wagner");
-            p.setBirthDate(LocalDateTime.of(1986, 5, 12, 0, 0, 0));
+            p.setBirthDate(LocalDate.of(1986, 5, 12));
 
             persons.add(p);
         }
 
         return persons;
+    }
+
+    private boolean createTable() throws SQLException {
+
+        String sqlStatement = "CREATE TABLE sample.unit_test\n" +
+                "            (\n" +
+                "                first_name text,\n" +
+                "                last_name text,\n" +
+                "                birth_date date\n" +
+                "            );";
+
+        Statement statement = connection.createStatement();
+
+        return statement.execute(sqlStatement);
     }
 
     private int getRowCount() throws SQLException {
