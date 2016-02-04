@@ -50,6 +50,7 @@ public class IntegrationTest extends TransactionalTestBase {
         public void setBirthDate(LocalDate birthDate) {
             this.birthDate = birthDate;
         }
+
     }
 
     public class PersonBulkInserter extends PgBulkInsert<Person>
