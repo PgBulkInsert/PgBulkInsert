@@ -15,19 +15,30 @@ public class TimeStampUtils {
 
     }
 
-    public static Long toPgSecs(LocalDate date) {
-        return toPgSecs(date.atStartOfDay());
+    public static int toPgDays(LocalDate date)
+    {
+        // Adjust TimeZone Offset:
+        LocalDateTime dateTime = date.atStartOfDay();
+        // pg time 0 is 2000-01-01 00:00:00:
+        long secs = toPgSecs(getSecondsSinceJavaEpoch(dateTime));
+        // Needs Days:
+        return (int) TimeUnit.SECONDS.toDays(secs);
     }
 
     public static Long toPgSecs(LocalDateTime dateTime) {
-        // Adjust TimeZone Offset:
-        OffsetDateTime zdt = dateTime.atOffset(ZoneOffset.UTC);
-        // Get the Epoch Millisecodns:
-        long milliseconds = zdt.toInstant().toEpochMilli();
         // pg time 0 is 2000-01-01 00:00:00:
-        long secs = toPgSecs(TimeUnit.MILLISECONDS.toSeconds(milliseconds));
+        long secs = toPgSecs(getSecondsSinceJavaEpoch(dateTime));
         // Needs Microseconds:
         return TimeUnit.SECONDS.toMicros(secs);
+    }
+
+    private static long getSecondsSinceJavaEpoch(LocalDateTime localDateTime) {
+        // Adjust TimeZone Offset:
+        OffsetDateTime zdt = localDateTime.atOffset(ZoneOffset.UTC);
+        // Get the Epoch Milliseconds:
+        long milliseconds = zdt.toInstant().toEpochMilli();
+        // Turn into Seconds:
+        return TimeUnit.MILLISECONDS.toSeconds(milliseconds);
     }
 
     /**

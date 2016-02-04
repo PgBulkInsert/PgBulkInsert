@@ -5,11 +5,9 @@ package de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Test;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.SQLException;
 
 public abstract class TransactionalTestBase {
 
@@ -20,18 +18,25 @@ public abstract class TransactionalTestBase {
         connection = DriverManager.getConnection("jdbc:postgresql://127.0.0.1:5432/sampledb", "philipp", "test_pwd");
 
         onSetUpBeforeTransaction();
-        connection.setAutoCommit(false); //transaction block start
+        connection.setAutoCommit(false); // Start the Transaction:
         onSetUpInTransaction();
     }
 
     @After
-    public void tearDown() throws SQLException {
+    public void tearDown() throws Exception {
+
+        onTearDownInTransaction();
+        connection.rollback();
+        onTearDownAfterTransaction();
+
         connection.close();
     }
 
-    protected abstract void onSetUpInTransaction() throws Exception;
+    protected void onSetUpInTransaction() throws Exception {}
 
-    protected abstract void onSetUpBeforeTransaction() throws Exception;
+    protected void onSetUpBeforeTransaction() throws Exception {}
 
+    protected void onTearDownInTransaction() throws Exception {}
 
+    protected void onTearDownAfterTransaction() throws Exception {}
 }

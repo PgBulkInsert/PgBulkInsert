@@ -12,21 +12,21 @@ import java.time.LocalDate;
 
 public class LocalDateValueHandler extends BaseValueHandler<LocalDate> {
 
-    private IValueConverter<LocalDate, Long> dateTimeConverter;
+    private IValueConverter<LocalDate, Integer> dateConverter;
 
     public LocalDateValueHandler() {
         this(new LocalDateConverter());
     }
 
-    public LocalDateValueHandler(IValueConverter<LocalDate, Long> dateTimeConverter) {
+    public LocalDateValueHandler(IValueConverter<LocalDate, Integer> dateTimeConverter) {
 
-        this.dateTimeConverter = dateTimeConverter;
+        this.dateConverter = dateTimeConverter;
     }
 
     @Override
     protected void internalHandle(DataOutputStream buffer, final LocalDate value) throws Exception {
-        buffer.writeInt(8);
-        buffer.writeLong(dateTimeConverter.convert(value));
+        buffer.writeInt(4);
+        buffer.writeInt(dateConverter.convert(value));
     }
 
     @Override

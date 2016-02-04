@@ -7,11 +7,11 @@ import de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.pgsql.utils.TimeStampUt
 
 import java.time.LocalDate;
 
-public class LocalDateConverter implements IValueConverter<LocalDate, Long> {
+public class LocalDateConverter implements IValueConverter<LocalDate, Integer> {
 
     @Override
-    public Long convert(final LocalDate date) {
-        return TimeStampUtils.toPgSecs(date);
+    public Integer convert(final LocalDate date) {
+        return TimeStampUtils.toPgDays(date);
     }
 
 }

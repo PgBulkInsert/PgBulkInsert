@@ -13,6 +13,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +24,7 @@ public class PgBulkInsertTest extends TransactionalTestBase {
     private class SampleEntity {
 
         private Integer col_integer;
+        private LocalDate col_date;
         private LocalDateTime col_datetime;
         private Float col_float;
         private Double col_double;
@@ -94,6 +96,14 @@ public class PgBulkInsertTest extends TransactionalTestBase {
         public void set_col_uuid(UUID col_uuid) {
             this.col_uuid = col_uuid;
         }
+
+        public LocalDate getCol_date() {
+            return col_date;
+        }
+
+        public void setCol_date(LocalDate col_date) {
+            this.col_date = col_date;
+        }
     }
 
     @Override
@@ -116,6 +126,7 @@ public class PgBulkInsertTest extends TransactionalTestBase {
             MapSmallInt("col_smallint", SampleEntity::get_col_short);
             MapTimeStamp("col_timestamp", SampleEntity::get_col_datetime);
             MapBigInt("col_bigint", SampleEntity::get_col_long);
+            MapDate("col_date", SampleEntity::getCol_date);
         }
     }
 
@@ -189,6 +200,31 @@ public class PgBulkInsertTest extends TransactionalTestBase {
 
         while(rs.next()) {
             Timestamp v = rs.getTimestamp("col_timestamp");
+
+            Assert.assertEquals(LocalDateTime.of(2010, 1, 1, 0, 0, 0), v.toLocalDateTime());
+        }
+    }
+
+    @Test
+    public void saveAll_LocalDate_Test() throws SQLException {
+
+        // This list will be inserted.
+        List<SampleEntity> entities = new ArrayList<>();
+
+        // Create the Entity to insert:
+        SampleEntity entity = new SampleEntity();
+        entity.col_date = LocalDate.of(2010, 1, 1);
+
+        entities.add(entity);
+
+        SampleEntityBulkInsert pgBulkInsert = new SampleEntityBulkInsert();
+
+        pgBulkInsert.saveAll(PostgreSqlUtils.getPGConnection(connection), entities.stream());
+
+        ResultSet rs = getAll();
+
+        while(rs.next()) {
+            Timestamp v = rs.getTimestamp("col_date");
 
             Assert.assertEquals(LocalDateTime.of(2010, 1, 1, 0, 0, 0), v.toLocalDateTime());
         }
