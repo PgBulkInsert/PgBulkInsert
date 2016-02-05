@@ -28,32 +28,6 @@ public class IntegrationTest extends TransactionalTestBase {
         createTable();
     }
 
-    private boolean createTable() throws SQLException {
-
-        String sqlStatement = "CREATE TABLE sample.unit_test\n" +
-                "            (\n" +
-                "                wban text,\n" +
-                "                sky_condition text,\n" +
-                "                date timestamp\n" +
-                "            );";
-
-        Statement statement = connection.createStatement();
-
-        return statement.execute(sqlStatement);
-    }
-
-    private int getRowCount() throws SQLException {
-
-        Statement s = connection.createStatement();
-
-        ResultSet r = s.executeQuery("SELECT COUNT(*) AS rowcount FROM sample.unit_test");
-        r.next();
-        int count = r.getInt("rowcount");
-        r.close();
-
-        return count;
-    }
-
     private class LocalWeatherData
     {
         private String WBAN;
@@ -129,5 +103,31 @@ public class IntegrationTest extends TransactionalTestBase {
         }
         // Check if we have the correct amount of rows in the DB:
         Assert.assertEquals(4496262, getRowCount());
+    }
+
+    private boolean createTable() throws SQLException {
+
+        String sqlStatement = "CREATE TABLE sample.unit_test\n" +
+                "            (\n" +
+                "                wban text,\n" +
+                "                sky_condition text,\n" +
+                "                date timestamp\n" +
+                "            );";
+
+        Statement statement = connection.createStatement();
+
+        return statement.execute(sqlStatement);
+    }
+
+    private int getRowCount() throws SQLException {
+
+        Statement s = connection.createStatement();
+
+        ResultSet r = s.executeQuery("SELECT COUNT(*) AS rowcount FROM sample.unit_test");
+        r.next();
+        int count = r.getInt("rowcount");
+        r.close();
+
+        return count;
     }
 }
