@@ -13,6 +13,8 @@ import java.io.BufferedOutputStream;
 import java.io.DataOutputStream;
 import java.io.OutputStream;
 import java.math.BigInteger;
+import java.net.Inet4Address;
+import java.net.Inet6Address;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -31,6 +33,8 @@ public class PgBinaryWriter implements AutoCloseable {
     private IValueHandler<Short> shortValueHandler;
     private IValueHandler<Long> longValueHandler;
     private IValueHandler<String> stringValueHandler;
+    private IValueHandler<Inet4Address> inet4AddressValueHandler;
+    private IValueHandler<Inet6Address> inet6AddressValueHandler;
 
     public PgBinaryWriter() {
         this(new ValueHandlerProvider());
@@ -50,7 +54,8 @@ public class PgBinaryWriter implements AutoCloseable {
         shortValueHandler = provider.resolve(Short.class);
         longValueHandler = provider.resolve(Long.class);
         stringValueHandler = provider.resolve(String.class);
-
+        inet4AddressValueHandler = provider.resolve(Inet4Address.class);
+        inet6AddressValueHandler = provider.resolve(Inet6Address.class);
     }
 
     public void open(final OutputStream out) {
@@ -109,6 +114,15 @@ public class PgBinaryWriter implements AutoCloseable {
     public void write(final Long value) {
         longValueHandler.handle(buffer, value);
     }
+
+    public void write(final Inet4Address value) {
+        inet4AddressValueHandler.handle(buffer, value);
+    }
+
+    public void write(final Inet6Address value) {
+        inet6AddressValueHandler.handle(buffer, value);
+    }
+
 
     public void write(final LocalDate value) {
         localDateValueHandler.handle(buffer, value);

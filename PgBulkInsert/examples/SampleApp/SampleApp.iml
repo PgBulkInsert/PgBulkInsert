@@ -19,6 +19,6 @@
       </library>
     </orderEntry>
     <orderEntry type="library" name="de.bytefish:jtinycsvparser:1.0" level="project" />
-    <orderEntry type="library" name="de.bytefish:pgbulkinsert:0.1" level="project" />
+    <orderEntry type="library" name="de.bytefish:pgbulkinsert:0.2" level="project" />
   </component>
 </module>

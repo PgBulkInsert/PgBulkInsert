@@ -6,9 +6,13 @@ package de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert;
 import de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.util.PostgreSqlUtils;
 import org.junit.Assert;
 import org.junit.Test;
+import org.postgresql.PGConnection;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.net.Inet4Address;
+import java.net.Inet6Address;
+import java.net.UnknownHostException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -32,6 +36,8 @@ public class PgBulkInsertTest extends TransactionalTestBase {
         private Long col_long;
         private Short col_short;
         private UUID col_uuid;
+        private Inet4Address col_inet4Address;
+        private Inet6Address col_inet6Address;
 
         public Integer get_col_integer() {
             return col_integer;
@@ -104,6 +110,22 @@ public class PgBulkInsertTest extends TransactionalTestBase {
         public void setCol_date(LocalDate col_date) {
             this.col_date = col_date;
         }
+
+        public Inet4Address getCol_inet4Address() {
+            return col_inet4Address;
+        }
+
+        public void setCol_inet4Address(Inet4Address col_inet4Address) {
+            this.col_inet4Address = col_inet4Address;
+        }
+
+        public Inet6Address getCol_inet6Address() {
+            return col_inet6Address;
+        }
+
+        public void setCol_inet6Address(Inet6Address col_inet6Address) {
+            this.col_inet6Address = col_inet6Address;
+        }
     }
 
     @Override
@@ -127,6 +149,8 @@ public class PgBulkInsertTest extends TransactionalTestBase {
             MapTimeStamp("col_timestamp", SampleEntity::get_col_datetime);
             MapBigInt("col_bigint", SampleEntity::get_col_long);
             MapDate("col_date", SampleEntity::getCol_date);
+            MapInet4Addr("col_inet4", SampleEntity::getCol_inet4Address);
+            MapInet6Addr("col_inet6", SampleEntity::getCol_inet6Address);
         }
     }
 
@@ -281,6 +305,54 @@ public class PgBulkInsertTest extends TransactionalTestBase {
     }
 
     @Test
+    public void saveAll_Inet4_Test() throws SQLException, UnknownHostException {
+
+        // This list will be inserted.
+        List<SampleEntity> entities = new ArrayList<>();
+
+        // Create the Entity to insert:
+        SampleEntity entity = new SampleEntity();
+        entity.col_inet4Address = (Inet4Address) Inet4Address.getByName("127.0.0.1");
+
+        entities.add(entity);
+
+        SampleEntityBulkInsert pgBulkInsert = new SampleEntityBulkInsert();
+
+        pgBulkInsert.saveAll(PostgreSqlUtils.getPGConnection(connection), entities.stream());
+
+        ResultSet rs = getAll();
+
+        while(rs.next()) {
+            String v = rs.getString("col_inet4");
+            Assert.assertEquals("127.0.0.1", v );
+        }
+    }
+
+    @Test
+    public void saveAll_Inet6_Test() throws SQLException, UnknownHostException {
+
+        // This list will be inserted.
+        List<SampleEntity> entities = new ArrayList<>();
+
+        // Create the Entity to insert:
+        SampleEntity entity = new SampleEntity();
+        entity.col_inet6Address = (Inet6Address) Inet6Address.getByName("1080::8:800:200c:417a");
+
+        entities.add(entity);
+
+        SampleEntityBulkInsert pgBulkInsert = new SampleEntityBulkInsert();
+
+        pgBulkInsert.saveAll(PostgreSqlUtils.getPGConnection(connection), entities.stream());
+
+        ResultSet rs = getAll();
+
+        while(rs.next()) {
+            String v = rs.getString("col_inet6");
+            Assert.assertEquals("1080::8:800:200c:417a", v );
+        }
+    }
+
+    @Test
     public void saveAll_Multiple_Entities_Test() throws SQLException {
 
         // This list will be inserted.
@@ -337,7 +409,8 @@ public class PgBulkInsertTest extends TransactionalTestBase {
                 "                col_bytea bytea,\n" +
                 "                col_uuid uuid,\n" +
                 "                col_numeric numeric,\n" +
-                "                col_inet inet,\n" +
+                "                col_inet4 inet,\n" +
+                "                col_inet6 inet,\n" +
                 "                col_macaddr macaddr,\n" +
                 "                col_date date,\n" +
                 "                col_interval interval,\n" +

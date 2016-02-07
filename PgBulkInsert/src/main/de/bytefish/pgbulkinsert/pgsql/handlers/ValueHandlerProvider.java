@@ -30,6 +30,8 @@ public class ValueHandlerProvider implements IValueHandlerProvider {
         add(new ShortValueHandler());
         add(new LongValueHandler());
         add(new StringValueHandler());
+        add(new Inet4AddressValueHandler());
+        add(new Inet6AddressValueHandler());
     }
 
     public <TTargetType> ValueHandlerProvider add(IValueHandler<TTargetType> valueHandler) {

@@ -14,6 +14,8 @@ import org.postgresql.copy.CopyManager;
 import org.postgresql.copy.PGCopyOutputStream;
 
 import java.math.BigInteger;
+import java.net.Inet4Address;
+import java.net.Inet6Address;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -175,6 +177,20 @@ public abstract class PgBulkInsert<TEntity> {
     }
 
     protected void MapDate(String columnName, Func2<TEntity, LocalDate> propertyGetter)
+    {
+        AddColumn(columnName, (binaryWriter, entity) -> {
+            binaryWriter.write(propertyGetter.invoke(entity));
+        });
+    }
+
+    protected void MapInet4Addr(String columnName, Func2<TEntity, Inet4Address> propertyGetter)
+    {
+        AddColumn(columnName, (binaryWriter, entity) -> {
+            binaryWriter.write(propertyGetter.invoke(entity));
+        });
+    }
+
+    protected void MapInet6Addr(String columnName, Func2<TEntity, Inet6Address> propertyGetter)
     {
         AddColumn(columnName, (binaryWriter, entity) -> {
             binaryWriter.write(propertyGetter.invoke(entity));

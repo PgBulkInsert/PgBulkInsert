@@ -30,34 +30,34 @@ public class IntegrationTest extends TransactionalTestBase {
 
     private class LocalWeatherData
     {
-        private String WBAN;
+        private String wban;
 
-        private LocalDate Date;
+        private LocalDate date;
 
-        private String SkyCondition;
+        private String skyCondition;
 
-        public String getWBAN() {
-            return WBAN;
+        public String getWban() {
+            return wban;
         }
 
-        public void setWBAN(String WBAN) {
-            this.WBAN = WBAN;
+        public void setWban(String wban) {
+            this.wban = wban;
         }
 
         public LocalDate getDate() {
-            return Date;
+            return date;
         }
 
         public void setDate(LocalDate date) {
-            Date = date;
+            this.date = date;
         }
 
         public String getSkyCondition() {
-            return SkyCondition;
+            return skyCondition;
         }
 
         public void setSkyCondition(String skyCondition) {
-            SkyCondition = skyCondition;
+            this.skyCondition = skyCondition;
         }
     }
 
@@ -66,7 +66,7 @@ public class IntegrationTest extends TransactionalTestBase {
         public LocalWeatherDataBulkInserter() {
             super("sample", "unit_test");
 
-            MapString("wban", LocalWeatherData::getWBAN);
+            MapString("wban", LocalWeatherData::getWban);
             MapString("sky_condition", LocalWeatherData::getSkyCondition);
             MapDate("date", LocalWeatherData::getDate);
         }
@@ -78,7 +78,7 @@ public class IntegrationTest extends TransactionalTestBase {
         {
             super(creator);
 
-            MapProperty(0, String.class, LocalWeatherData::setWBAN);
+            MapProperty(0, String.class, LocalWeatherData::setWban);
             MapProperty(1, LocalDate.class, LocalWeatherData::setDate, new LocalDateConverter(DateTimeFormatter.ofPattern("yyyyMMdd")));
             MapProperty(4, String.class, LocalWeatherData::setSkyCondition);
         }
