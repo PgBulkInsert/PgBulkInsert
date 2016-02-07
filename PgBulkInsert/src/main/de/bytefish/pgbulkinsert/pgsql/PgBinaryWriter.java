@@ -5,18 +5,16 @@ package de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.pgsql;
 
 
 import de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.exceptions.BinaryWriteFailedException;
-import de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.pgsql.converter.LocalDateConverter;
-import de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.pgsql.converter.LocalDateTimeConverter;
 import de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.pgsql.handlers.*;
 
 import java.io.BufferedOutputStream;
 import java.io.DataOutputStream;
 import java.io.OutputStream;
-import java.math.BigInteger;
 import java.net.Inet4Address;
 import java.net.Inet6Address;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 public class PgBinaryWriter implements AutoCloseable {
 
@@ -35,6 +33,7 @@ public class PgBinaryWriter implements AutoCloseable {
     private IValueHandler<String> stringValueHandler;
     private IValueHandler<Inet4Address> inet4AddressValueHandler;
     private IValueHandler<Inet6Address> inet6AddressValueHandler;
+    private IValueHandler<UUID> uuidValueHandler;
 
     public PgBinaryWriter() {
         this(new ValueHandlerProvider());
@@ -56,6 +55,7 @@ public class PgBinaryWriter implements AutoCloseable {
         stringValueHandler = provider.resolve(String.class);
         inet4AddressValueHandler = provider.resolve(Inet4Address.class);
         inet6AddressValueHandler = provider.resolve(Inet6Address.class);
+        uuidValueHandler = provider.resolve(UUID.class);
     }
 
     public void open(final OutputStream out) {
@@ -123,6 +123,9 @@ public class PgBinaryWriter implements AutoCloseable {
         inet6AddressValueHandler.handle(buffer, value);
     }
 
+    public void write(final UUID value) {
+        uuidValueHandler.handle(buffer, value);
+    }
 
     public void write(final LocalDate value) {
         localDateValueHandler.handle(buffer, value);

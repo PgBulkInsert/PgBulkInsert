@@ -211,6 +211,12 @@ public abstract class PgBulkInsert<TEntity> {
         });
     }
 
+    protected void MapUUID(String columnName, Func2<TEntity, UUID> propertyGetter) {
+        AddColumn(columnName, (binaryWriter, entity) -> {
+            binaryWriter.write(propertyGetter.invoke(entity));
+        });
+    }
+
     private PgBulkInsert<TEntity> AddColumn(String columnName, Action2<PgBinaryWriter, TEntity> action)
     {
         columns.add(new ColumnDefinition(columnName, action));

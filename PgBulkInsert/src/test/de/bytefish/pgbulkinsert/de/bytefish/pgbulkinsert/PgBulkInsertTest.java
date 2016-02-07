@@ -151,6 +151,7 @@ public class PgBulkInsertTest extends TransactionalTestBase {
             MapDate("col_date", SampleEntity::getCol_date);
             MapInet4Addr("col_inet4", SampleEntity::getCol_inet4Address);
             MapInet6Addr("col_inet6", SampleEntity::getCol_inet6Address);
+            MapUUID("col_uuid", SampleEntity::get_col_uuid);
         }
     }
 
@@ -325,6 +326,33 @@ public class PgBulkInsertTest extends TransactionalTestBase {
         while(rs.next()) {
             String v = rs.getString("col_inet4");
             Assert.assertEquals("127.0.0.1", v );
+        }
+    }
+
+    @Test
+    public void saveAll_UUID_Test() throws SQLException, UnknownHostException {
+
+        // This list will be inserted.
+        List<SampleEntity> entities = new ArrayList<>();
+
+
+        UUID uuid = UUID.randomUUID();
+
+        // Create the Entity to insert:
+        SampleEntity entity = new SampleEntity();
+        entity.col_uuid = uuid;
+
+        entities.add(entity);
+
+        SampleEntityBulkInsert pgBulkInsert = new SampleEntityBulkInsert();
+
+        pgBulkInsert.saveAll(PostgreSqlUtils.getPGConnection(connection), entities.stream());
+
+        ResultSet rs = getAll();
+
+        while(rs.next()) {
+            String v = rs.getString("col_uuid");
+            Assert.assertEquals(uuid.toString(), v );
         }
     }
 
