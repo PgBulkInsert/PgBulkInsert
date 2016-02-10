@@ -7,6 +7,9 @@ import de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.exceptions.SaveEntityFa
 import de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.functional.Action2;
 import de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.functional.Func2;
 import de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.pgsql.PgBinaryWriter;
+import de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.pgsql.handlers.IValueHandler;
+import de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.pgsql.handlers.IValueHandlerProvider;
+import de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.pgsql.handlers.ValueHandlerProvider;
 import de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.util.StringUtils;
 import org.postgresql.PGConnection;
 import org.postgresql.copy.CopyIn;
@@ -20,6 +23,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.DoubleSummaryStatistics;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -89,14 +93,22 @@ public abstract class PgBulkInsert<TEntity> {
         }
     }
 
+    private IValueHandlerProvider provider;
+
     private TableDefinition table;
 
     private List<ColumnDefinition> columns;
 
     public PgBulkInsert(String schemaName, String tableName)
     {
-        table = new TableDefinition(schemaName, tableName);
-        columns = new ArrayList<>();
+        this(new ValueHandlerProvider(), schemaName, tableName);
+    }
+
+    public PgBulkInsert(IValueHandlerProvider provider, String schemaName, String tableName)
+    {
+        this.provider = provider;
+        this.table = new TableDefinition(schemaName, tableName);
+        this.columns = new ArrayList<>();
     }
 
     public void saveAll(PGConnection connection, Stream<TEntity> entities) throws SQLException {
@@ -113,6 +125,7 @@ public abstract class PgBulkInsert<TEntity> {
 
             // Insert Each Column:
             entities.forEach(entity -> {
+
                 // Start a New Row:
                 bw.startRow(columnCount);
 
@@ -127,94 +140,82 @@ public abstract class PgBulkInsert<TEntity> {
         }
     }
 
+    protected <TProperty> void Map(String columnName, Class<TProperty> type, Func2<TEntity, TProperty> propertyGetter)
+    {
+        final IValueHandler<TProperty> valueHandler = provider.resolve(type);
+
+        AddColumn(columnName, (binaryWriter, entity) -> {
+            binaryWriter.write(valueHandler, propertyGetter.invoke(entity));
+        });
+    }
+
     protected void MapBoolean(String columnName, Func2<TEntity, Boolean> propertyGetter)
     {
-        AddColumn(columnName, (binaryWriter, entity) -> {
-            binaryWriter.write(propertyGetter.invoke(entity));
-        });
+       Map(columnName, Boolean.class, propertyGetter);
     }
 
     protected void MapByte(String columnName, Func2<TEntity, Byte> propertyGetter)
     {
-        AddColumn(columnName, (binaryWriter, entity) -> {
-            binaryWriter.write(propertyGetter.invoke(entity));
-        });
+        Map(columnName, Byte.class, propertyGetter);
     }
 
     protected void MapSmallInt(String columnName, Func2<TEntity, Short> propertyGetter)
     {
-        AddColumn(columnName, (binaryWriter, entity) -> {
-            binaryWriter.write(propertyGetter.invoke(entity));
-        });
+
+        Map(columnName, Short.class, propertyGetter);
     }
 
     protected void MapInteger(String columnName, Func2<TEntity, Integer> propertyGetter)
     {
-        AddColumn(columnName, (binaryWriter, entity) -> {
-            binaryWriter.write(propertyGetter.invoke(entity));
-        });
+        Map(columnName, Integer.class, propertyGetter);
     }
 
     protected void MapBigInt(String columnName, Func2<TEntity, Long> propertyGetter)
     {
-        AddColumn(columnName, (binaryWriter, entity) -> {
-            binaryWriter.write(propertyGetter.invoke(entity));
-        });
+        Map(columnName, Long.class, propertyGetter);
     }
 
     protected void MapReal(String columnName, Func2<TEntity, Float> propertyGetter)
     {
-        AddColumn(columnName, (binaryWriter, entity) -> {
-            binaryWriter.write(propertyGetter.invoke(entity));
-        });
+        Map(columnName, Float.class, propertyGetter);
     }
 
     protected void MapDouble(String columnName, Func2<TEntity, Double> propertyGetter)
     {
-        AddColumn(columnName, (binaryWriter, entity) -> {
-            binaryWriter.write(propertyGetter.invoke(entity));
-        });
+        Map(columnName, Double.class, propertyGetter);
     }
 
     protected void MapDate(String columnName, Func2<TEntity, LocalDate> propertyGetter)
     {
-        AddColumn(columnName, (binaryWriter, entity) -> {
-            binaryWriter.write(propertyGetter.invoke(entity));
-        });
+        Map(columnName, LocalDate.class, propertyGetter);
     }
 
     protected void MapInet4Addr(String columnName, Func2<TEntity, Inet4Address> propertyGetter)
     {
-        AddColumn(columnName, (binaryWriter, entity) -> {
-            binaryWriter.write(propertyGetter.invoke(entity));
-        });
+        Map(columnName, Inet4Address.class, propertyGetter);
     }
 
     protected void MapInet6Addr(String columnName, Func2<TEntity, Inet6Address> propertyGetter)
     {
-        AddColumn(columnName, (binaryWriter, entity) -> {
-            binaryWriter.write(propertyGetter.invoke(entity));
-        });
+        Map(columnName, Inet6Address.class, propertyGetter);
     }
 
     protected void MapTimeStamp(String columnName, Func2<TEntity, LocalDateTime> propertyGetter)
     {
-        AddColumn(columnName, (binaryWriter, entity) -> {
-            binaryWriter.write(propertyGetter.invoke(entity));
-        });
+        Map(columnName, LocalDateTime.class, propertyGetter);
     }
 
     protected void MapString(String columnName, Func2<TEntity, String> propertyGetter)
     {
-        AddColumn(columnName, (binaryWriter, entity) -> {
-            binaryWriter.write(propertyGetter.invoke(entity));
-        });
+        Map(columnName, String.class, propertyGetter);
     }
 
     protected void MapUUID(String columnName, Func2<TEntity, UUID> propertyGetter) {
-        AddColumn(columnName, (binaryWriter, entity) -> {
-            binaryWriter.write(propertyGetter.invoke(entity));
-        });
+        Map(columnName, UUID.class, propertyGetter);
+    }
+
+    protected void MapByteArray(String columnName, Func2<TEntity, Byte[]> propertyGetter) {
+        Map(columnName, Byte[].class, propertyGetter);
     }
 
     private PgBulkInsert<TEntity> AddColumn(String columnName, Action2<PgBinaryWriter, TEntity> action)

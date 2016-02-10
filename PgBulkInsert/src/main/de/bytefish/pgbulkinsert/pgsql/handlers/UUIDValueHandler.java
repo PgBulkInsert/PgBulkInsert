@@ -22,7 +22,7 @@ public class UUIDValueHandler extends BaseValueHandler<UUID> {
         buffer.writeShort(bb.getShort(4));
         buffer.writeShort(bb.getShort(6));
 
-        buffer.write(Arrays.copyOfRange(bb.array(), 8, 16)); 
+        buffer.write(Arrays.copyOfRange(bb.array(), 8, 16));
     }
 
     private static ByteBuffer toByteBuffer(UUID uuid) {

@@ -5,57 +5,18 @@ package de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.pgsql;
 
 
 import de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.exceptions.BinaryWriteFailedException;
-import de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.pgsql.handlers.*;
+import de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.pgsql.handlers.IValueHandler;
 
 import java.io.BufferedOutputStream;
 import java.io.DataOutputStream;
 import java.io.OutputStream;
-import java.net.Inet4Address;
-import java.net.Inet6Address;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.UUID;
 
-public class PgBinaryWriter implements AutoCloseable {
+public class PgBinaryWriter<TEntity> implements AutoCloseable {
 
     /** The ByteBuffer to write the output. */
     private transient DataOutputStream buffer;
 
-    private IValueHandler<Boolean> booleanValueHandler;
-    private IValueHandler<Byte> byteValueHandler;
-    private IValueHandler<Double> doubleValueHandler;
-    private IValueHandler<Float> floatValueHandler;
-    private IValueHandler<LocalDate> localDateValueHandler;
-    private IValueHandler<LocalDateTime> localDateTimeValueHandler;
-    private IValueHandler<Integer> integerValueHandler;
-    private IValueHandler<Short> shortValueHandler;
-    private IValueHandler<Long> longValueHandler;
-    private IValueHandler<String> stringValueHandler;
-    private IValueHandler<Inet4Address> inet4AddressValueHandler;
-    private IValueHandler<Inet6Address> inet6AddressValueHandler;
-    private IValueHandler<UUID> uuidValueHandler;
-
     public PgBinaryWriter() {
-        this(new ValueHandlerProvider());
-    }
-
-
-    public PgBinaryWriter(IValueHandlerProvider provider) {
-
-        // We want some speed, so resolve the used handlers one time only:
-        booleanValueHandler = provider.resolve(Boolean.class);
-        byteValueHandler = provider.resolve(Byte.class);
-        doubleValueHandler = provider.resolve(Double.class);
-        floatValueHandler = provider.resolve(Float.class);
-        localDateValueHandler = provider.resolve(LocalDate.class);
-        localDateTimeValueHandler = provider.resolve(LocalDateTime.class);
-        integerValueHandler = provider.resolve(Integer.class);
-        shortValueHandler = provider.resolve(Short.class);
-        longValueHandler = provider.resolve(Long.class);
-        stringValueHandler = provider.resolve(String.class);
-        inet4AddressValueHandler = provider.resolve(Inet4Address.class);
-        inet6AddressValueHandler = provider.resolve(Inet6Address.class);
-        uuidValueHandler = provider.resolve(UUID.class);
     }
 
     public void open(final OutputStream out) {
@@ -87,56 +48,8 @@ public class PgBinaryWriter implements AutoCloseable {
         }
     }
 
-    public void write(final Boolean value) {
-        booleanValueHandler.handle(buffer, value);
-    }
-
-    public void write(final Byte value) {
-        byteValueHandler.handle(buffer, value);
-    }
-
-    public void write(final Double value) {
-        doubleValueHandler.handle(buffer, value);
-    }
-
-    public void write(final Float value) {
-        floatValueHandler.handle(buffer, value);
-    }
-
-    public void write(final Integer value) {
-        integerValueHandler.handle(buffer, value);
-    }
-
-    public void write(final Short value) {
-        shortValueHandler.handle(buffer, value);
-    }
-
-    public void write(final Long value) {
-        longValueHandler.handle(buffer, value);
-    }
-
-    public void write(final Inet4Address value) {
-        inet4AddressValueHandler.handle(buffer, value);
-    }
-
-    public void write(final Inet6Address value) {
-        inet6AddressValueHandler.handle(buffer, value);
-    }
-
-    public void write(final UUID value) {
-        uuidValueHandler.handle(buffer, value);
-    }
-
-    public void write(final LocalDate value) {
-        localDateValueHandler.handle(buffer, value);
-    }
-
-    public void write(final LocalDateTime value) {
-        localDateTimeValueHandler.handle(buffer, value);
-    }
-
-    public void write(final String value) {
-        stringValueHandler.handle(buffer, value);
+    public <TTargetType> void write(final IValueHandler<TTargetType> handler, final TTargetType value) {
+        handler.handle(buffer, value);
     }
 
     @Override

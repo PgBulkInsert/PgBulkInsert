@@ -38,6 +38,7 @@ public class PgBulkInsertTest extends TransactionalTestBase {
         private UUID col_uuid;
         private Inet4Address col_inet4Address;
         private Inet6Address col_inet6Address;
+        private Byte[] col_bytearray;
 
         public Integer get_col_integer() {
             return col_integer;
@@ -355,6 +356,8 @@ public class PgBulkInsertTest extends TransactionalTestBase {
             Assert.assertEquals(uuid.toString(), v );
         }
     }
+
+
 
     @Test
     public void saveAll_Inet6_Test() throws SQLException, UnknownHostException {
