@@ -162,6 +162,8 @@ public class PgBulkInsertTest extends TransactionalTestBase {
             MapInet6Addr("col_inet6", SampleEntity::getCol_inet6Address);
             MapUUID("col_uuid", SampleEntity::get_col_uuid);
             MapByteArray("col_bytea", SampleEntity::getCol_bytearray);
+            MapDouble("col_double", SampleEntity::get_col_double);
+            MapReal("col_real", SampleEntity::get_col_float);
         }
     }
 
@@ -212,6 +214,56 @@ public class PgBulkInsertTest extends TransactionalTestBase {
             int v = rs.getInt("col_integer");
 
             Assert.assertEquals(1, v);
+        }
+    }
+
+    @Test
+    public void saveAll_Double_Precision_Test() throws SQLException {
+
+        // This list will be inserted.
+        List<SampleEntity> entities = new ArrayList<>();
+
+        // Create the Entity to insert:
+        SampleEntity entity = new SampleEntity();
+        entity.col_double = 2.0001;
+
+        entities.add(entity);
+
+        SampleEntityBulkInsert pgBulkInsert = new SampleEntityBulkInsert();
+
+        pgBulkInsert.saveAll(PostgreSqlUtils.getPGConnection(connection), entities.stream());
+
+        ResultSet rs = getAll();
+
+        while(rs.next()) {
+            double v = rs.getDouble("col_double");
+
+            Assert.assertEquals(2.0001, v, 1e-10);
+        }
+    }
+
+    @Test
+    public void saveAll_Single_Precision_Test() throws SQLException {
+
+        // This list will be inserted.
+        List<SampleEntity> entities = new ArrayList<>();
+
+        // Create the Entity to insert:
+        SampleEntity entity = new SampleEntity();
+        entity.col_float = 2.0001f;
+
+        entities.add(entity);
+
+        SampleEntityBulkInsert pgBulkInsert = new SampleEntityBulkInsert();
+
+        pgBulkInsert.saveAll(PostgreSqlUtils.getPGConnection(connection), entities.stream());
+
+        ResultSet rs = getAll();
+
+        while(rs.next()) {
+            float v = rs.getFloat("col_real");
+
+            Assert.assertEquals(2.0001, v, 1e-6);
         }
     }
 
