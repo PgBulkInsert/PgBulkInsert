@@ -55,12 +55,12 @@ public class PgBinaryWriter<TEntity> implements AutoCloseable {
     @Override
     public void close() {
         try {
-            buffer.writeShort(-1); // EOF
+            buffer.writeShort(-1);
 
             buffer.flush();
             buffer.close();
         } catch(Exception e) {
-            // is this ok?
+            throw new BinaryWriteFailedException(e);
         }
     }
 }

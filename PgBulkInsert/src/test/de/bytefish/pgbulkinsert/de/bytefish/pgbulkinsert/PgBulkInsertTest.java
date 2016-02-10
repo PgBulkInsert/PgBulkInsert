@@ -127,6 +127,14 @@ public class PgBulkInsertTest extends TransactionalTestBase {
         public void setCol_inet6Address(Inet6Address col_inet6Address) {
             this.col_inet6Address = col_inet6Address;
         }
+
+        public Byte[] getCol_bytearray() {
+            return col_bytearray;
+        }
+
+        public void setCol_bytearray(Byte[] col_bytearray) {
+            this.col_bytearray = col_bytearray;
+        }
     }
 
     @Override
@@ -153,6 +161,7 @@ public class PgBulkInsertTest extends TransactionalTestBase {
             MapInet4Addr("col_inet4", SampleEntity::getCol_inet4Address);
             MapInet6Addr("col_inet6", SampleEntity::getCol_inet6Address);
             MapUUID("col_uuid", SampleEntity::get_col_uuid);
+            MapByteArray("col_bytea", SampleEntity::getCol_bytearray);
         }
     }
 
@@ -380,6 +389,32 @@ public class PgBulkInsertTest extends TransactionalTestBase {
         while(rs.next()) {
             String v = rs.getString("col_inet6");
             Assert.assertEquals("1080::8:800:200c:417a", v );
+        }
+    }
+
+    @Test
+    public void saveAll_ByteArray_Test() throws SQLException, UnknownHostException {
+
+        // This list will be inserted.
+        List<SampleEntity> entities = new ArrayList<>();
+
+        // Create the Entity to insert:
+        SampleEntity entity = new SampleEntity();
+        entity.col_bytearray = new Byte[] {new Byte((byte) 1), new Byte((byte) 2)};
+
+        entities.add(entity);
+
+        SampleEntityBulkInsert pgBulkInsert = new SampleEntityBulkInsert();
+
+        pgBulkInsert.saveAll(PostgreSqlUtils.getPGConnection(connection), entities.stream());
+
+        ResultSet rs = getAll();
+
+        while(rs.next()) {
+            byte[] v = rs.getBytes("col_bytea");
+
+            Assert.assertEquals((byte)1,v[0]);
+            Assert.assertEquals((byte)2,v[1]);
         }
     }
 
