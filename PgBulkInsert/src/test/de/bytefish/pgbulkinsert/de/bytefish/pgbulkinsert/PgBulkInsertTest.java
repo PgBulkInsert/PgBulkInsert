@@ -3,6 +3,7 @@
 
 package de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.util.PostgreSqlUtils;
 import org.junit.Assert;
 import org.junit.Test;
@@ -39,6 +40,7 @@ public class PgBulkInsertTest extends TransactionalTestBase {
         private Inet4Address col_inet4Address;
         private Inet6Address col_inet6Address;
         private Byte[] col_bytearray;
+        private Boolean col_boolean;
 
         public Integer get_col_integer() {
             return col_integer;
@@ -135,6 +137,14 @@ public class PgBulkInsertTest extends TransactionalTestBase {
         public void setCol_bytearray(Byte[] col_bytearray) {
             this.col_bytearray = col_bytearray;
         }
+
+        public Boolean getCol_boolean() {
+            return col_boolean;
+        }
+
+        public void setCol_boolean(Boolean col_boolean) {
+            this.col_boolean = col_boolean;
+        }
     }
 
     @Override
@@ -164,6 +174,32 @@ public class PgBulkInsertTest extends TransactionalTestBase {
             MapByteArray("col_bytea", SampleEntity::getCol_bytearray);
             MapDouble("col_double", SampleEntity::get_col_double);
             MapReal("col_real", SampleEntity::get_col_float);
+            MapBoolean("col_boolean", SampleEntity::getCol_boolean);
+        }
+    }
+
+    @Test
+    public void saveAll_boolean_Test() throws SQLException {
+
+        // This list will be inserted.
+        List<SampleEntity> entities = new ArrayList<>();
+
+        // Create the Entity to insert:
+        SampleEntity entity = new SampleEntity();
+        entity.col_boolean = true;
+
+        entities.add(entity);
+
+        SampleEntityBulkInsert pgBulkInsert = new SampleEntityBulkInsert();
+
+        pgBulkInsert.saveAll(PostgreSqlUtils.getPGConnection(connection), entities.stream());
+
+        ResultSet rs = getAll();
+        
+        while(rs.next()) {
+            boolean v = rs.getBoolean("col_boolean");
+
+            Assert.assertEquals(true, v);
         }
     }
 
@@ -397,7 +433,6 @@ public class PgBulkInsertTest extends TransactionalTestBase {
         // This list will be inserted.
         List<SampleEntity> entities = new ArrayList<>();
 
-
         UUID uuid = UUID.randomUUID();
 
         // Create the Entity to insert:
@@ -532,6 +567,7 @@ public class PgBulkInsertTest extends TransactionalTestBase {
                 "                col_macaddr macaddr,\n" +
                 "                col_date date,\n" +
                 "                col_interval interval,\n" +
+                "                col_boolean boolean,\n" +
                 "                col_text text\n" +
                 "            );";
 
