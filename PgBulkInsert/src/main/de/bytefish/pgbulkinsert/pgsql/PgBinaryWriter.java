@@ -11,7 +11,7 @@ import java.io.BufferedOutputStream;
 import java.io.DataOutputStream;
 import java.io.OutputStream;
 
-public class PgBinaryWriter<TEntity> implements AutoCloseable {
+public class PgBinaryWriter implements AutoCloseable {
 
     /** The ByteBuffer to write the output. */
     private transient DataOutputStream buffer;
