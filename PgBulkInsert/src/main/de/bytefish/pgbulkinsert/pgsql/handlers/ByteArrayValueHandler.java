@@ -5,11 +5,6 @@ package de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.pgsql.handlers;
 
 import java.io.DataOutputStream;
 import java.lang.reflect.Type;
-import java.util.Arrays;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 
 public class ByteArrayValueHandler extends BaseValueHandler<Byte[]> {
 

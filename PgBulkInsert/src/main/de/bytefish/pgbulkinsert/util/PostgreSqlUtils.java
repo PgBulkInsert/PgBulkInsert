@@ -4,7 +4,9 @@
 package de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.util;
 
 import com.sun.istack.internal.NotNull;
+
 import de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.exceptions.PgConnectionException;
+
 import org.postgresql.PGConnection;
 
 import java.sql.Connection;

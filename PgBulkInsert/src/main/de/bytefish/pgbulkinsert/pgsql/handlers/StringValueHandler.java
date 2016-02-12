@@ -3,8 +3,6 @@
 
 package de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.pgsql.handlers;
 
-import de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.pgsql.handlers.BaseValueHandler;
-
 import java.io.DataOutputStream;
 import java.lang.reflect.Type;
 

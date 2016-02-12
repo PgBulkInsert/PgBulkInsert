@@ -24,8 +24,8 @@ public class ValueHandlerProvider implements IValueHandlerProvider {
         add(new ByteValueHandler());
         add(new DoubleValueHandler());
         add(new FloatValueHandler());
-        add(new LocalDateValueHandler(new LocalDateConverter()));
-        add(new LocalDateTimeValueHandler(new LocalDateTimeConverter()));
+        add(new LocalDateValueHandler());
+        add(new LocalDateTimeValueHandler());
         add(new IntegerValueHandler());
         add(new ShortValueHandler());
         add(new LongValueHandler());

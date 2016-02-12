@@ -6,7 +6,6 @@ package de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.pgsql.handlers;
 import java.io.DataOutputStream;
 import java.lang.reflect.Type;
 import java.net.Inet4Address;
-import java.net.InetAddress;
 
 public class Inet4AddressValueHandler extends BaseValueHandler<Inet4Address> {
 

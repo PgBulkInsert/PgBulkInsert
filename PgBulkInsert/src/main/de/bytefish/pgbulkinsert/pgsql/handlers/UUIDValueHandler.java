@@ -6,7 +6,6 @@ package de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.pgsql.handlers;
 import java.io.DataOutputStream;
 import java.lang.reflect.Type;
 import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.util.Arrays;
 import java.util.UUID;
 
