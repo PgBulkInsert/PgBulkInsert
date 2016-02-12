@@ -3,7 +3,6 @@
 
 package de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.pgsql;
 
-
 import de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.exceptions.BinaryWriteFailedException;
 import de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.pgsql.handlers.IValueHandler;
 
@@ -13,7 +12,6 @@ import java.io.OutputStream;
 
 public class PgBinaryWriter implements AutoCloseable {
 
-    /** The ByteBuffer to write the output. */
     private transient DataOutputStream buffer;
 
     public PgBinaryWriter() {
