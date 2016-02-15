@@ -139,85 +139,85 @@ public abstract class PgBulkInsert<TEntity> {
         }
     }
 
-    protected <TProperty> void Map(String columnName, Class<TProperty> type, Func2<TEntity, TProperty> propertyGetter)
+    protected <TProperty> void map(String columnName, Class<TProperty> type, Func2<TEntity, TProperty> propertyGetter)
     {
         final IValueHandler<TProperty> valueHandler = provider.resolve(type);
 
-        AddColumn(columnName, (binaryWriter, entity) -> {
+        addColumn(columnName, (binaryWriter, entity) -> {
             binaryWriter.write(valueHandler, propertyGetter.invoke(entity));
         });
     }
 
-    protected void MapBoolean(String columnName, Func2<TEntity, Boolean> propertyGetter)
+    protected void mapBoolean(String columnName, Func2<TEntity, Boolean> propertyGetter)
     {
-       Map(columnName, Boolean.class, propertyGetter);
+       map(columnName, Boolean.class, propertyGetter);
     }
 
-    protected void MapByte(String columnName, Func2<TEntity, Byte> propertyGetter)
+    protected void mapByte(String columnName, Func2<TEntity, Byte> propertyGetter)
     {
-        Map(columnName, Byte.class, propertyGetter);
+        map(columnName, Byte.class, propertyGetter);
     }
 
-    protected void MapSmallInt(String columnName, Func2<TEntity, Short> propertyGetter)
+    protected void mapSmallInt(String columnName, Func2<TEntity, Short> propertyGetter)
     {
 
-        Map(columnName, Short.class, propertyGetter);
+        map(columnName, Short.class, propertyGetter);
     }
 
-    protected void MapInteger(String columnName, Func2<TEntity, Integer> propertyGetter)
+    protected void mapInteger(String columnName, Func2<TEntity, Integer> propertyGetter)
     {
-        Map(columnName, Integer.class, propertyGetter);
+        map(columnName, Integer.class, propertyGetter);
     }
 
-    protected void MapBigInt(String columnName, Func2<TEntity, Long> propertyGetter)
+    protected void mapBigInt(String columnName, Func2<TEntity, Long> propertyGetter)
     {
-        Map(columnName, Long.class, propertyGetter);
+        map(columnName, Long.class, propertyGetter);
     }
 
-    protected void MapReal(String columnName, Func2<TEntity, Float> propertyGetter)
+    protected void mapReal(String columnName, Func2<TEntity, Float> propertyGetter)
     {
-        Map(columnName, Float.class, propertyGetter);
+        map(columnName, Float.class, propertyGetter);
     }
 
-    protected void MapDouble(String columnName, Func2<TEntity, Double> propertyGetter)
+    protected void mapDouble(String columnName, Func2<TEntity, Double> propertyGetter)
     {
-        Map(columnName, Double.class, propertyGetter);
+        map(columnName, Double.class, propertyGetter);
     }
 
-    protected void MapDate(String columnName, Func2<TEntity, LocalDate> propertyGetter)
+    protected void mapDate(String columnName, Func2<TEntity, LocalDate> propertyGetter)
     {
-        Map(columnName, LocalDate.class, propertyGetter);
+        map(columnName, LocalDate.class, propertyGetter);
     }
 
-    protected void MapInet4Addr(String columnName, Func2<TEntity, Inet4Address> propertyGetter)
+    protected void mapInet4Addr(String columnName, Func2<TEntity, Inet4Address> propertyGetter)
     {
-        Map(columnName, Inet4Address.class, propertyGetter);
+        map(columnName, Inet4Address.class, propertyGetter);
     }
 
-    protected void MapInet6Addr(String columnName, Func2<TEntity, Inet6Address> propertyGetter)
+    protected void mapInet6Addr(String columnName, Func2<TEntity, Inet6Address> propertyGetter)
     {
-        Map(columnName, Inet6Address.class, propertyGetter);
+        map(columnName, Inet6Address.class, propertyGetter);
     }
 
-    protected void MapTimeStamp(String columnName, Func2<TEntity, LocalDateTime> propertyGetter)
+    protected void mapTimeStamp(String columnName, Func2<TEntity, LocalDateTime> propertyGetter)
     {
-        Map(columnName, LocalDateTime.class, propertyGetter);
+        map(columnName, LocalDateTime.class, propertyGetter);
     }
 
-    protected void MapString(String columnName, Func2<TEntity, String> propertyGetter)
+    protected void mapString(String columnName, Func2<TEntity, String> propertyGetter)
     {
-        Map(columnName, String.class, propertyGetter);
+        map(columnName, String.class, propertyGetter);
     }
 
-    protected void MapUUID(String columnName, Func2<TEntity, UUID> propertyGetter) {
-        Map(columnName, UUID.class, propertyGetter);
+    protected void mapUUID(String columnName, Func2<TEntity, UUID> propertyGetter) {
+        map(columnName, UUID.class, propertyGetter);
     }
 
-    protected void MapByteArray(String columnName, Func2<TEntity, Byte[]> propertyGetter) {
-        Map(columnName, Byte[].class, propertyGetter);
+    protected void mapByteArray(String columnName, Func2<TEntity, Byte[]> propertyGetter) {
+        map(columnName, Byte[].class, propertyGetter);
     }
 
-    private PgBulkInsert<TEntity> AddColumn(String columnName, Action2<PgBinaryWriter, TEntity> action)
+    private PgBulkInsert<TEntity> addColumn(String columnName, Action2<PgBinaryWriter, TEntity> action)
     {
         columns.add(new ColumnDefinition(columnName, action));
 

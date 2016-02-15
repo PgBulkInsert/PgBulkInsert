@@ -3,14 +3,10 @@
 
 package de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.util.PostgreSqlUtils;
 import org.junit.Assert;
 import org.junit.Test;
-import org.postgresql.PGConnection;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.net.Inet4Address;
 import java.net.Inet6Address;
 import java.net.UnknownHostException;
@@ -162,19 +158,19 @@ public class PgBulkInsertTest extends TransactionalTestBase {
         public SampleEntityBulkInsert() {
             super("sample", "unit_test");
 
-            MapString("col_text", SampleEntity::get_col_text);
-            MapInteger("col_integer", SampleEntity::get_col_integer);
-            MapSmallInt("col_smallint", SampleEntity::get_col_short);
-            MapTimeStamp("col_timestamp", SampleEntity::get_col_datetime);
-            MapBigInt("col_bigint", SampleEntity::get_col_long);
-            MapDate("col_date", SampleEntity::getCol_date);
-            MapInet4Addr("col_inet4", SampleEntity::getCol_inet4Address);
-            MapInet6Addr("col_inet6", SampleEntity::getCol_inet6Address);
-            MapUUID("col_uuid", SampleEntity::get_col_uuid);
-            MapByteArray("col_bytea", SampleEntity::getCol_bytearray);
-            MapDouble("col_double", SampleEntity::get_col_double);
-            MapReal("col_real", SampleEntity::get_col_float);
-            MapBoolean("col_boolean", SampleEntity::getCol_boolean);
+            mapString("col_text", SampleEntity::get_col_text);
+            mapInteger("col_integer", SampleEntity::get_col_integer);
+            mapSmallInt("col_smallint", SampleEntity::get_col_short);
+            mapTimeStamp("col_timestamp", SampleEntity::get_col_datetime);
+            mapBigInt("col_bigint", SampleEntity::get_col_long);
+            mapDate("col_date", SampleEntity::getCol_date);
+            mapInet4Addr("col_inet4", SampleEntity::getCol_inet4Address);
+            mapInet6Addr("col_inet6", SampleEntity::getCol_inet6Address);
+            mapUUID("col_uuid", SampleEntity::get_col_uuid);
+            mapByteArray("col_bytea", SampleEntity::getCol_bytearray);
+            mapDouble("col_double", SampleEntity::get_col_double);
+            mapReal("col_real", SampleEntity::get_col_float);
+            mapBoolean("col_boolean", SampleEntity::getCol_boolean);
         }
     }
 

@@ -11,7 +11,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,9 +57,9 @@ public class IntegrationTest extends TransactionalTestBase {
         public PersonBulkInserter() {
             super("sample", "unit_test");
 
-            MapString("first_name", Person::getFirstName);
-            MapString("last_name", Person::getLastName);
-            MapDate("birth_date", Person::getBirthDate);
+            mapString("first_name", Person::getFirstName);
+            mapString("last_name", Person::getLastName);
+            mapDate("birth_date", Person::getBirthDate);
         }
     }
 

@@ -102,9 +102,9 @@ public class PersonBulkInserter extends PgBulkInsert<Person>
     public PersonBulkInserter() {
         super("sample", "unit_test");
 
-        MapString("first_name", Person::getFirstName);
-        MapString("last_name", Person::getLastName);
-        MapDate("birth_date", Person::getBirthDate);
+        mapString("first_name", Person::getFirstName);
+        mapString("last_name", Person::getLastName);
+        mapDate("birth_date", Person::getBirthDate);
     }
 }
 ```
