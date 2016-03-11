@@ -3,10 +3,7 @@
 
 package de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.util;
 
-import com.sun.istack.internal.NotNull;
-
 import de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.exceptions.PgConnectionException;
-
 import org.postgresql.PGConnection;
 
 import java.sql.Connection;
@@ -25,7 +22,7 @@ public final class PostgreSqlUtils {
         return result.get();
     }
 
-    public static boolean tryGetPGConnection(final Connection connection, @NotNull OutParameter<PGConnection> result) throws SQLException {
+    public static boolean tryGetPGConnection(final Connection connection, OutParameter<PGConnection> result) throws SQLException {
         if(tryCastConnection(connection, result)) {
             return true;
         }
@@ -35,7 +32,7 @@ public final class PostgreSqlUtils {
         return false;
     }
 
-    private static boolean tryCastConnection(final Connection connection, @NotNull OutParameter<PGConnection> result) {
+    private static boolean tryCastConnection(final Connection connection, OutParameter<PGConnection> result) {
         if (connection instanceof PGConnection) {
             result.set((PGConnection) connection);
 
@@ -44,7 +41,7 @@ public final class PostgreSqlUtils {
         return false;
     }
 
-    private static boolean tryUnwrapConnection(final Connection connection, @NotNull OutParameter<PGConnection> result) {
+    private static boolean tryUnwrapConnection(final Connection connection, OutParameter<PGConnection> result) {
         try {
             if (connection.isWrapperFor(PGConnection.class)) {
                 result.set(connection.unwrap(PGConnection.class));
