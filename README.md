@@ -2,6 +2,7 @@
 
 [MIT License]: https://opensource.org/licenses/MIT
 [COPY command]: http://www.postgresql.org/docs/current/static/sql-copy.html
+[PgBulkInsert]: https://github.com/bytefish/PgBulkInsert
 
 PgBulkInsert is a Java 1.8 library for Bulk Inserts to PostgreSQL. 
 
@@ -15,13 +16,15 @@ It provides a wrapper around the PostgreSQL [Copy command]:
 
 [PgBulkInsert] is available in the Central Maven Repository. 
 
-You can add the following dependencies to your pom.xml to include ``elasticutils`` in your project.
+You can add the following dependencies to your pom.xml to include [PgBulkInsert] in your project.
 
+```xml
 <dependency>
 	<groupId>de.bytefish</groupId>
 	<artifactId>pgbulkinsert</artifactId>
 	<version>0.5</version>
 </dependency>
+```
 
 ## License ##
 
