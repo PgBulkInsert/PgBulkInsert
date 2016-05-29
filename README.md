@@ -11,6 +11,24 @@ It provides a wrapper around the PostgreSQL [Copy command]:
 > data to and from a table. This is a much faster way of getting data in and out of a table than using 
 > INSERT and SELECT.
 
+## Setup ##
+
+[PgBulkInsert] is available in the Central Maven Repository. 
+
+You can add the following dependencies to your pom.xml to include ``elasticutils`` in your project.
+
+<dependency>
+	<groupId>de.bytefish</groupId>
+	<artifactId>pgbulkinsert</artifactId>
+	<version>0.5</version>
+</dependency>
+
+## License ##
+
+PgBulkInsert is released with under terms of the [MIT License]:
+
+* [https://github.com/bytefish/PgBulkInsert](https://github.com/bytefish/PgBulkInsert)
+
 ## Supported PostgreSQL Types ##
 
 * [Numeric Types](http://www.postgresql.org/docs/current/static/datatype-numeric.html)
@@ -146,8 +164,4 @@ private List<Person> getPersonList(int numPersons) {
 }
 ```
 
-## License ##
 
-PgBulkInsert is released with under terms of the [MIT License]:
-
-* [https://github.com/bytefish/PgBulkInsert](https://github.com/bytefish/PgBulkInsert)
