@@ -11,6 +11,7 @@ import de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.pgsql.constants.PgOid;
 import de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.pgsql.handlers.CollectionValueHandler;
 import de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.pgsql.handlers.IValueHandler;
 import de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.pgsql.handlers.IValueHandlerProvider;
+import de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.pgsql.handlers.ListValueHandler;
 import de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.pgsql.handlers.ValueHandlerProvider;
 import de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.util.StringUtils;
 
@@ -159,6 +160,16 @@ public abstract class PgBulkInsert<TEntity> {
     protected <TProperty> void map(String columnName, IValueHandler<TProperty> valueHandler, Func2<TEntity, TProperty> propertyGetter) {
         addColumn(columnName, (binaryWriter, entity) -> {
             binaryWriter.write(valueHandler, propertyGetter.invoke(entity));
+        });
+    }
+
+    protected <TElement> void mapList(String columnName, Class<TElement> elementType, int nDims, int elementOid, Func2<TEntity, List<TElement>> propertyGetter)
+    {
+        final IValueHandler<TElement> valueHandler = provider.resolve(elementType);
+        final ListValueHandler<TElement> listHandler = new ListValueHandler<>(nDims, elementOid, valueHandler);
+
+        addColumn(columnName, (binaryWriter, entity) -> {
+            binaryWriter.write(listHandler, propertyGetter.invoke(entity));
         });
     }
 

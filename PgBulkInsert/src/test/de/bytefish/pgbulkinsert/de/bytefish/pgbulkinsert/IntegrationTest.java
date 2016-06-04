@@ -24,6 +24,8 @@ public class IntegrationTest extends TransactionalTestBase {
 
         private LocalDate birthDate;
 
+        private ArrayList<Integer> luckyNumbers;
+
         public Person() {}
 
         public String getFirstName() {
@@ -50,6 +52,9 @@ public class IntegrationTest extends TransactionalTestBase {
             this.birthDate = birthDate;
         }
 
+        public List<Integer> getLuckyNumbers() { return luckyNumbers; }
+
+        public void setLuckyNumbers(ArrayList<Integer> luckyNumbers) { this.luckyNumbers = luckyNumbers; }
     }
 
     public class PersonBulkInserter extends PgBulkInsert<Person>
@@ -60,6 +65,7 @@ public class IntegrationTest extends TransactionalTestBase {
             mapString("first_name", Person::getFirstName);
             mapString("last_name", Person::getLastName);
             mapDate("birth_date", Person::getBirthDate);
+            mapList("lucky_numbers", Integer.class, 1, 23, Person::getLuckyNumbers);
         }
     }
 
@@ -86,9 +92,15 @@ public class IntegrationTest extends TransactionalTestBase {
         for (int pos = 0; pos < numPersons; pos++) {
             Person p = new Person();
 
+            ArrayList<Integer> luckyNumbers = new ArrayList<>();
+            luckyNumbers.add(11);
+            luckyNumbers.add(0);
+            luckyNumbers.add(-8);
+
             p.setFirstName("Philipp");
             p.setLastName("Wagner");
             p.setBirthDate(LocalDate.of(1986, 5, 12));
+            p.setLuckyNumbers(luckyNumbers);
 
             persons.add(p);
         }
@@ -102,7 +114,8 @@ public class IntegrationTest extends TransactionalTestBase {
                 "            (\n" +
                 "                first_name text,\n" +
                 "                last_name text,\n" +
-                "                birth_date date\n" +
+                "                birth_date date,\n" +
+                "                lucky_numbers int[]\n" +
                 "            );";
 
         Statement statement = connection.createStatement();
