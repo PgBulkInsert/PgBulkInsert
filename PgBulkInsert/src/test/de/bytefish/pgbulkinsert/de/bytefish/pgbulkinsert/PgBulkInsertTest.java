@@ -36,6 +36,7 @@ public class PgBulkInsertTest extends TransactionalTestBase {
         public Byte[] col_bytearray;
         public Boolean col_boolean;
         public List<Integer> col_int_array;
+        public List<Double> col_double_array;
 
         public Integer get_col_integer() {
             return col_integer;
@@ -93,6 +94,10 @@ public class PgBulkInsertTest extends TransactionalTestBase {
             return col_int_array;
         }
 
+        public List<Double> getCol_double_array() {
+            return col_double_array;
+        }
+
     }
 
     @Override
@@ -124,6 +129,7 @@ public class PgBulkInsertTest extends TransactionalTestBase {
             mapReal("col_real", SampleEntity::get_col_float);
             mapBoolean("col_boolean", SampleEntity::getCol_boolean);
             mapIntegerArray("col_int_array", SampleEntity::getCol_int_array);
+            mapDoubleArray("col_double_array", SampleEntity::getCol_double_array);
         }
     }
 
@@ -481,6 +487,34 @@ public class PgBulkInsertTest extends TransactionalTestBase {
     }
 
     @Test
+    public void saveAll_CustomDoubleArray_Test() throws SQLException, UnknownHostException {
+
+        // This list will be inserted.
+        List<SampleEntity> entities = new ArrayList<>();
+
+        // Create the Entity to insert:
+        SampleEntity entity = new SampleEntity();
+        entity.col_double_array = Arrays.asList(new Double(1.131), new Double(2.412));
+
+        entities.add(entity);
+
+        SampleEntityBulkInsert pgBulkInsert = new SampleEntityBulkInsert();
+
+        pgBulkInsert.saveAll(PostgreSqlUtils.getPGConnection(connection), entities.stream());
+
+        ResultSet rs = getAll();
+
+        while(rs.next()) {
+            Array z = rs.getArray("col_double_array");
+
+            Double[] v = (Double[]) z.getArray();
+
+            Assert.assertEquals(new Double(1.131), v[0]);
+            Assert.assertEquals(new Double(2.412), v[1]);
+        }
+    }
+
+    @Test
     public void saveAll_Multiple_Entities_Test() throws SQLException {
 
         // This list will be inserted.
@@ -544,7 +578,8 @@ public class PgBulkInsertTest extends TransactionalTestBase {
                 "                col_interval interval,\n" +
                 "                col_boolean boolean,\n" +
                 "                col_text text,\n" +
-                "                col_int_array integer[] \n" +
+                "                col_int_array integer[], \n" +
+                "                col_double_array double precision[] \n" +
                 "            );";
 
         Statement statement = connection.createStatement();
