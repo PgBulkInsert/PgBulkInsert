@@ -4,7 +4,7 @@
 [COPY command]: http://www.postgresql.org/docs/current/static/sql-copy.html
 [PgBulkInsert]: https://github.com/bytefish/PgBulkInsert
 
-PgBulkInsert is a Java 1.8 library for Bulk Inserts to PostgreSQL. 
+PgBulkInsert is a Java library for Bulk Inserts to PostgreSQL using the Binary COPY Protocol. 
 
 It provides a wrapper around the PostgreSQL [Copy command]:
 
