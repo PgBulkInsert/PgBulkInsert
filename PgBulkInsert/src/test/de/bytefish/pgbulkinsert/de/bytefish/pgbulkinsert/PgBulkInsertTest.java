@@ -10,13 +10,11 @@ import org.junit.Test;
 import java.net.Inet4Address;
 import java.net.Inet6Address;
 import java.net.UnknownHostException;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.Timestamp;
+import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -24,19 +22,20 @@ public class PgBulkInsertTest extends TransactionalTestBase {
 
     private class SampleEntity {
 
-        private Integer col_integer;
-        private LocalDate col_date;
-        private LocalDateTime col_datetime;
-        private Float col_float;
-        private Double col_double;
-        private String col_text;
-        private Long col_long;
-        private Short col_short;
-        private UUID col_uuid;
-        private Inet4Address col_inet4Address;
-        private Inet6Address col_inet6Address;
-        private Byte[] col_bytearray;
-        private Boolean col_boolean;
+        public Integer col_integer;
+        public LocalDate col_date;
+        public LocalDateTime col_datetime;
+        public Float col_float;
+        public Double col_double;
+        public String col_text;
+        public Long col_long;
+        public Short col_short;
+        public UUID col_uuid;
+        public Inet4Address col_inet4Address;
+        public Inet6Address col_inet6Address;
+        public Byte[] col_bytearray;
+        public Boolean col_boolean;
+        public List<Integer> col_int_array;
 
         public Integer get_col_integer() {
             return col_integer;
@@ -54,93 +53,46 @@ public class PgBulkInsertTest extends TransactionalTestBase {
             return col_double;
         }
 
-        public void set_col_integer(Integer col_integer) {
-            this.col_integer = col_integer;
-        }
-
-        public void set_col_datetime(LocalDateTime col_datetime) {
-            this.col_datetime = col_datetime;
-        }
-
-        public void set_col_float(Float col_float) {
-            this.col_float = col_float;
-        }
-
-        public void set_col_double(Double col_double) {
-            this.col_double = col_double;
-        }
-
         public String get_col_text() {
             return col_text;
-        }
-
-        public void set_col_text(String col_text) {
-            this.col_text = col_text;
         }
 
         public Long get_col_long() {
             return col_long;
         }
 
-        public void set_col_long(Long col_long) {
-            this.col_long = col_long;
-        }
-
         public Short get_col_short() {
             return col_short;
-        }
-
-        public void set_col_short(Short col_short) {
-            this.col_short = col_short;
         }
 
         public UUID get_col_uuid() {
             return col_uuid;
         }
 
-        public void set_col_uuid(UUID col_uuid) {
-            this.col_uuid = col_uuid;
-        }
-
         public LocalDate getCol_date() {
             return col_date;
-        }
-
-        public void setCol_date(LocalDate col_date) {
-            this.col_date = col_date;
         }
 
         public Inet4Address getCol_inet4Address() {
             return col_inet4Address;
         }
 
-        public void setCol_inet4Address(Inet4Address col_inet4Address) {
-            this.col_inet4Address = col_inet4Address;
-        }
-
         public Inet6Address getCol_inet6Address() {
             return col_inet6Address;
-        }
-
-        public void setCol_inet6Address(Inet6Address col_inet6Address) {
-            this.col_inet6Address = col_inet6Address;
         }
 
         public Byte[] getCol_bytearray() {
             return col_bytearray;
         }
 
-        public void setCol_bytearray(Byte[] col_bytearray) {
-            this.col_bytearray = col_bytearray;
-        }
-
         public Boolean getCol_boolean() {
             return col_boolean;
         }
 
-        public void setCol_boolean(Boolean col_boolean) {
-            this.col_boolean = col_boolean;
+        public List<Integer> getCol_int_array() {
+            return col_int_array;
         }
+
     }
 
     @Override
@@ -171,6 +123,7 @@ public class PgBulkInsertTest extends TransactionalTestBase {
             mapDouble("col_double", SampleEntity::get_col_double);
             mapReal("col_real", SampleEntity::get_col_float);
             mapBoolean("col_boolean", SampleEntity::getCol_boolean);
+            mapCollection("col_int_array", Integer.class, 23, SampleEntity::getCol_int_array);
         }
     }
 
@@ -449,8 +402,6 @@ public class PgBulkInsertTest extends TransactionalTestBase {
         }
     }
 
-
-
     @Test
     public void saveAll_Inet6_Test() throws SQLException, UnknownHostException {
 
@@ -498,6 +449,34 @@ public class PgBulkInsertTest extends TransactionalTestBase {
 
             Assert.assertEquals((byte)1,v[0]);
             Assert.assertEquals((byte)2,v[1]);
+        }
+    }
+
+    @Test
+    public void saveAll_CustomIntegerArray_Test() throws SQLException, UnknownHostException {
+
+        // This list will be inserted.
+        List<SampleEntity> entities = new ArrayList<>();
+
+        // Create the Entity to insert:
+        SampleEntity entity = new SampleEntity();
+        entity.col_int_array = Arrays.asList(new Integer(1), new Integer(2));
+
+        entities.add(entity);
+
+        SampleEntityBulkInsert pgBulkInsert = new SampleEntityBulkInsert();
+
+        pgBulkInsert.saveAll(PostgreSqlUtils.getPGConnection(connection), entities.stream());
+
+        ResultSet rs = getAll();
+
+        while(rs.next()) {
+            Array z = rs.getArray("col_int_array");
+
+            Integer[] v = (Integer[]) z.getArray();
+
+            Assert.assertEquals((Integer)1, v[0]);
+            Assert.assertEquals((Integer)2, v[1]);
         }
     }
 
@@ -564,7 +543,8 @@ public class PgBulkInsertTest extends TransactionalTestBase {
                 "                col_date date,\n" +
                 "                col_interval interval,\n" +
                 "                col_boolean boolean,\n" +
-                "                col_text text\n" +
+                "                col_text text,\n" +
+                "                col_int_array integer[] \n" +
                 "            );";
 
         Statement statement = connection.createStatement();

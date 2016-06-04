@@ -7,6 +7,7 @@ import de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.exceptions.SaveEntityFa
 import de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.functional.Action2;
 import de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.functional.Func2;
 import de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.pgsql.PgBinaryWriter;
+import de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.pgsql.handlers.CollectionValueHandler;
 import de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.pgsql.handlers.IValueHandler;
 import de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.pgsql.handlers.IValueHandlerProvider;
 import de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.pgsql.handlers.ValueHandlerProvider;
@@ -22,9 +23,7 @@ import java.net.Inet6Address;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -143,6 +142,10 @@ public abstract class PgBulkInsert<TEntity> {
     {
         final IValueHandler<TProperty> valueHandler = provider.resolve(type);
 
+        map(columnName, valueHandler, propertyGetter);
+    }
+
+    protected <TProperty> void map(String columnName, IValueHandler<TProperty> valueHandler, Func2<TEntity, TProperty> propertyGetter) {
         addColumn(columnName, (binaryWriter, entity) -> {
             binaryWriter.write(valueHandler, propertyGetter.invoke(entity));
         });
@@ -215,6 +218,12 @@ public abstract class PgBulkInsert<TEntity> {
 
     protected void mapByteArray(String columnName, Func2<TEntity, Byte[]> propertyGetter) {
         map(columnName, Byte[].class, propertyGetter);
+    }
+
+    protected <TElementType, TCollectionType extends Collection<TElementType>> void mapCollection(String columnName, Class<TElementType> type, int oid, Func2<TEntity, TCollectionType> propertyGetter) {
+        final IValueHandler<TElementType> valueHandler = provider.resolve(type);
+
+        map(columnName, new CollectionValueHandler<>(type, oid, valueHandler), propertyGetter);
     }
 
     private PgBulkInsert<TEntity> addColumn(String columnName, Action2<PgBinaryWriter, TEntity> action)
