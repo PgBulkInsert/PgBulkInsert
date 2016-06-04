@@ -128,6 +128,7 @@ public abstract class PgBulkInsert<TEntity> {
                 // Start a New Row:
                 bw.startRow(columnCount);
 
+                // Iterate over each column mapping:
                 columns.forEach(column -> {
                     try {
                         column.getWrite().invoke(bw, entity);
@@ -136,7 +137,16 @@ public abstract class PgBulkInsert<TEntity> {
                     }
                 });
             });
+
         }
+    }
+
+    protected <TElementType, TCollectionType extends Collection<TElementType>> void mapCollection(String columnName, Class<TElementType> type, Func2<TEntity, TCollectionType> propertyGetter) {
+
+        final IValueHandler<TElementType> valueHandler = provider.resolve(type);
+        final int valueOID = PgOid.mapFrom(type);
+
+        map(columnName, new CollectionValueHandler<>(type, valueOID, valueHandler), propertyGetter);
     }
 
     protected <TProperty> void map(String columnName, Class<TProperty> type, Func2<TEntity, TProperty> propertyGetter)
@@ -221,11 +231,44 @@ public abstract class PgBulkInsert<TEntity> {
         map(columnName, Byte[].class, propertyGetter);
     }
 
-    protected <TElementType, TCollectionType extends Collection<TElementType>> void mapCollection(String columnName, Class<TElementType> type, Func2<TEntity, TCollectionType> propertyGetter) {
-        final IValueHandler<TElementType> valueHandler = provider.resolve(type);
-        final int oid = PgOid.mapFrom(type);
+    protected <TCollectionType extends Collection<Boolean>> void mapBooleanArray(String columnName, Func2<TEntity, TCollectionType> propertyGetter) {
+        mapCollection(columnName, Boolean.class, propertyGetter);
+    }
 
-        map(columnName, new CollectionValueHandler<>(type, oid, valueHandler), propertyGetter);
+    protected <TCollectionType extends Collection<Short>> void mapShortArray(String columnName, Func2<TEntity, TCollectionType> propertyGetter) {
+        mapCollection(columnName, Short.class, propertyGetter);
+    }
+
+    protected <TCollectionType extends Collection<Integer>> void mapIntegerArray(String columnName, Func2<TEntity, TCollectionType> propertyGetter) {
+        mapCollection(columnName, Integer.class, propertyGetter);
+    }
+
+    protected <TCollectionType extends Collection<Long>> void mapLongArray(String columnName, Func2<TEntity, TCollectionType> propertyGetter) {
+        mapCollection(columnName, Long.class, propertyGetter);
+    }
+
+    protected <TCollectionType extends Collection<String>> void mapStringArray(String columnName, Func2<TEntity, TCollectionType> propertyGetter) {
+        mapCollection(columnName, String.class, propertyGetter);
+    }
+
+    protected <TCollectionType extends Collection<Float>> void mapFloatArray(String columnName, Func2<TEntity, TCollectionType> propertyGetter) {
+        mapCollection(columnName, Float.class, propertyGetter);
+    }
+
+    protected <TCollectionType extends Collection<Double>> void mapDoubleArray(String columnName, Func2<TEntity, TCollectionType> propertyGetter) {
+        mapCollection(columnName, Double.class, propertyGetter);
+    }
+
+    protected <TCollectionType extends Collection<UUID>> void mapUUIDArray(String columnName, Func2<TEntity, TCollectionType> propertyGetter) {
+        mapCollection(columnName, UUID.class, propertyGetter);
+    }
+
+    protected <TCollectionType extends Collection<Inet4Address>> void mapInet4Array(String columnName, Func2<TEntity, TCollectionType> propertyGetter) {
+        mapCollection(columnName, Inet4Address.class, propertyGetter);
+    }
+
+    protected <TCollectionType extends Collection<Inet6Address>> void mapInet6Array(String columnName, Func2<TEntity, TCollectionType> propertyGetter) {
+        mapCollection(columnName, Inet6Address.class, propertyGetter);
     }
 
     private PgBulkInsert<TEntity> addColumn(String columnName, Action2<PgBinaryWriter, TEntity> action)
