@@ -123,7 +123,7 @@ public class PgBulkInsertTest extends TransactionalTestBase {
             mapDouble("col_double", SampleEntity::get_col_double);
             mapReal("col_real", SampleEntity::get_col_float);
             mapBoolean("col_boolean", SampleEntity::getCol_boolean);
-            mapCollection("col_int_array", Integer.class, 23, SampleEntity::getCol_int_array);
+            mapCollection("col_int_array", Integer.class, SampleEntity::getCol_int_array);
         }
     }
 

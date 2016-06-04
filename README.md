@@ -169,4 +169,8 @@ private List<Person> getPersonList(int numPersons) {
 }
 ```
 
+## Resources ##
+
+* [Postgres on the wire - A look at the PostgreSQL wire protocol (PGCon 2014)](https://www.pgcon.org/2014/schedule/attachments/330_postgres-for-the-wire.pdf)
+
 
