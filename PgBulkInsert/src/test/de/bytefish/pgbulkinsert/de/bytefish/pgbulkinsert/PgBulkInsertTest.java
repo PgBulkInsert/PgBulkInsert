@@ -150,8 +150,8 @@ public class PgBulkInsertTest extends TransactionalTestBase {
         pgBulkInsert.saveAll(PostgreSqlUtils.getPGConnection(connection), entities.stream());
 
         ResultSet rs = getAll();
-        
-        while(rs.next()) {
+
+        while (rs.next()) {
             boolean v = rs.getBoolean("col_boolean");
 
             Assert.assertEquals(true, v);
@@ -176,7 +176,7 @@ public class PgBulkInsertTest extends TransactionalTestBase {
 
         ResultSet rs = getAll();
 
-        while(rs.next()) {
+        while (rs.next()) {
             short v = rs.getShort("col_smallint");
 
             Assert.assertEquals(1, v);
@@ -201,7 +201,7 @@ public class PgBulkInsertTest extends TransactionalTestBase {
 
         ResultSet rs = getAll();
 
-        while(rs.next()) {
+        while (rs.next()) {
             int v = rs.getInt("col_integer");
 
             Assert.assertEquals(1, v);
@@ -226,7 +226,7 @@ public class PgBulkInsertTest extends TransactionalTestBase {
 
         ResultSet rs = getAll();
 
-        while(rs.next()) {
+        while (rs.next()) {
             double v = rs.getDouble("col_double");
 
             Assert.assertEquals(2.0001, v, 1e-10);
@@ -251,7 +251,7 @@ public class PgBulkInsertTest extends TransactionalTestBase {
 
         ResultSet rs = getAll();
 
-        while(rs.next()) {
+        while (rs.next()) {
             float v = rs.getFloat("col_real");
 
             Assert.assertEquals(2.0001, v, 1e-6);
@@ -276,7 +276,7 @@ public class PgBulkInsertTest extends TransactionalTestBase {
 
         ResultSet rs = getAll();
 
-        while(rs.next()) {
+        while (rs.next()) {
             Timestamp v = rs.getTimestamp("col_timestamp");
 
             Assert.assertEquals(LocalDateTime.of(2010, 1, 1, 0, 0, 0), v.toLocalDateTime());
@@ -301,7 +301,7 @@ public class PgBulkInsertTest extends TransactionalTestBase {
 
         ResultSet rs = getAll();
 
-        while(rs.next()) {
+        while (rs.next()) {
             Timestamp v = rs.getTimestamp("col_date");
 
             Assert.assertEquals(LocalDateTime.of(2010, 1, 1, 0, 0, 0), v.toLocalDateTime());
@@ -326,7 +326,7 @@ public class PgBulkInsertTest extends TransactionalTestBase {
 
         ResultSet rs = getAll();
 
-        while(rs.next()) {
+        while (rs.next()) {
             String v = rs.getString("col_text");
 
             Assert.assertEquals("ABC", v);
@@ -352,7 +352,7 @@ public class PgBulkInsertTest extends TransactionalTestBase {
 
         ResultSet rs = getAll();
 
-        while(rs.next()) {
+        while (rs.next()) {
             long v = rs.getLong("col_bigint");
             Assert.assertEquals(1, v);
         }
@@ -376,9 +376,9 @@ public class PgBulkInsertTest extends TransactionalTestBase {
 
         ResultSet rs = getAll();
 
-        while(rs.next()) {
+        while (rs.next()) {
             String v = rs.getString("col_inet4");
-            Assert.assertEquals("127.0.0.1", v );
+            Assert.assertEquals("127.0.0.1", v);
         }
     }
 
@@ -402,9 +402,9 @@ public class PgBulkInsertTest extends TransactionalTestBase {
 
         ResultSet rs = getAll();
 
-        while(rs.next()) {
+        while (rs.next()) {
             String v = rs.getString("col_uuid");
-            Assert.assertEquals(uuid.toString(), v );
+            Assert.assertEquals(uuid.toString(), v);
         }
     }
 
@@ -426,9 +426,9 @@ public class PgBulkInsertTest extends TransactionalTestBase {
 
         ResultSet rs = getAll();
 
-        while(rs.next()) {
+        while (rs.next()) {
             String v = rs.getString("col_inet6");
-            Assert.assertEquals("1080::8:800:200c:417a", v );
+            Assert.assertEquals("1080::8:800:200c:417a", v);
         }
     }
 
@@ -440,7 +440,7 @@ public class PgBulkInsertTest extends TransactionalTestBase {
 
         // Create the Entity to insert:
         SampleEntity entity = new SampleEntity();
-        entity.col_bytearray = new Byte[] {new Byte((byte) 1), new Byte((byte) 2)};
+        entity.col_bytearray = new Byte[]{new Byte((byte) 1), new Byte((byte) 2)};
 
         entities.add(entity);
 
@@ -450,11 +450,11 @@ public class PgBulkInsertTest extends TransactionalTestBase {
 
         ResultSet rs = getAll();
 
-        while(rs.next()) {
+        while (rs.next()) {
             byte[] v = rs.getBytes("col_bytea");
 
-            Assert.assertEquals((byte)1,v[0]);
-            Assert.assertEquals((byte)2,v[1]);
+            Assert.assertEquals((byte) 1, v[0]);
+            Assert.assertEquals((byte) 2, v[1]);
         }
     }
 
@@ -476,13 +476,13 @@ public class PgBulkInsertTest extends TransactionalTestBase {
 
         ResultSet rs = getAll();
 
-        while(rs.next()) {
+        while (rs.next()) {
             Array z = rs.getArray("col_int_array");
 
             Integer[] v = (Integer[]) z.getArray();
 
-            Assert.assertEquals((Integer)1, v[0]);
-            Assert.assertEquals((Integer)2, v[1]);
+            Assert.assertEquals((Integer) 1, v[0]);
+            Assert.assertEquals((Integer) 2, v[1]);
         }
     }
 
@@ -504,7 +504,7 @@ public class PgBulkInsertTest extends TransactionalTestBase {
 
         ResultSet rs = getAll();
 
-        while(rs.next()) {
+        while (rs.next()) {
             Array z = rs.getArray("col_double_array");
 
             Double[] v = (Double[]) z.getArray();
@@ -541,7 +541,7 @@ public class PgBulkInsertTest extends TransactionalTestBase {
         // Turn it into a List:
         ArrayList<Long> values = new ArrayList<>();
 
-        while(rs.next()) {
+        while (rs.next()) {
             values.add(rs.getLong("col_bigint"));
         }
 
