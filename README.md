@@ -53,6 +53,8 @@ PgBulkInsert is released with under terms of the [MIT License]:
     * inet (IPv4, IPv6)
 * [UUID Type](http://www.postgresql.org/docs/current/static/datatype-uuid.html)
     * uuid
+* [Array Type](https://www.postgresql.org/docs/current/static/arrays.html)
+    * One-Dimensional Arrays
 
 ## Basic Usage ##
 

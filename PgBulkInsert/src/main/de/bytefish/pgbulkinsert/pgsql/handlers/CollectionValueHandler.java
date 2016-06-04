@@ -35,7 +35,7 @@ public class CollectionValueHandler<S, T extends Collection<S>> extends BaseValu
 
         arrayOutput.writeInt(1); // Dimensions, use 1 for one-dimensional arrays at the moment
         arrayOutput.writeInt(1); // The Array can contain Null Values
-        arrayOutput.writeInt(oid); // Write the Values using the OID (TODO (Can we make this any easier for the user of the library?)
+        arrayOutput.writeInt(oid); // Write the Values using the OID TODO Can we make this any easier for the user of the library?
         arrayOutput.writeInt(value.size()); // Write the number of elements
         arrayOutput.writeInt(1); // Ignore Lower Bound. Use PG Default for now
 
