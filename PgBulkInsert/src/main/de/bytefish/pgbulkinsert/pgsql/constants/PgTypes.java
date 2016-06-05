@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.UUID;
 
 // https://github.com/postgres/postgres/blob/master/src/include/catalog/pg_type.h
-public class PgOid {
+public class PgTypes {
 
     public static int Boolean = 16;
 

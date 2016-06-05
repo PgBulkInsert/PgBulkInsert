@@ -6,17 +6,16 @@ package de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.pgsql.handlers;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.lang.reflect.Type;
-import java.util.AbstractCollection;
 import java.util.Collection;
 
-public class CollectionValueHandler<S, T extends Collection<S>> extends BaseValueHandler<T> {
+public class CollectionValueHandler<TElementType, TCollectionType extends Collection<TElementType>> extends BaseValueHandler<TCollectionType> {
 
-    private final Class<S> type;
+    private final Class<TElementType> type;
 
     private final int oid;
-    private final IValueHandler<S> valueHandler;
+    private final IValueHandler<TElementType> valueHandler;
 
-     public CollectionValueHandler(Class<S> type, int oid, IValueHandler<S> valueHandler) {
+     public CollectionValueHandler(Class<TElementType> type, int oid, IValueHandler<TElementType> valueHandler) {
          this.type = type;
          this.oid = oid;
          this.valueHandler = valueHandler;
@@ -28,7 +27,7 @@ public class CollectionValueHandler<S, T extends Collection<S>> extends BaseValu
     }
 
     @Override
-    protected void internalHandle(DataOutputStream buffer, T value) throws Exception {
+    protected void internalHandle(DataOutputStream buffer, TCollectionType value) throws Exception {
 
         ByteArrayOutputStream byteArrayOutput = new ByteArrayOutputStream();
         DataOutputStream arrayOutput = new DataOutputStream(byteArrayOutput);
@@ -40,7 +39,7 @@ public class CollectionValueHandler<S, T extends Collection<S>> extends BaseValu
         arrayOutput.writeInt(1); // Ignore Lower Bound. Use PG Default for now
 
         // Now write the actual Collection elements using the inner handler:
-        for (S element : value) {
+        for (TElementType element : value) {
             valueHandler.handle(arrayOutput, element);
         }
 

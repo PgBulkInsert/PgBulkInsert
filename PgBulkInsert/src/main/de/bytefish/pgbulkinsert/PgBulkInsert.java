@@ -7,7 +7,7 @@ import de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.exceptions.SaveEntityFa
 import de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.functional.Action2;
 import de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.functional.Func2;
 import de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.pgsql.PgBinaryWriter;
-import de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.pgsql.constants.PgOid;
+import de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.pgsql.constants.PgTypes;
 import de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.pgsql.handlers.CollectionValueHandler;
 import de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.pgsql.handlers.IValueHandler;
 import de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.pgsql.handlers.IValueHandlerProvider;
@@ -144,7 +144,7 @@ public abstract class PgBulkInsert<TEntity> {
     protected <TElementType, TCollectionType extends Collection<TElementType>> void mapCollection(String columnName, Class<TElementType> type, Func2<TEntity, TCollectionType> propertyGetter) {
 
         final IValueHandler<TElementType> valueHandler = provider.resolve(type);
-        final int valueOID = PgOid.mapFrom(type);
+        final int valueOID = PgTypes.mapFrom(type);
 
         map(columnName, new CollectionValueHandler<>(type, valueOID, valueHandler), propertyGetter);
     }
