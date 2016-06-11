@@ -55,14 +55,34 @@ public class BulkProcessorTest extends TransactionalTestBase {
         // Create the BulkProcessor:
         BulkProcessor<Person> bulkProcessor = new BulkProcessor<>(personBulkInserter, connectionFactory, 10, Duration.ofSeconds(1));
         // Create some Test data:
-        List<Person> fiftyPersons = getPersonList(3);
+        List<Person> threePersons = getPersonList(3);
         // Now process them with the BulkProcessor:
-        for (Person p : fiftyPersons) {
+        for (Person p : threePersons) {
             bulkProcessor.add(p);
         }
         // Sleep for 2 Seconds:
         Thread.sleep(Duration.ofSeconds(2).toMillis());
 
+        // The three items should have been added:
+        Assert.assertEquals(3, getRowCount());
+    }
+
+    @Test
+    public void testWriteOnClose() throws Exception {
+        // Create the BulkInserter to be wrapped:
+        PersonBulkInserter personBulkInserter = new PersonBulkInserter();
+        // Create the ConnectionFactory:
+        Func1<PGConnection> connectionFactory = () -> PostgreSqlUtils.getPGConnection(connection);
+        // Create the BulkProcessor:
+        BulkProcessor<Person> bulkProcessor = new BulkProcessor<>(personBulkInserter, connectionFactory, 10, Duration.ofSeconds(1));
+        // Create some Test data:
+        List<Person> threePersons = getPersonList(3);
+        // Now process them with the BulkProcessor:
+        for (Person p : threePersons) {
+            bulkProcessor.add(p);
+        }
+        // Close the processor:
+        bulkProcessor.close();
         // The three items should have been added:
         Assert.assertEquals(3, getRowCount());
     }

@@ -68,10 +68,15 @@ public class BulkProcessor<TEntity> implements AutoCloseable {
         }
         closed = true;
 
-        // Quit the Scheduled Task:
+        // Quit the Scheduled FlushInterval Future:
         if (this.scheduledFuture != null) {
             cancel(this.scheduledFuture);
             this.scheduler.shutdown();
+        }
+
+        // Are there any entities left to write?
+        if (batchedEntities.size() >= 0) {
+            execute();
         }
     }
 
