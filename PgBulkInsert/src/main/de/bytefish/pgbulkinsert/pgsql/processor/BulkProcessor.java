@@ -25,7 +25,7 @@ public class BulkProcessor<TEntity> implements AutoCloseable {
     private final Duration flushInterval;
     private final int bulkSize;
 
-    private List<TEntity> batchedEntities = Collections.synchronizedList(new ArrayList<TEntity>());
+    private List<TEntity> batchedEntities;
 
     public BulkProcessor(IPgBulkInsert<TEntity> client, Func1<PGConnection> connectionFactory, int bulkSize) {
         this(client, connectionFactory, bulkSize, null);
@@ -38,6 +38,9 @@ public class BulkProcessor<TEntity> implements AutoCloseable {
         this.connectionFactory = connectionFactory;
         this.bulkSize = bulkSize;
         this.flushInterval = flushInterval;
+
+        // Start with an empty List of batched entities:
+        this.batchedEntities = new ArrayList<>();
 
         if(flushInterval != null) {
             // Create a Scheduler for the time-based Flush Interval:
@@ -83,7 +86,7 @@ public class BulkProcessor<TEntity> implements AutoCloseable {
         // Assign to a new List:
         final List<TEntity> entities = batchedEntities;
         // We can restart batching entities:
-        batchedEntities = null;
+        batchedEntities = new ArrayList<>();
         // Write the previously batched entities to PostgreSQL:
         write(entities);
     }

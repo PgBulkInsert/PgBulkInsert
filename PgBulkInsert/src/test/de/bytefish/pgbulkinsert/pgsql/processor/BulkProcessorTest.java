@@ -1,11 +1,16 @@
 // Copyright (c) Philipp Wagner. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-package de.bytefish.pgbulkinsert;
+package de.bytefish.pgbulkinsert.pgsql.processor;
 
+import de.bytefish.pgbulkinsert.functional.Func1;
+import de.bytefish.pgbulkinsert.mapping.PersonBulkInserter;
+import de.bytefish.pgbulkinsert.model.Person;
 import de.bytefish.pgbulkinsert.util.PostgreSqlUtils;
+import de.bytefish.pgbulkinsert.utils.TransactionalTestBase;
 import org.junit.Assert;
 import org.junit.Test;
+import org.postgresql.PGConnection;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -14,54 +19,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class IntegrationTest extends TransactionalTestBase {
-
-    private class Person {
-
-        private String firstName;
-
-        private String lastName;
-
-        private LocalDate birthDate;
-
-        public Person() {}
-
-        public String getFirstName() {
-            return firstName;
-        }
-
-        public void setFirstName(String firstName) {
-            this.firstName = firstName;
-        }
-
-        public String getLastName() {
-            return lastName;
-        }
-
-        public void setLastName(String lastName) {
-            this.lastName = lastName;
-        }
-
-        public LocalDate getBirthDate() {
-            return birthDate;
-        }
-
-        public void setBirthDate(LocalDate birthDate) {
-            this.birthDate = birthDate;
-        }
-
-    }
-
-    public class PersonBulkInserter extends PgBulkInsert<Person>
-    {
-        public PersonBulkInserter() {
-            super("sample", "unit_test");
-
-            mapString("first_name", Person::getFirstName);
-            mapString("last_name", Person::getLastName);
-            mapDate("birth_date", Person::getBirthDate);
-        }
-    }
+public class BulkProcessorTest extends TransactionalTestBase {
 
     @Override
     protected void onSetUpInTransaction() throws Exception {
@@ -69,15 +27,22 @@ public class IntegrationTest extends TransactionalTestBase {
     }
 
     @Test
-    public void bulkInsertPersonDataTest() throws SQLException {
-        // Create a large list of Persons:
-        List<Person> persons = getPersonList(100000);
-        // Create the BulkInserter:
+    public void testAdd() throws Exception {
+        // Create the BulkInserter to be wrapped:
         PersonBulkInserter personBulkInserter = new PersonBulkInserter();
-        // Now save all entities of a given stream:
-        personBulkInserter.saveAll(PostgreSqlUtils.getPGConnection(connection), persons.stream());
-        // And assert all have been written to the database:
-        Assert.assertEquals(100000, getRowCount());
+        // Create the ConnectionFactory:
+        Func1<PGConnection> connectionFactory = () -> PostgreSqlUtils.getPGConnection(connection);
+        // Create the BulkProcessor:
+        BulkProcessor<Person> bulkProcessor = new BulkProcessor<>(personBulkInserter, connectionFactory, 10);
+        // Create some Test data:
+        List<Person> fiftyPersons = getPersonList(50);
+        // Now process them with the BulkProcessor:
+        for (Person p : fiftyPersons) {
+            bulkProcessor.add(p);
+        }
+        // The Processor should have fired 5 times, so 50 persons have been added:
+
+        Assert.assertEquals(50, getRowCount());
     }
 
     private List<Person> getPersonList(int numPersons) {
@@ -121,5 +86,4 @@ public class IntegrationTest extends TransactionalTestBase {
 
         return count;
     }
-
 }
