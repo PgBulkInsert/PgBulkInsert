@@ -1,10 +1,10 @@
 // Copyright (c) Philipp Wagner. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-package de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.pgsql;
+package de.bytefish.pgbulkinsert.pgsql;
 
-import de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.exceptions.BinaryWriteFailedException;
-import de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.pgsql.handlers.IValueHandler;
+import de.bytefish.pgbulkinsert.exceptions.BinaryWriteFailedException;
+import de.bytefish.pgbulkinsert.pgsql.handlers.IValueHandler;
 
 import java.io.BufferedOutputStream;
 import java.io.DataOutputStream;

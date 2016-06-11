@@ -1,15 +1,14 @@
 // Copyright (c) Philipp Wagner. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-package de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.pgsql.handlers;
+package de.bytefish.pgbulkinsert.pgsql.handlers;
 
-import de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.exceptions.ValueHandlerAlreadyRegisteredException;
-import de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.exceptions.ValueHandlerNotRegisteredException;
-import de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.pgsql.converter.LocalDateConverter;
-import de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.pgsql.converter.LocalDateTimeConverter;
+import de.bytefish.pgbulkinsert.exceptions.ValueHandlerAlreadyRegisteredException;
+import de.bytefish.pgbulkinsert.exceptions.ValueHandlerNotRegisteredException;
 
 import java.lang.reflect.Type;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class ValueHandlerProvider implements IValueHandlerProvider {

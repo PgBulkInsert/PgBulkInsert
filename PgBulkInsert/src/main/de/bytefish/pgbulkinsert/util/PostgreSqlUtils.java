@@ -1,9 +1,9 @@
 // Copyright (c) Philipp Wagner. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-package de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.util;
+package de.bytefish.pgbulkinsert.util;
 
-import de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.exceptions.PgConnectionException;
+import de.bytefish.pgbulkinsert.exceptions.PgConnectionException;
 import org.postgresql.PGConnection;
 
 import java.sql.Connection;

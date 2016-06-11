@@ -1,19 +1,18 @@
 // Copyright (c) Philipp Wagner. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-package de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert;
+package de.bytefish.pgbulkinsert;
 
-import de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.exceptions.SaveEntityFailedException;
-import de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.functional.Action2;
-import de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.functional.Func2;
-import de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.pgsql.PgBinaryWriter;
-import de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.pgsql.constants.PgTypes;
-import de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.pgsql.handlers.CollectionValueHandler;
-import de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.pgsql.handlers.IValueHandler;
-import de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.pgsql.handlers.IValueHandlerProvider;
-import de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.pgsql.handlers.ValueHandlerProvider;
-import de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.util.StringUtils;
-
+import de.bytefish.pgbulkinsert.exceptions.SaveEntityFailedException;
+import de.bytefish.pgbulkinsert.functional.Action2;
+import de.bytefish.pgbulkinsert.functional.Func2;
+import de.bytefish.pgbulkinsert.pgsql.PgBinaryWriter;
+import de.bytefish.pgbulkinsert.pgsql.constants.PgTypes;
+import de.bytefish.pgbulkinsert.pgsql.handlers.CollectionValueHandler;
+import de.bytefish.pgbulkinsert.pgsql.handlers.IValueHandler;
+import de.bytefish.pgbulkinsert.pgsql.handlers.IValueHandlerProvider;
+import de.bytefish.pgbulkinsert.pgsql.handlers.ValueHandlerProvider;
+import de.bytefish.pgbulkinsert.util.StringUtils;
 import org.postgresql.PGConnection;
 import org.postgresql.copy.CopyIn;
 import org.postgresql.copy.CopyManager;
@@ -28,7 +27,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public abstract class PgBulkInsert<TEntity> {
+public abstract class PgBulkInsert<TEntity> implements IPgBulkInsert<TEntity> {
 
     private class TableDefinition {
 

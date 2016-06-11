@@ -1,9 +1,9 @@
 // Copyright (c) Philipp Wagner. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-package de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.pgsql.constants;
+package de.bytefish.pgbulkinsert.pgsql.constants;
 
-import de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.util.JavaUtils;
+import de.bytefish.pgbulkinsert.util.JavaUtils;
 
 import java.net.Inet4Address;
 import java.net.Inet6Address;

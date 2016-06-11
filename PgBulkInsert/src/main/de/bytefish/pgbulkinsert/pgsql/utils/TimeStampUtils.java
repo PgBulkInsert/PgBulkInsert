@@ -1,7 +1,7 @@
 // Copyright (c) Philipp Wagner. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-package de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.pgsql.utils;
+package de.bytefish.pgbulkinsert.pgsql.utils;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

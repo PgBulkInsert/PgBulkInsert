@@ -1,9 +1,9 @@
 // Copyright (c) Philipp Wagner. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-package de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert;
+package de.bytefish.pgbulkinsert;
 
-import de.bytefish.pgbulkinsert.de.bytefish.pgbulkinsert.util.PostgreSqlUtils;
+import de.bytefish.pgbulkinsert.util.PostgreSqlUtils;
 import org.junit.Assert;
 import org.junit.Test;
 
