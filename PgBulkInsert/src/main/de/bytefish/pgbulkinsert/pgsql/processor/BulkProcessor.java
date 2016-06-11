@@ -75,7 +75,7 @@ public class BulkProcessor<TEntity> implements AutoCloseable {
         }
 
         // Are there any entities left to write?
-        if (batchedEntities.size() >= 0) {
+        if (batchedEntities.size() > 0) {
             execute();
         }
     }
