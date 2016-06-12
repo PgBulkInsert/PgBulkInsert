@@ -3,13 +3,10 @@
 
 package de.bytefish.pgbulkinsert.pgsql.processor;
 
-import de.bytefish.pgbulkinsert.IPgBulkInsert;
-import de.bytefish.pgbulkinsert.functional.Func1;
-import org.postgresql.PGConnection;
+import de.bytefish.pgbulkinsert.pgsql.processor.handler.IBulkWriteHandler;
 
 import java.time.Duration;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.*;
 
@@ -20,24 +17,20 @@ public class BulkProcessor<TEntity> implements AutoCloseable {
 
     private volatile boolean closed = false;
 
-    private final IPgBulkInsert<TEntity> client;
-    private final Func1<PGConnection> connectionFactory;
-    private final Duration flushInterval;
+    private final IBulkWriteHandler<TEntity> handler;
+
     private final int bulkSize;
 
     private List<TEntity> batchedEntities;
 
-    public BulkProcessor(IPgBulkInsert<TEntity> client, Func1<PGConnection> connectionFactory, int bulkSize) {
-        this(client, connectionFactory, bulkSize, null);
+    public BulkProcessor(IBulkWriteHandler<TEntity> handler, int bulkSize) {
+        this(handler, bulkSize, null);
     }
 
-    public BulkProcessor(IPgBulkInsert<TEntity> client, Func1<PGConnection> connectionFactory, int bulkSize, Duration flushInterval) {
+    public BulkProcessor(IBulkWriteHandler<TEntity> handler, int bulkSize, Duration flushInterval) {
 
-        // Assign the Instance Variables for Batch Processing:
-        this.client = client;
-        this.connectionFactory = connectionFactory;
+        this.handler = handler;
         this.bulkSize = bulkSize;
-        this.flushInterval = flushInterval;
 
         // Start with an empty List of batched entities:
         this.batchedEntities = new ArrayList<>();
@@ -98,10 +91,7 @@ public class BulkProcessor<TEntity> implements AutoCloseable {
 
     private void write(List<TEntity> entities) {
         try {
-            // Get a new Connection from the ConnectionFactory:
-            PGConnection connection = connectionFactory.invoke();
-            // Copy entities to PostgreSQL:
-            client.saveAll(connection, entities.stream());
+            handler.write(entities);
         } catch(Exception e) {
             throw new RuntimeException(e);
         }

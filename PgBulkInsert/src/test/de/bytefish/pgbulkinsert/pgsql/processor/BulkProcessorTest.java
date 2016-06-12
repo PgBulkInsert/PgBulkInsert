@@ -3,15 +3,19 @@
 
 package de.bytefish.pgbulkinsert.pgsql.processor;
 
+import de.bytefish.pgbulkinsert.IPgBulkInsert;
 import de.bytefish.pgbulkinsert.functional.Func1;
 import de.bytefish.pgbulkinsert.mapping.PersonBulkInserter;
 import de.bytefish.pgbulkinsert.model.Person;
+import de.bytefish.pgbulkinsert.pgsql.processor.handler.BulkWriteHandler;
+import de.bytefish.pgbulkinsert.pgsql.processor.handler.IBulkWriteHandler;
 import de.bytefish.pgbulkinsert.util.PostgreSqlUtils;
 import de.bytefish.pgbulkinsert.utils.TransactionalTestBase;
 import org.junit.Assert;
 import org.junit.Test;
 import org.postgresql.PGConnection;
 
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -27,14 +31,34 @@ public class BulkProcessorTest extends TransactionalTestBase {
         createTable();
     }
 
+    // Define a Custom Handler for the Unit Test, which does not close the Connection:
+    class CustomBulkWriteHandler<TEntity> implements IBulkWriteHandler<TEntity> {
+
+        private final IPgBulkInsert<TEntity> client;
+        private final Func1<Connection> connectionFactory;
+
+        public CustomBulkWriteHandler(IPgBulkInsert<TEntity> client, Func1<Connection> connectionFactory) {
+            this.client = client;
+            this.connectionFactory = connectionFactory;
+        }
+
+        public void write(List<TEntity> entities) throws Exception {
+            Connection connection = connectionFactory.invoke();
+
+            client.saveAll(PostgreSqlUtils.getPGConnection(connection), entities.stream());
+        }
+    }
+
     @Test
     public void testAdd() throws Exception {
         // Create the BulkInserter to be wrapped:
-        PersonBulkInserter personBulkInserter = new PersonBulkInserter();
+        IPgBulkInsert<Person> personBulkInserter = new PersonBulkInserter();
         // Create the ConnectionFactory:
-        Func1<PGConnection> connectionFactory = () -> PostgreSqlUtils.getPGConnection(connection);
+        Func1<Connection> connectionFactory = () -> connection;
+        // Create the BulkHandler:
+        IBulkWriteHandler<Person> bulkWriteHandler = new CustomBulkWriteHandler<>(personBulkInserter, connectionFactory);
         // Create the BulkProcessor:
-        BulkProcessor<Person> bulkProcessor = new BulkProcessor<>(personBulkInserter, connectionFactory, 10);
+        BulkProcessor<Person> bulkProcessor = new BulkProcessor<>(bulkWriteHandler, 10, Duration.ofSeconds(1));
         // Create some Test data:
         List<Person> fiftyPersons = getPersonList(50);
         // Now process them with the BulkProcessor:
@@ -49,11 +73,13 @@ public class BulkProcessorTest extends TransactionalTestBase {
     @Test
     public void testAddTimeBased() throws Exception {
         // Create the BulkInserter to be wrapped:
-        PersonBulkInserter personBulkInserter = new PersonBulkInserter();
+        IPgBulkInsert<Person> personBulkInserter = new PersonBulkInserter();
         // Create the ConnectionFactory:
-        Func1<PGConnection> connectionFactory = () -> PostgreSqlUtils.getPGConnection(connection);
+        Func1<Connection> connectionFactory = () -> connection;
+        // Create the BulkHandler:
+        IBulkWriteHandler<Person> bulkWriteHandler = new CustomBulkWriteHandler<>(personBulkInserter, connectionFactory);
         // Create the BulkProcessor:
-        BulkProcessor<Person> bulkProcessor = new BulkProcessor<>(personBulkInserter, connectionFactory, 10, Duration.ofSeconds(1));
+        BulkProcessor<Person> bulkProcessor = new BulkProcessor<>(bulkWriteHandler, 10, Duration.ofSeconds(1));
         // Create some Test data:
         List<Person> threePersons = getPersonList(3);
         // Now process them with the BulkProcessor:
@@ -70,11 +96,13 @@ public class BulkProcessorTest extends TransactionalTestBase {
     @Test
     public void testWriteOnClose() throws Exception {
         // Create the BulkInserter to be wrapped:
-        PersonBulkInserter personBulkInserter = new PersonBulkInserter();
+        IPgBulkInsert<Person> personBulkInserter = new PersonBulkInserter();
         // Create the ConnectionFactory:
-        Func1<PGConnection> connectionFactory = () -> PostgreSqlUtils.getPGConnection(connection);
+        Func1<Connection> connectionFactory = () -> connection;
+        // Create the BulkHandler:
+        IBulkWriteHandler<Person> bulkWriteHandler = new CustomBulkWriteHandler<>(personBulkInserter, connectionFactory);
         // Create the BulkProcessor:
-        BulkProcessor<Person> bulkProcessor = new BulkProcessor<>(personBulkInserter, connectionFactory, 10, Duration.ofSeconds(1));
+        BulkProcessor<Person> bulkProcessor = new BulkProcessor<>(bulkWriteHandler, 10, Duration.ofSeconds(1));
         // Create some Test data:
         List<Person> threePersons = getPersonList(3);
         // Now process them with the BulkProcessor:
