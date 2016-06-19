@@ -169,6 +169,10 @@ private List<Person> getPersonList(int numPersons) {
 }
 ```
 
+## BulkProcessor ##
+
+* [Working with a BulkProcessor in PgBulkInsert](http://bytefish.de/blog/pgbulkinsert_bulkprocessor/)
+
 ## Resources ##
 
 * [Npgsql](https://github.com/npgsql/npgsql)
