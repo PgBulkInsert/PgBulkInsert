@@ -114,29 +114,29 @@ public abstract class PgBulkInsert<TEntity> implements IPgBulkInsert<TEntity> {
         CopyManager cpManager = connection.getCopyAPI();
         CopyIn copyIn = cpManager.copyIn(getCopyCommand());
 
-        int columnCount = columns.size();
-
         try (PgBinaryWriter bw = new PgBinaryWriter()) {
 
             // Wrap the CopyOutputStream in our own Writer:
             bw.open(new PGCopyOutputStream(copyIn));
 
             // Insert Each Column:
-            entities.forEach(entity -> {
+            entities.forEach(entity -> this.saveEntity(bw, entity));
+        }
+    }
 
-                // Start a New Row:
-                bw.startRow(columnCount);
+    private void saveEntity(PgBinaryWriter bw, TEntity entity) throws SaveEntityFailedException {
+        synchronized (bw) {
+            // Start a New Row:
+            bw.startRow(columns.size());
 
-                // Iterate over each column mapping:
-                columns.forEach(column -> {
-                    try {
-                        column.getWrite().invoke(bw, entity);
-                    } catch (Exception e) {
-                        throw new SaveEntityFailedException(e);
-                    }
-                });
+            // Iterate over each column mapping:
+            columns.forEach(column -> {
+                try {
+                    column.getWrite().invoke(bw, entity);
+                } catch (Exception e) {
+                    throw new SaveEntityFailedException(e);
+                }
             });
-
         }
     }
 
