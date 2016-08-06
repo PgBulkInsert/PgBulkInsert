@@ -3,6 +3,7 @@
 
 package de.bytefish.pgbulkinsert.pgsql.handlers;
 
+import de.bytefish.pgbulkinsert.pgsql.constants.DataType;
 import de.bytefish.pgbulkinsert.pgsql.converter.IValueConverter;
 import de.bytefish.pgbulkinsert.pgsql.converter.LocalDateConverter;
 
@@ -30,7 +31,7 @@ public class LocalDateValueHandler extends BaseValueHandler<LocalDate> {
     }
 
     @Override
-    public Type getTargetType() {
-        return LocalDate.class;
+    public DataType getDataType() {
+        return DataType.Date;
     }
 }

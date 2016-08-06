@@ -39,6 +39,7 @@ public class PgBulkInsertTest extends TransactionalTestBase {
         public Boolean col_boolean;
         public List<Integer> col_int_array;
         public List<Double> col_double_array;
+        public String col_jsonb;
 
         public Integer get_col_integer() {
             return col_integer;
@@ -100,6 +101,10 @@ public class PgBulkInsertTest extends TransactionalTestBase {
             return col_double_array;
         }
 
+        public String getCol_jsonb() {
+            return col_jsonb;
+        }
+
     }
 
     @Override
@@ -121,7 +126,7 @@ public class PgBulkInsertTest extends TransactionalTestBase {
             mapInteger("col_integer", SampleEntity::get_col_integer);
             mapSmallInt("col_smallint", SampleEntity::get_col_short);
             mapTimeStamp("col_timestamp", SampleEntity::get_col_datetime);
-            mapBigInt("col_bigint", SampleEntity::get_col_long);
+            mapLong("col_bigint", SampleEntity::get_col_long);
             mapDate("col_date", SampleEntity::getCol_date);
             mapInet4Addr("col_inet4", SampleEntity::getCol_inet4Address);
             mapInet6Addr("col_inet6", SampleEntity::getCol_inet6Address);
@@ -132,6 +137,7 @@ public class PgBulkInsertTest extends TransactionalTestBase {
             mapBoolean("col_boolean", SampleEntity::getCol_boolean);
             mapIntegerArray("col_int_array", SampleEntity::getCol_int_array);
             mapDoubleArray("col_double_array", SampleEntity::getCol_double_array);
+            mapJsonb("col_jsonb", SampleEntity::getCol_jsonb);
         }
     }
 
@@ -360,6 +366,39 @@ public class PgBulkInsertTest extends TransactionalTestBase {
         }
     }
 
+
+    @Test
+    public void saveAll_Jsonb_Test() throws SQLException {
+
+        // This list will be inserted.
+        List<SampleEntity> entities = new ArrayList<>();
+
+        // Json To Store:
+        String jsonText = "{\"bar\": \"baz\", \"balance\": 7.77}";
+
+        String expected_1 = "{\"bar\": \"baz\", \"balance\": 7.77}";
+        String expected_2 = "{\"balance\": 7.77, \"bar\": \"baz\"}";
+
+        // Create the Entity to insert:
+        SampleEntity entity = new SampleEntity();
+        entity.col_jsonb = jsonText;
+
+        entities.add(entity);
+
+        SampleEntityBulkInsert pgBulkInsert = new SampleEntityBulkInsert();
+
+        pgBulkInsert.saveAll(PostgreSqlUtils.getPGConnection(connection), entities.stream());
+
+        ResultSet rs = getAll();
+
+        while (rs.next()) {
+            String v = rs.getString("col_jsonb");
+
+
+            Assert.assertTrue(expected_1.equals(v) || expected_2.equals(v));
+        }
+    }
+
     @Test
     public void saveAll_Inet4_Test() throws SQLException, UnknownHostException {
 
@@ -581,7 +620,8 @@ public class PgBulkInsertTest extends TransactionalTestBase {
                 "                col_boolean boolean,\n" +
                 "                col_text text,\n" +
                 "                col_int_array integer[], \n" +
-                "                col_double_array double precision[] \n" +
+                "                col_double_array double precision[], \n" +
+                "                col_jsonb jsonb \n" +
                 "            );";
 
         Statement statement = connection.createStatement();

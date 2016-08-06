@@ -11,12 +11,4 @@ public class StringUtils {
         return  input == null || input.trim().length() == 0;
     }
 
-    public static String[] trimAllElements(String[] elements) {
-        String[] result = new String[elements.length];
-        for(int pos = 0; pos < elements.length; pos++) {
-            result[pos] = elements[pos].trim();
-        }
-        return result;
-    }
-
 }

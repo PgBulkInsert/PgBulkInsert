@@ -3,6 +3,8 @@
 
 package de.bytefish.pgbulkinsert.pgsql.handlers;
 
+import de.bytefish.pgbulkinsert.pgsql.constants.DataType;
+
 import java.io.DataOutputStream;
 import java.lang.reflect.Type;
 import java.net.Inet6Address;
@@ -27,7 +29,7 @@ public class Inet6AddressValueHandler extends BaseValueHandler<Inet6Address> {
     }
 
     @Override
-    public Type getTargetType() {
-        return Inet6Address.class;
+    public DataType getDataType() {
+        return DataType.Inet6;
     }
 }

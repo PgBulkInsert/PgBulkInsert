@@ -3,6 +3,8 @@
 
 package de.bytefish.pgbulkinsert.pgsql.handlers;
 
+import de.bytefish.pgbulkinsert.pgsql.constants.DataType;
+
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.lang.reflect.Type;
@@ -10,21 +12,13 @@ import java.util.Collection;
 
 public class CollectionValueHandler<TElementType, TCollectionType extends Collection<TElementType>> extends BaseValueHandler<TCollectionType> {
 
-    private final Class<TElementType> type;
-
     private final int oid;
     private final IValueHandler<TElementType> valueHandler;
 
-     public CollectionValueHandler(Class<TElementType> type, int oid, IValueHandler<TElementType> valueHandler) {
-         this.type = type;
+     public CollectionValueHandler(int oid, IValueHandler<TElementType> valueHandler) {
          this.oid = oid;
          this.valueHandler = valueHandler;
      }
-
-    @Override
-    public Type getTargetType() {
-        return type;
-    }
 
     @Override
     protected void internalHandle(DataOutputStream buffer, TCollectionType value) throws Exception {
@@ -45,5 +39,10 @@ public class CollectionValueHandler<TElementType, TCollectionType extends Collec
 
         buffer.writeInt(byteArrayOutput.size());
         buffer.write(byteArrayOutput.toByteArray());
+    }
+
+    @Override
+    public DataType getDataType() {
+        return valueHandler.getDataType();
     }
 }

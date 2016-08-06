@@ -3,6 +3,8 @@
 
 package de.bytefish.pgbulkinsert.pgsql.handlers;
 
+import de.bytefish.pgbulkinsert.pgsql.constants.DataType;
+
 import java.io.DataOutputStream;
 import java.lang.reflect.Type;
 
@@ -15,7 +17,7 @@ public class DoubleValueHandler extends BaseValueHandler<Double> {
     }
 
     @Override
-    public Type getTargetType() {
-        return Double.class;
+    public DataType getDataType() {
+        return DataType.DoublePrecision;
     }
 }

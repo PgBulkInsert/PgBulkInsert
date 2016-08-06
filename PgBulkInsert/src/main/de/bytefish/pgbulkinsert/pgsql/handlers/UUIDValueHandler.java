@@ -3,6 +3,8 @@
 
 package de.bytefish.pgbulkinsert.pgsql.handlers;
 
+import de.bytefish.pgbulkinsert.pgsql.constants.DataType;
+
 import java.io.DataOutputStream;
 import java.lang.reflect.Type;
 import java.nio.ByteBuffer;
@@ -32,7 +34,7 @@ public class UUIDValueHandler extends BaseValueHandler<UUID> {
     }
 
     @Override
-    public Type getTargetType() {
-        return UUID.class;
+    public DataType getDataType() {
+        return DataType.Uuid;
     }
 }
