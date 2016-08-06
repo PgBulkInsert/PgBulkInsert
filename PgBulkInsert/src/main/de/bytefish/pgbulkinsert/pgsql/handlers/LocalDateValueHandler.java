@@ -8,7 +8,6 @@ import de.bytefish.pgbulkinsert.pgsql.converter.IValueConverter;
 import de.bytefish.pgbulkinsert.pgsql.converter.LocalDateConverter;
 
 import java.io.DataOutputStream;
-import java.lang.reflect.Type;
 import java.time.LocalDate;
 
 public class LocalDateValueHandler extends BaseValueHandler<LocalDate> {

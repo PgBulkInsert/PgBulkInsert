@@ -7,7 +7,6 @@ import de.bytefish.pgbulkinsert.exceptions.ValueHandlerAlreadyRegisteredExceptio
 import de.bytefish.pgbulkinsert.exceptions.ValueHandlerNotRegisteredException;
 import de.bytefish.pgbulkinsert.pgsql.constants.DataType;
 
-import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;

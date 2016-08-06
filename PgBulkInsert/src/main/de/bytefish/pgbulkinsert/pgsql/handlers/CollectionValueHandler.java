@@ -7,7 +7,6 @@ import de.bytefish.pgbulkinsert.pgsql.constants.DataType;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
-import java.lang.reflect.Type;
 import java.util.Collection;
 
 public class CollectionValueHandler<TElementType, TCollectionType extends Collection<TElementType>> extends BaseValueHandler<TCollectionType> {

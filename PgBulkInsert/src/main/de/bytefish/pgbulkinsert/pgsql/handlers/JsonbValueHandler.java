@@ -4,7 +4,6 @@
 package de.bytefish.pgbulkinsert.pgsql.handlers;
 
 import de.bytefish.pgbulkinsert.pgsql.constants.DataType;
-import de.bytefish.pgbulkinsert.pgsql.constants.ObjectIdentifier;
 
 import java.io.DataOutputStream;
 
