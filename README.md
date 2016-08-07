@@ -61,6 +61,14 @@ PgBulkInsert is released with under terms of the [MIT License]:
     * One-Dimensional Arrays
 * [hstore](https://www.postgresql.org/docs/current/static/hstore.html)
     * hstore
+* [Geometric Types](https://www.postgresql.org/docs/current/static/datatype-geometric.html)
+    * point
+    * line
+    * lseg
+    * box
+    * path
+    * polygon
+    * circle
 
 ## Basic Usage ##
 
