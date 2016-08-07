@@ -6,7 +6,7 @@
 
 PgBulkInsert is a Java library for Bulk Inserts to PostgreSQL using the Binary COPY Protocol. 
 
-It provides a wrapper around the PostgreSQL [Copy command]:
+It provides a wrapper around the PostgreSQL [COPY command]:
 
 > The [COPY command] is a PostgreSQL specific feature, which allows efficient bulk import or export of 
 > data to and from a table. This is a much faster way of getting data in and out of a table than using 
