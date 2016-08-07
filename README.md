@@ -22,15 +22,9 @@ You can add the following dependencies to your pom.xml to include [PgBulkInsert]
 <dependency>
 	<groupId>de.bytefish</groupId>
 	<artifactId>pgbulkinsert</artifactId>
-	<version>1.0</version>
+	<version>1.1</version>
 </dependency>
 ```
-
-## License ##
-
-PgBulkInsert is released with under terms of the [MIT License]:
-
-* [https://github.com/bytefish/PgBulkInsert](https://github.com/bytefish/PgBulkInsert)
 
 ## Supported PostgreSQL Types ##
 
@@ -70,7 +64,13 @@ PgBulkInsert is released with under terms of the [MIT License]:
     * path
     * polygon
     * circle
-	
+
+## License ##
+
+PgBulkInsert is released with under terms of the [MIT License]:
+
+* [https://github.com/bytefish/PgBulkInsert](https://github.com/bytefish/PgBulkInsert)
+
 ## Basic Usage ##
 
 Imagine we want to bulk insert a large amount of persons into a PostgreSQL database. Each ``Person`` has a first name, a last name and a birthdate.
