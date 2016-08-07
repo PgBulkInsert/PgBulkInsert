@@ -59,6 +59,8 @@ PgBulkInsert is released with under terms of the [MIT License]:
     * uuid
 * [Array Type](https://www.postgresql.org/docs/current/static/arrays.html)
     * One-Dimensional Arrays
+* [hstore](https://www.postgresql.org/docs/current/static/hstore.html)
+    * hstore
 
 ## Basic Usage ##
 

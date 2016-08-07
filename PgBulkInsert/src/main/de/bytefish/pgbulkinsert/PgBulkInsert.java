@@ -25,10 +25,7 @@ import java.net.Inet6Address;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -176,6 +173,10 @@ public abstract class PgBulkInsert<TEntity> implements IPgBulkInsert<TEntity> {
 
     protected void mapJsonb(String columnName, Func2<TEntity, String> propertyGetter) {
         map(columnName, DataType.Jsonb, propertyGetter);
+    }
+
+    protected void mapHstore(String columnName, Func2<TEntity, Map<String, String>> propertyGetter) {
+        map(columnName, DataType.Hstore, propertyGetter);
     }
 
     protected <TCollectionType extends Collection<Boolean>> void mapBooleanArray(String columnName, Func2<TEntity, TCollectionType> propertyGetter) {

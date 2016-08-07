@@ -33,6 +33,7 @@ public class ValueHandlerProvider implements IValueHandlerProvider {
         add(new UUIDValueHandler());
         add(new ByteArrayValueHandler());
         add(new JsonbValueHandler());
+        add(new HstoreValueHandler());
     }
 
     public <TTargetType> ValueHandlerProvider add(IValueHandler<TTargetType> valueHandler) {

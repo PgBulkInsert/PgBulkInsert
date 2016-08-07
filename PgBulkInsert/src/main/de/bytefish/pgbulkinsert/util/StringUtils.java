@@ -11,4 +11,12 @@ public class StringUtils {
         return  input == null || input.trim().length() == 0;
     }
 
+    public static byte[] getUtf8Bytes(String value) {
+        try {
+            return value.getBytes("UTF-8");
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 }

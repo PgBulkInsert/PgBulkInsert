@@ -24,5 +24,6 @@ public enum DataType {
     Unknown,
     Date,
     Timestamp,
-    Uuid
+    Uuid,
+    Hstore
 }
