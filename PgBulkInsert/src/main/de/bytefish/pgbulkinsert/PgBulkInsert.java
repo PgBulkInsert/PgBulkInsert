@@ -16,6 +16,7 @@ import de.bytefish.pgbulkinsert.pgsql.handlers.IValueHandler;
 import de.bytefish.pgbulkinsert.pgsql.handlers.IValueHandlerProvider;
 import de.bytefish.pgbulkinsert.pgsql.handlers.ValueHandlerProvider;
 import de.bytefish.pgbulkinsert.pgsql.model.geometric.*;
+import de.bytefish.pgbulkinsert.pgsql.model.network.MacAddress;
 import org.postgresql.PGConnection;
 import org.postgresql.copy.CopyIn;
 import org.postgresql.copy.CopyManager;
@@ -206,6 +207,10 @@ public abstract class PgBulkInsert<TEntity> implements IPgBulkInsert<TEntity> {
 
     protected void mapCircle(String columnName, Func2<TEntity, Circle> propertyGetter) {
         map(columnName, DataType.Circle, propertyGetter);
+    }
+
+    protected void mapMacAddress(String columnName, Func2<TEntity, MacAddress> propertyGetter) {
+        map(columnName, DataType.MacAddress, propertyGetter);
     }
 
     protected <TCollectionType extends Collection<Boolean>> void mapBooleanArray(String columnName, Func2<TEntity, TCollectionType> propertyGetter) {

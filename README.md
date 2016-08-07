@@ -55,6 +55,7 @@ PgBulkInsert is released with under terms of the [MIT License]:
     * bytea
 * [Network Address Types](http://www.postgresql.org/docs/current/static/datatype-net-types.html)
     * inet (IPv4, IPv6)
+    * macaddr
 * [UUID Type](http://www.postgresql.org/docs/current/static/datatype-uuid.html)
     * uuid
 * [Array Type](https://www.postgresql.org/docs/current/static/arrays.html)
@@ -69,7 +70,7 @@ PgBulkInsert is released with under terms of the [MIT License]:
     * path
     * polygon
     * circle
-
+	
 ## Basic Usage ##
 
 Imagine we want to bulk insert a large amount of persons into a PostgreSQL database. Each ``Person`` has a first name, a last name and a birthdate.
