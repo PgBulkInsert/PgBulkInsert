@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-@Ignore("This Test Requires the hstore extension to be enabled. This may fail, when hstore is not enabled in your Postgres.")
 public class HstoreExtensionTest extends TransactionalTestBase {
 
     private class HStoreEntity {
@@ -65,6 +64,7 @@ public class HstoreExtensionTest extends TransactionalTestBase {
     }
 
     @Test
+    @Ignore("This Test Requires the hstore extension to be enabled.")
     public void saveAll_Hstore_Test() throws SQLException {
 
         // This list will be inserted.

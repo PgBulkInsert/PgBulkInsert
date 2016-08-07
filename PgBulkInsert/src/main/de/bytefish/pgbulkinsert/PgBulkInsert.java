@@ -15,6 +15,7 @@ import de.bytefish.pgbulkinsert.pgsql.handlers.CollectionValueHandler;
 import de.bytefish.pgbulkinsert.pgsql.handlers.IValueHandler;
 import de.bytefish.pgbulkinsert.pgsql.handlers.IValueHandlerProvider;
 import de.bytefish.pgbulkinsert.pgsql.handlers.ValueHandlerProvider;
+import de.bytefish.pgbulkinsert.pgsql.model.geometric.*;
 import org.postgresql.PGConnection;
 import org.postgresql.copy.CopyIn;
 import org.postgresql.copy.CopyManager;
@@ -177,6 +178,34 @@ public abstract class PgBulkInsert<TEntity> implements IPgBulkInsert<TEntity> {
 
     protected void mapHstore(String columnName, Func2<TEntity, Map<String, String>> propertyGetter) {
         map(columnName, DataType.Hstore, propertyGetter);
+    }
+
+    protected void mapPoint(String columnName, Func2<TEntity, Point> propertyGetter) {
+        map(columnName, DataType.Point, propertyGetter);
+    }
+
+    protected void mapBox(String columnName, Func2<TEntity, Box> propertyGetter) {
+        map(columnName, DataType.Box, propertyGetter);
+    }
+
+    protected void mapPath(String columnName, Func2<TEntity, Path> propertyGetter) {
+        map(columnName, DataType.Path, propertyGetter);
+    }
+
+    protected void mapPolygon(String columnName, Func2<TEntity, Polygon> propertyGetter) {
+        map(columnName, DataType.Polygon, propertyGetter);
+    }
+
+    protected void mapLine(String columnName, Func2<TEntity, Line> propertyGetter) {
+        map(columnName, DataType.Line, propertyGetter);
+    }
+
+    protected void mapLineSegment(String columnName, Func2<TEntity, LineSegment> propertyGetter) {
+        map(columnName, DataType.LineSegment, propertyGetter);
+    }
+
+    protected void mapCircle(String columnName, Func2<TEntity, Circle> propertyGetter) {
+        map(columnName, DataType.Circle, propertyGetter);
     }
 
     protected <TCollectionType extends Collection<Boolean>> void mapBooleanArray(String columnName, Func2<TEntity, TCollectionType> propertyGetter) {

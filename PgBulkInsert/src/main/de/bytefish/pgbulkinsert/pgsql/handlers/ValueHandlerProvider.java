@@ -34,6 +34,13 @@ public class ValueHandlerProvider implements IValueHandlerProvider {
         add(new ByteArrayValueHandler());
         add(new JsonbValueHandler());
         add(new HstoreValueHandler());
+        add(new PointValueHandler());
+        add(new BoxValueHandler());
+        add(new LineValueHandler());
+        add(new LineSegmentValueHandler());
+        add(new PathValueHandler());
+        add(new PolygonValueHandler());
+        add(new CircleValueHandler());
     }
 
     public <TTargetType> ValueHandlerProvider add(IValueHandler<TTargetType> valueHandler) {

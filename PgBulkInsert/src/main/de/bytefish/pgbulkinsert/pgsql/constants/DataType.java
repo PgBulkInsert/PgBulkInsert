@@ -25,5 +25,12 @@ public enum DataType {
     Date,
     Timestamp,
     Uuid,
+    Point,
+    Box,
+    Line,
+    LineSegment,
+    Circle,
+    Path,
+    Polygon,
     Hstore
 }
