@@ -22,7 +22,7 @@ You can add the following dependencies to your pom.xml to include [PgBulkInsert]
 <dependency>
 	<groupId>de.bytefish</groupId>
 	<artifactId>pgbulkinsert</artifactId>
-	<version>1.0</version>
+	<version>1.1</version>
 </dependency>
 ```
 
