@@ -1,6 +1,6 @@
-.. _concepts:
+.. _overview:
 
-Concepts
+Overview
 ========
 
 PgBulkInsert is a Java library for Bulk Inserts to PostgreSQL using the Binary COPY Protocol.
