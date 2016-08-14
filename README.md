@@ -26,6 +26,13 @@ You can add the following dependencies to your pom.xml to include [PgBulkInsert]
 </dependency>
 ```
 
+## Documentation ##
+
+The [PgBulkInsert] documentation is located at:
+
+* [http://bytefish.github.io/PgBulkInsert/](http://bytefish.github.io/PgBulkInsert/)
+
+
 ## Supported PostgreSQL Types ##
 
 * [Numeric Types](http://www.postgresql.org/docs/current/static/datatype-numeric.html)
