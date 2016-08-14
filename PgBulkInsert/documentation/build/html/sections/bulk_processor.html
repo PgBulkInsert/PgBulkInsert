@@ -1,0 +1,427 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Bulk Processor API &mdash; PgBulkInsert 1.1 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="PgBulkInsert 1.1 documentation" href="../index.html"/>
+        <link rel="next" title="Contributing" href="contributing.html"/>
+        <link rel="prev" title="Quickstart" href="quickstart.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> PgBulkInsert
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">Bulk Processor API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#bulkprocessor">BulkProcessor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#database-table">Database Table</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#domain-model">Domain Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#implementing-the-bulk-inserter">Implementing the Bulk Inserter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#connection-pooling-with-dbcp2">Connection Pooling (with DBCP2)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#implementing-the-application">Implementing the Application</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">PgBulkInsert</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+      
+    <li>Bulk Processor API</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/sections/bulk_processor.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="bulk-processor-api">
+<span id="bulk-processor"></span><h1>Bulk Processor API<a class="headerlink" href="#bulk-processor-api" title="Permalink to this headline">¶</a></h1>
+<p>Integrating bulk inserts into existing applications can be tricky, because you often don&#8217;t want
+to deal with batching of entities or you can&#8217;t obscure existing interfaces. This is where the
+<code class="code docutils literal"><span class="pre">BulkProcessor</span></code> API of <a class="reference external" href="https://github.com/bytefish/PgBulkInsert">PgBulkInsert</a> fits in.</p>
+<p>The <code class="code docutils literal"><span class="pre">BulkProcessor</span></code> provides a simple interface, which flushes bulk operations automatically
+based on the number of entities or after a given time period.</p>
+<div class="section" id="bulkprocessor">
+<h2>BulkProcessor<a class="headerlink" href="#bulkprocessor" title="Permalink to this headline">¶</a></h2>
+<p>Imagine we want to bulk insert a large amount of persons into a PostgreSQL database using a
+<code class="code docutils literal"><span class="pre">BulkProcessor</span></code>. Each <code class="code docutils literal"><span class="pre">Person</span></code> has a first name, a last name and a birthdate.</p>
+</div>
+<div class="section" id="database-table">
+<h2>Database Table<a class="headerlink" href="#database-table" title="Permalink to this headline">¶</a></h2>
+<p>The table in the PostgreSQL database might look like this:</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">sample</span><span class="p">.</span><span class="n">person_example</span>
+<span class="p">(</span>
+    <span class="n">first_name</span> <span class="nb">text</span><span class="p">,</span>
+    <span class="n">last_name</span> <span class="nb">text</span><span class="p">,</span>
+    <span class="n">birth_date</span> <span class="nb">date</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="domain-model">
+<h2>Domain Model<a class="headerlink" href="#domain-model" title="Permalink to this headline">¶</a></h2>
+<p>The domain model in the application might look like this:</p>
+<div class="highlight-java"><div class="highlight"><pre><span class="c1">// Copyright (c) Philipp Wagner. All rights reserved.</span>
+<span class="c1">// Licensed under the MIT license. See LICENSE file in the project root for full license information.</span>
+
+<span class="kn">package</span> <span class="nn">model</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">java.time.LocalDate</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Person</span> <span class="o">{</span>
+
+    <span class="kd">private</span> <span class="n">String</span> <span class="n">firstName</span><span class="o">;</span>
+
+    <span class="kd">private</span> <span class="n">String</span> <span class="n">lastName</span><span class="o">;</span>
+
+    <span class="kd">private</span> <span class="n">LocalDate</span> <span class="n">birthDate</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="nf">Person</span><span class="o">()</span> <span class="o">{}</span>
+
+    <span class="kd">public</span> <span class="n">String</span> <span class="nf">getFirstName</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">firstName</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setFirstName</span><span class="o">(</span><span class="n">String</span> <span class="n">firstName</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">firstName</span> <span class="o">=</span> <span class="n">firstName</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="n">String</span> <span class="nf">getLastName</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">lastName</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setLastName</span><span class="o">(</span><span class="n">String</span> <span class="n">lastName</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">lastName</span> <span class="o">=</span> <span class="n">lastName</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="n">LocalDate</span> <span class="nf">getBirthDate</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">birthDate</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setBirthDate</span><span class="o">(</span><span class="n">LocalDate</span> <span class="n">birthDate</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">birthDate</span> <span class="o">=</span> <span class="n">birthDate</span><span class="o">;</span>
+    <span class="o">}</span>
+
+<span class="o">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="implementing-the-bulk-inserter">
+<h2>Implementing the Bulk Inserter<a class="headerlink" href="#implementing-the-bulk-inserter" title="Permalink to this headline">¶</a></h2>
+<p>Then the mapping between the database table and the domain model has to defined. This is done by
+implementing the abstract base class <code class="code docutils literal"><span class="pre">PgBulkInsert&lt;TEntity&gt;</span></code>, where <code class="code docutils literal"><span class="pre">TEntity</span></code> is the
+<code class="code docutils literal"><span class="pre">Person</span></code> class in this example.</p>
+<div class="highlight-java"><div class="highlight"><pre><span class="c1">// Copyright (c) Philipp Wagner. All rights reserved.</span>
+<span class="c1">// Licensed under the MIT license. See LICENSE file in the project root for full license information.</span>
+
+<span class="kn">package</span> <span class="nn">mapping</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">model.Person</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">de.bytefish.pgbulkinsert.PgBulkInsert</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">PersonBulkInsert</span> <span class="kd">extends</span> <span class="n">PgBulkInsert</span><span class="o">&lt;</span><span class="n">Person</span><span class="o">&gt;</span>
+<span class="o">{</span>
+    <span class="kd">public</span> <span class="nf">PersonBulkInsert</span><span class="o">()</span> <span class="o">{</span>
+        <span class="kd">super</span><span class="o">(</span><span class="s">&quot;sample&quot;</span><span class="o">,</span> <span class="s">&quot;person_example&quot;</span><span class="o">);</span>
+
+        <span class="n">mapString</span><span class="o">(</span><span class="s">&quot;first_name&quot;</span><span class="o">,</span> <span class="n">Person</span><span class="o">::</span><span class="n">getFirstName</span><span class="o">);</span>
+        <span class="n">mapString</span><span class="o">(</span><span class="s">&quot;last_name&quot;</span><span class="o">,</span> <span class="n">Person</span><span class="o">::</span><span class="n">getLastName</span><span class="o">);</span>
+        <span class="n">mapDate</span><span class="o">(</span><span class="s">&quot;birth_date&quot;</span><span class="o">,</span> <span class="n">Person</span><span class="o">::</span><span class="n">getBirthDate</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="connection-pooling-with-dbcp2">
+<h2>Connection Pooling (with DBCP2)<a class="headerlink" href="#connection-pooling-with-dbcp2" title="Permalink to this headline">¶</a></h2>
+<p>The <code class="code docutils literal"><span class="pre">BulkProcessor</span></code> needs a way to obtain a <code class="code docutils literal"><span class="pre">Connection</span></code> for the database access. That&#8217;s why
+the <code class="code docutils literal"><span class="pre">BulkProcessor</span></code> takes a factory for creating connections. In my projects I simply use the great
+<a class="reference external" href="https://commons.apache.org/proper/commons-dbcp/">DBCP2</a> project for handling database connections.</p>
+<p>You can add the following dependencies to your <code class="code docutils literal"><span class="pre">pom.xml</span></code> to include <a class="reference external" href="https://commons.apache.org/proper/commons-dbcp/">DBCP2</a> in your project:</p>
+<div class="highlight-xml"><div class="highlight"><pre><span class="nt">&lt;dependency&gt;</span>
+    <span class="nt">&lt;groupId&gt;</span>org.apache.commons<span class="nt">&lt;/groupId&gt;</span>
+    <span class="nt">&lt;artifactId&gt;</span>commons-dbcp2<span class="nt">&lt;/artifactId&gt;</span>
+    <span class="nt">&lt;version&gt;</span>2.0.1<span class="nt">&lt;/version&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+</pre></div>
+</div>
+<p>The Connection Factory for the <code class="code docutils literal"><span class="pre">BulkProcessor</span></code> can now be implemented.</p>
+<div class="highlight-java"><div class="highlight"><pre><span class="c1">// Copyright (c) Philipp Wagner. All rights reserved.</span>
+<span class="c1">// Licensed under the MIT license. See LICENSE file in the project root for full license information.</span>
+
+<span class="kn">package</span> <span class="nn">connection</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">de.bytefish.pgbulkinsert.functional.Func1</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.apache.commons.dbcp2.BasicDataSource</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">java.net.URI</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.sql.Connection</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">PooledConnectionFactory</span> <span class="kd">implements</span> <span class="n">Func1</span><span class="o">&lt;</span><span class="n">Connection</span><span class="o">&gt;</span> <span class="o">{</span>
+
+    <span class="kd">private</span> <span class="kd">final</span> <span class="n">BasicDataSource</span> <span class="n">connectionPool</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="nf">PooledConnectionFactory</span><span class="o">(</span><span class="n">URI</span> <span class="n">databaseUri</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">connectionPool</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BasicDataSource</span><span class="o">();</span>
+
+        <span class="n">initializeConnectionPool</span><span class="o">(</span><span class="n">connectionPool</span><span class="o">,</span> <span class="n">databaseUri</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">initializeConnectionPool</span><span class="o">(</span><span class="n">BasicDataSource</span> <span class="n">connectionPool</span><span class="o">,</span> <span class="n">URI</span> <span class="n">databaseUri</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kd">final</span> <span class="n">String</span> <span class="n">dbUrl</span> <span class="o">=</span> <span class="s">&quot;jdbc:postgresql://&quot;</span> <span class="o">+</span> <span class="n">databaseUri</span><span class="o">.</span><span class="na">getHost</span><span class="o">()</span> <span class="o">+</span> <span class="n">databaseUri</span><span class="o">.</span><span class="na">getPath</span><span class="o">();</span>
+
+        <span class="k">if</span> <span class="o">(</span><span class="n">databaseUri</span><span class="o">.</span><span class="na">getUserInfo</span><span class="o">()</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">connectionPool</span><span class="o">.</span><span class="na">setUsername</span><span class="o">(</span><span class="n">databaseUri</span><span class="o">.</span><span class="na">getUserInfo</span><span class="o">().</span><span class="na">split</span><span class="o">(</span><span class="s">&quot;:&quot;</span><span class="o">)[</span><span class="mi">0</span><span class="o">]);</span>
+            <span class="n">connectionPool</span><span class="o">.</span><span class="na">setPassword</span><span class="o">(</span><span class="n">databaseUri</span><span class="o">.</span><span class="na">getUserInfo</span><span class="o">().</span><span class="na">split</span><span class="o">(</span><span class="s">&quot;:&quot;</span><span class="o">)[</span><span class="mi">1</span><span class="o">]);</span>
+        <span class="o">}</span>
+        <span class="n">connectionPool</span><span class="o">.</span><span class="na">setDriverClassName</span><span class="o">(</span><span class="s">&quot;org.postgresql.Driver&quot;</span><span class="o">);</span>
+        <span class="n">connectionPool</span><span class="o">.</span><span class="na">setUrl</span><span class="o">(</span><span class="n">dbUrl</span><span class="o">);</span>
+        <span class="n">connectionPool</span><span class="o">.</span><span class="na">setInitialSize</span><span class="o">(</span><span class="mi">1</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="n">Connection</span> <span class="nf">invoke</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">connectionPool</span><span class="o">.</span><span class="na">getConnection</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="implementing-the-application">
+<h2>Implementing the Application<a class="headerlink" href="#implementing-the-application" title="Permalink to this headline">¶</a></h2>
+<p>And finally we can implement the sample application, which is using the <code class="code docutils literal"><span class="pre">BulkProcessor</span></code>. The
+<code class="code docutils literal"><span class="pre">BulkProcessor</span></code> takes a so called <code class="code docutils literal"><span class="pre">BulkWriteHandler</span></code>. This <code class="code docutils literal"><span class="pre">BulkWriteHandler</span></code> handles
+the writing of a list of batched entities.</p>
+<p>The <code class="code docutils literal"><span class="pre">BulkProcessor</span></code> is thread-safe, so it can safely be used from multiple threads.</p>
+<p>The example application writes <code class="code docutils literal"><span class="pre">1000</span></code> Person entities to the database, using a Bulk Size of
+<code class="code docutils literal"><span class="pre">100</span></code> entities.</p>
+<div class="highlight-java"><div class="highlight"><pre><span class="c1">// Copyright (c) Philipp Wagner. All rights reserved.</span>
+<span class="c1">// Licensed under the MIT license. See LICENSE file in the project root for full license information.</span>
+
+<span class="kn">package</span> <span class="nn">app</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">connection.PooledConnectionFactory</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">de.bytefish.pgbulkinsert.pgsql.processor.BulkProcessor</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">de.bytefish.pgbulkinsert.pgsql.processor.handler.BulkWriteHandler</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">mapping.PersonBulkInsert</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">model.Person</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">java.net.URI</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.time.LocalDate</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.ArrayList</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.List</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">BulkProcessorApp</span> <span class="o">{</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+        <span class="c1">// Database to connect to:</span>
+        <span class="n">URI</span> <span class="n">databaseUri</span> <span class="o">=</span> <span class="n">URI</span><span class="o">.</span><span class="na">create</span><span class="o">(</span><span class="s">&quot;postgres://philipp:test_pwd@127.0.0.1:5432/sampledb&quot;</span><span class="o">);</span>
+        <span class="c1">// Bulk Actions after which the batched entities are written:</span>
+        <span class="kd">final</span> <span class="kt">int</span> <span class="n">bulkSize</span> <span class="o">=</span> <span class="mi">100</span><span class="o">;</span>
+        <span class="c1">// Create a new BulkProcessor:</span>
+        <span class="k">try</span><span class="o">(</span><span class="n">BulkProcessor</span><span class="o">&lt;</span><span class="n">Person</span><span class="o">&gt;</span> <span class="n">bulkProcessor</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BulkProcessor</span><span class="o">&lt;&gt;(</span><span class="k">new</span> <span class="n">BulkWriteHandler</span><span class="o">&lt;&gt;(</span><span class="k">new</span> <span class="n">PersonBulkInsert</span><span class="o">(),</span> <span class="k">new</span> <span class="n">PooledConnectionFactory</span><span class="o">(</span><span class="n">databaseUri</span><span class="o">)),</span> <span class="n">bulkSize</span><span class="o">))</span> <span class="o">{</span>
+            <span class="c1">// Create some Test data:</span>
+            <span class="n">List</span><span class="o">&lt;</span><span class="n">Person</span><span class="o">&gt;</span> <span class="n">thousandPersons</span> <span class="o">=</span> <span class="n">getPersonList</span><span class="o">(</span><span class="mi">1000</span><span class="o">);</span>
+            <span class="c1">// Now process them with the BulkProcessor:</span>
+            <span class="k">for</span> <span class="o">(</span><span class="n">Person</span> <span class="n">p</span> <span class="o">:</span> <span class="n">thousandPersons</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">bulkProcessor</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">p</span><span class="o">);</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="kd">private</span> <span class="kd">static</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">Person</span><span class="o">&gt;</span> <span class="nf">getPersonList</span><span class="o">(</span><span class="kt">int</span> <span class="n">numPersons</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">List</span><span class="o">&lt;</span><span class="n">Person</span><span class="o">&gt;</span> <span class="n">persons</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;();</span>
+
+        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">pos</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">pos</span> <span class="o">&lt;</span> <span class="n">numPersons</span><span class="o">;</span> <span class="n">pos</span><span class="o">++)</span> <span class="o">{</span>
+            <span class="n">Person</span> <span class="n">p</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Person</span><span class="o">();</span>
+
+            <span class="n">p</span><span class="o">.</span><span class="na">setFirstName</span><span class="o">(</span><span class="s">&quot;Philipp&quot;</span><span class="o">);</span>
+            <span class="n">p</span><span class="o">.</span><span class="na">setLastName</span><span class="o">(</span><span class="s">&quot;Wagner&quot;</span><span class="o">);</span>
+            <span class="n">p</span><span class="o">.</span><span class="na">setBirthDate</span><span class="o">(</span><span class="n">LocalDate</span><span class="o">.</span><span class="na">of</span><span class="o">(</span><span class="mi">1986</span><span class="o">,</span> <span class="mi">5</span><span class="o">,</span> <span class="mi">12</span><span class="o">));</span>
+
+            <span class="n">persons</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">p</span><span class="o">);</span>
+        <span class="o">}</span>
+
+        <span class="k">return</span> <span class="n">persons</span><span class="o">;</span>
+    <span class="o">}</span>
+
+<span class="o">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="contributing.html" class="btn btn-neutral float-right" title="Contributing" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="quickstart.html" class="btn btn-neutral" title="Quickstart" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Philipp Wagner.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'1.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

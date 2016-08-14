@@ -1,0 +1,2 @@
+.. role:: java(code)
+   :language: java
