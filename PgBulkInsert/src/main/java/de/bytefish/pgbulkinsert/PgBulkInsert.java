@@ -36,7 +36,6 @@ public abstract class PgBulkInsert<TEntity> implements IPgBulkInsert<TEntity> {
 
     private IValueHandlerProvider provider;
 
-
     private TableDefinition table;
 
     private List<ColumnDefinition<TEntity>> columns;
