@@ -32,5 +32,6 @@ public enum DataType {
     Circle,
     Path,
     Polygon,
-    Hstore
+    Hstore,
+    Numeric
 }

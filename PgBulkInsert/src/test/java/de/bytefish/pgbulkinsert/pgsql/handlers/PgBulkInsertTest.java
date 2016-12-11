@@ -10,6 +10,7 @@ import de.bytefish.pgbulkinsert.utils.TransactionalTestBase;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.math.BigDecimal;
 import java.net.Inet4Address;
 import java.net.Inet6Address;
 import java.net.UnknownHostException;
@@ -38,6 +39,8 @@ public class PgBulkInsertTest extends TransactionalTestBase {
         public List<Integer> col_int_array;
         public List<Double> col_double_array;
         public String col_jsonb;
+
+        public BigDecimal col_numeric;
 
         public Integer get_col_integer() {
             return col_integer;
@@ -103,6 +106,10 @@ public class PgBulkInsertTest extends TransactionalTestBase {
             return col_jsonb;
         }
 
+        public BigDecimal getCol_numeric() {
+            return col_numeric;
+        }
+
     }
 
     @Override
@@ -136,6 +143,33 @@ public class PgBulkInsertTest extends TransactionalTestBase {
             mapIntegerArray("col_int_array", SampleEntity::getCol_int_array);
             mapDoubleArray("col_double_array", SampleEntity::getCol_double_array);
             mapJsonb("col_jsonb", SampleEntity::getCol_jsonb);
+            mapNumeric("col_numeric", SampleEntity::getCol_numeric);
+        }
+    }
+
+    @Test
+    public void saveAll_numeric_Test() throws SQLException {
+
+        // This list will be inserted.
+        List<SampleEntity> entities = new ArrayList<>();
+
+        // Create the Entity to insert:
+        SampleEntity entity = new SampleEntity();
+        entity.col_numeric = new BigDecimal("210000.00011234567");
+
+        entities.add(entity);
+
+        SampleEntityBulkInsert pgBulkInsert = new SampleEntityBulkInsert();
+
+        pgBulkInsert.saveAll(PostgreSqlUtils.getPGConnection(connection), entities.stream());
+
+        ResultSet rs = getAll();
+
+        while (rs.next()) {
+            BigDecimal v = rs.getBigDecimal("col_numeric");
+
+
+            Assert.assertEquals(new BigDecimal("210000.00011234567"), v.stripTrailingZeros());
         }
     }
 
@@ -609,7 +643,6 @@ public class PgBulkInsertTest extends TransactionalTestBase {
                 "                col_double double precision,\n" +
                 "                col_bytea bytea,\n" +
                 "                col_uuid uuid,\n" +
-                "                col_numeric numeric,\n" +
                 "                col_inet4 inet,\n" +
                 "                col_inet6 inet,\n" +
                 "                col_macaddr macaddr,\n" +
@@ -619,7 +652,8 @@ public class PgBulkInsertTest extends TransactionalTestBase {
                 "                col_text text,\n" +
                 "                col_int_array integer[], \n" +
                 "                col_double_array double precision[], \n" +
-                "                col_jsonb jsonb \n" +
+                "                col_jsonb jsonb, \n" +
+                "                col_numeric numeric(50, 20) \n" +
                 "            );";
 
         Statement statement = connection.createStatement();

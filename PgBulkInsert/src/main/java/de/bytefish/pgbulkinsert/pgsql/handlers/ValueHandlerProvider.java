@@ -42,6 +42,7 @@ public class ValueHandlerProvider implements IValueHandlerProvider {
         add(new PolygonValueHandler());
         add(new CircleValueHandler());
         add(new MacAddressValueHandler());
+        add(new BigDecimalValueHandler());
     }
 
     public <TTargetType> ValueHandlerProvider add(IValueHandler<TTargetType> valueHandler) {

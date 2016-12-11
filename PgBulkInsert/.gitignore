@@ -6,5 +6,8 @@
 /out/production
 /out/test
 /captures
+/target
+/out
+.idea
 .iws
 workspace.xml

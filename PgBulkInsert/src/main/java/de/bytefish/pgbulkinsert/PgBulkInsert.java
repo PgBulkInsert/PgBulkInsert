@@ -22,6 +22,7 @@ import org.postgresql.copy.CopyIn;
 import org.postgresql.copy.CopyManager;
 import org.postgresql.copy.PGCopyOutputStream;
 
+import java.math.BigDecimal;
 import java.net.Inet4Address;
 import java.net.Inet6Address;
 import java.sql.SQLException;
@@ -123,6 +124,11 @@ public abstract class PgBulkInsert<TEntity> implements IPgBulkInsert<TEntity> {
     protected void mapInteger(String columnName, Func2<TEntity, Integer> propertyGetter)
     {
         map(columnName, DataType.Int4, propertyGetter);
+    }
+
+    protected void mapNumeric(String columnName, Func2<TEntity, BigDecimal> propertyGetter)
+    {
+        map(columnName, DataType.Numeric, propertyGetter);
     }
 
     protected void mapLong(String columnName, Func2<TEntity, Long> propertyGetter)
@@ -239,6 +245,10 @@ public abstract class PgBulkInsert<TEntity> implements IPgBulkInsert<TEntity> {
 
     protected <TCollectionType extends Collection<Double>> void mapDoubleArray(String columnName, Func2<TEntity, TCollectionType> propertyGetter) {
         mapCollection(columnName, DataType.DoublePrecision, propertyGetter);
+    }
+
+    protected <TCollectionType extends Collection<BigDecimal>> void mapNumericArray(String columnName, Func2<TEntity, TCollectionType> propertyGetter) {
+        mapCollection(columnName, DataType.Numeric, propertyGetter);
     }
 
     protected <TCollectionType extends Collection<UUID>> void mapUUIDArray(String columnName, Func2<TEntity, TCollectionType> propertyGetter) {
