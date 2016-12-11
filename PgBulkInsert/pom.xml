@@ -3,7 +3,7 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-		 <modelVersion>4.0.0</modelVersion>
+    <modelVersion>4.0.0</modelVersion>
 
     <groupId>de.bytefish</groupId>
     <artifactId>pgbulkinsert</artifactId>
@@ -11,22 +11,22 @@
     <name>pgbulkinsert</name>
     <description>PgBulkInsert is a Java library for Bulk Inserts with PostgreSQL.</description>
     <url>http://www.github.com/bytefish/PgBulkInsert</url>
-	
-	<!-- Define the License -->
+
+    <!-- Define the License -->
     <licenses>
         <license>
             <name>MIT License</name>
             <url>https://opensource.org/licenses/MIT</url>
         </license>
     </licenses>
-	
-	<!-- Source Management -->
+
+    <!-- Source Management -->
     <scm>
         <url>https://github.com/bytefish/PgBulkInsert</url>
         <connection>scm:git:git://github.com/bytefish/PgBulkInsert.git</connection>
         <developerConnection>scm:git:git@github.com:bytefish/PgBulkInsert.git</developerConnection>
     </scm>
-	
+
     <!-- Developers -->
     <developers>
         <developer>
@@ -36,8 +36,8 @@
             <id>bytefish</id>
         </developer>
     </developers>
-	
-	<!-- Build Information -->
+
+    <!-- Build Information -->
     <build>
         <plugins>
             <plugin>
@@ -56,7 +56,18 @@
         <postgresql.version>9.4-1206-jdbc42</postgresql.version>
     </properties>
 
-	    <profiles>
+    <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <repository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
+
+    <profiles>
         <profile>
             <id>release</id>
             <build>
@@ -128,14 +139,14 @@
         </profile>
 
     </profiles>
-	
+
     <dependencies>
 
-    <dependency>
-        <groupId>org.postgresql</groupId>
-        <artifactId>postgresql</artifactId>
-        <version>${postgresql.version}</version>
-    </dependency>
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>${postgresql.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>junit</groupId>

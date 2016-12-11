@@ -22,7 +22,7 @@ You can add the following dependencies to your pom.xml to include [PgBulkInsert]
 <dependency>
 	<groupId>de.bytefish</groupId>
 	<artifactId>pgbulkinsert</artifactId>
-	<version>1.1</version>
+	<version>1.3</version>
 </dependency>
 ```
 
@@ -41,6 +41,7 @@ The [PgBulkInsert] documentation is located at:
     * bigint
     * real
     * double precision
+	* numeric
 * [Date/Time Types](http://www.postgresql.org/docs/current/static/datatype-datetime.html)
     * timestamp
     * date
