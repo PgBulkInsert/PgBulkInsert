@@ -3,8 +3,6 @@
 
 package de.bytefish.pgbulkinsert.pgsql.model.geometric;
 
-import com.sun.javaws.exceptions.InvalidArgumentException;
-
 public class Box {
 
     private final Point high;

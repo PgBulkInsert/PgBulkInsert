@@ -19,8 +19,6 @@ import java.util.List;
 
 public class IntegrationTest extends TransactionalTestBase {
 
-
-
     @Override
     protected void onSetUpInTransaction() throws Exception {
         createTable();
