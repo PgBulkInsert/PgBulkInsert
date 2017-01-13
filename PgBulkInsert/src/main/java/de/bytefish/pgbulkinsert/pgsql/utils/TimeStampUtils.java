@@ -7,12 +7,45 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
+import java.time.temporal.ChronoUnit;
 import java.util.concurrent.TimeUnit;
 
 public class TimeStampUtils {
 
     private TimeStampUtils() {
 
+    }
+
+    private static final LocalDateTime JavaEpoch = LocalDateTime.of(1970, 1, 1, 0, 0, 0);
+
+    private static final LocalDateTime PostgresEpoch = LocalDateTime.of(2000, 1, 1, 0, 0, 0);
+
+    private static final long DaysBetweenJavaAndPostgresEpochs = ChronoUnit.DAYS.between(JavaEpoch, PostgresEpoch);
+
+
+    public static long convertToPostgresTimeStamp(LocalDateTime localDateTime) {
+
+        if(localDateTime == null) {
+            throw new IllegalArgumentException("localDateTime");
+        }
+        // Extract the Time of the Day in Nanoseconds:
+        long timeInNanoseconds = localDateTime
+                .toLocalTime()
+                .toNanoOfDay();
+
+        // Convert the Nanoseconds to Microseconds:
+        long timeInMicroseconds = timeInNanoseconds / 1000;
+
+        // Now Calculate the Postgres Timestamp:
+        if(localDateTime.isBefore(PostgresEpoch)) {
+            long dateInMicroseconds = (localDateTime.toLocalDate().toEpochDay() - DaysBetweenJavaAndPostgresEpochs) * 86400000000L;
+
+            return dateInMicroseconds + timeInMicroseconds;
+        } else {
+            long dateInMicroseconds = (DaysBetweenJavaAndPostgresEpochs - localDateTime.toLocalDate().toEpochDay()) * 86400000000L;
+
+            return -(dateInMicroseconds - timeInMicroseconds);
+        }
     }
 
     public static int toPgDays(LocalDate date)

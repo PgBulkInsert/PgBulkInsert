@@ -306,7 +306,7 @@ public class PgBulkInsertTest extends TransactionalTestBase {
 
         // Create the Entity to insert:
         SampleEntity entity = new SampleEntity();
-        entity.col_datetime = LocalDateTime.of(2010, 1, 1, 0, 0);
+        entity.col_datetime = LocalDateTime.of(2010, 1, 1, 0, 0, 0, 10000);
 
         entities.add(entity);
 
@@ -319,7 +319,32 @@ public class PgBulkInsertTest extends TransactionalTestBase {
         while (rs.next()) {
             Timestamp v = rs.getTimestamp("col_timestamp");
 
-            Assert.assertEquals(LocalDateTime.of(2010, 1, 1, 0, 0, 0), v.toLocalDateTime());
+            Assert.assertEquals(LocalDateTime.of(2010, 1, 1, 0, 0, 0, 10000), v.toLocalDateTime());
+        }
+    }
+
+    @Test
+    public void saveAll_LocalDateTime_Before_Postgres_Epoch_Test() throws SQLException {
+
+        // This list will be inserted.
+        List<SampleEntity> entities = new ArrayList<>();
+
+        // Create the Entity to insert:
+        SampleEntity entity = new SampleEntity();
+        entity.col_datetime = LocalDateTime.of(1712, 1, 3, 0, 0, 0, 10000);
+
+        entities.add(entity);
+
+        SampleEntityBulkInsert pgBulkInsert = new SampleEntityBulkInsert();
+
+        pgBulkInsert.saveAll(PostgreSqlUtils.getPGConnection(connection), entities.stream());
+
+        ResultSet rs = getAll();
+
+        while (rs.next()) {
+            Timestamp v = rs.getTimestamp("col_timestamp");
+
+            Assert.assertEquals(LocalDateTime.of(1712, 1, 3, 0, 0, 0, 10000), v.toLocalDateTime());
         }
     }
 
