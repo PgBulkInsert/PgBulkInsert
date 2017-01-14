@@ -3,6 +3,7 @@
 [MIT License]: https://opensource.org/licenses/MIT
 [COPY command]: http://www.postgresql.org/docs/current/static/sql-copy.html
 [PgBulkInsert]: https://github.com/bytefish/PgBulkInsert
+[Npgsql]: https://github.com/npgsql/npgsql
 
 PgBulkInsert is a Java library for Bulk Inserts to PostgreSQL using the Binary COPY Protocol. 
 
@@ -11,6 +12,8 @@ It provides a wrapper around the PostgreSQL [COPY command]:
 > The [COPY command] is a PostgreSQL specific feature, which allows efficient bulk import or export of 
 > data to and from a table. This is a much faster way of getting data in and out of a table than using 
 > INSERT and SELECT.
+
+This project wouldn't be possible without the great [Npgsql] library, which has a beautiful implementation of the Postgres protocol.
 
 ## Setup ##
 
