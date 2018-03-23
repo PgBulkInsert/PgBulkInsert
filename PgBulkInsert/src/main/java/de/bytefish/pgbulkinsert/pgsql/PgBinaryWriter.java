@@ -8,17 +8,22 @@ import de.bytefish.pgbulkinsert.pgsql.handlers.IValueHandler;
 
 import java.io.BufferedOutputStream;
 import java.io.DataOutputStream;
-import java.io.OutputStream;
+
+import org.postgresql.copy.CopyIn;
+import org.postgresql.copy.PGCopyOutputStream;
 
 public class PgBinaryWriter implements AutoCloseable {
 
     private transient DataOutputStream buffer;
+    
+    private final int bufferSize;
 
-    public PgBinaryWriter() {
+    public PgBinaryWriter(int bufferSize) {
+    	this.bufferSize = bufferSize;
     }
 
-    public void open(final OutputStream out) {
-        buffer = new DataOutputStream(new BufferedOutputStream(out));
+    public void open(final CopyIn copyIn) {
+        buffer = new DataOutputStream(new BufferedOutputStream(new PGCopyOutputStream(copyIn, 1), bufferSize));
 
         writeHeader();
     }

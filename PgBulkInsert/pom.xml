@@ -53,7 +53,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <postgresql.version>9.4-1206-jdbc42</postgresql.version>
+        <postgresql.version>42.2.2</postgresql.version>
     </properties>
 
     <distributionManagement>
