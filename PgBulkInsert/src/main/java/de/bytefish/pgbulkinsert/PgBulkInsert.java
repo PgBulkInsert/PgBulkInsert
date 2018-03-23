@@ -20,7 +20,6 @@ import de.bytefish.pgbulkinsert.pgsql.model.network.MacAddress;
 import org.postgresql.PGConnection;
 import org.postgresql.copy.CopyIn;
 import org.postgresql.copy.CopyManager;
-import org.postgresql.copy.PGCopyOutputStream;
 
 import java.math.BigDecimal;
 import java.net.Inet4Address;
@@ -33,23 +32,33 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public abstract class PgBulkInsert<TEntity> implements IPgBulkInsert<TEntity> {
+	
+	private static final int DEFAULT_BUFFER_SIZE = 65536;
 
     private IValueHandlerProvider provider;
 
     private TableDefinition table;
 
     private List<ColumnDefinition<TEntity>> columns;
+    
+    private final int bufferSize;
 
     public PgBulkInsert(String schemaName, String tableName)
     {
-        this(new ValueHandlerProvider(), schemaName, tableName);
+        this(new ValueHandlerProvider(), schemaName, tableName, DEFAULT_BUFFER_SIZE);
+    }
+    
+    public PgBulkInsert(String schemaName, String tableName, int bufferSize)
+    {
+        this(new ValueHandlerProvider(), schemaName, tableName, bufferSize);
     }
 
-    public PgBulkInsert(IValueHandlerProvider provider, String schemaName, String tableName)
+    public PgBulkInsert(IValueHandlerProvider provider, String schemaName, String tableName, int bufferSize)
     {
         this.provider = provider;
         this.table = new TableDefinition(schemaName, tableName);
         this.columns = new ArrayList<>();
+        this.bufferSize = bufferSize;
     }
 
     public void saveAll(PGConnection connection, Stream<TEntity> entities) throws SQLException {
@@ -57,10 +66,10 @@ public abstract class PgBulkInsert<TEntity> implements IPgBulkInsert<TEntity> {
         CopyManager cpManager = connection.getCopyAPI();
         CopyIn copyIn = cpManager.copyIn(getCopyCommand());
 
-        try (PgBinaryWriter bw = new PgBinaryWriter()) {
+        try (PgBinaryWriter bw = new PgBinaryWriter(bufferSize)) {
 
             // Wrap the CopyOutputStream in our own Writer:
-            bw.open(new PGCopyOutputStream(copyIn));
+            bw.open(copyIn);
 
             // Insert Each Column:
             entities.forEach(entity -> this.saveEntity(bw, entity));
