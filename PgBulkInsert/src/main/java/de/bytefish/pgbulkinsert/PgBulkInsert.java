@@ -124,6 +124,12 @@ public abstract class PgBulkInsert<TEntity> implements IPgBulkInsert<TEntity> {
     {
         map(columnName, DataType.Int4, propertyGetter);
     }
+    
+    
+    protected void mapShort(String columnName, Func2<TEntity, Short> propertyGetter)
+    {
+        map(columnName, DataType.Int2, propertyGetter);
+    }
 
     protected void mapNumeric(String columnName, Func2<TEntity, BigDecimal> propertyGetter)
     {
