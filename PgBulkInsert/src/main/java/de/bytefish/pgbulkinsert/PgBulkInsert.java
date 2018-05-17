@@ -67,7 +67,7 @@ public abstract class PgBulkInsert<TEntity> implements IPgBulkInsert<TEntity> {
         }
     }
 
-    private void saveEntity(PgBinaryWriter bw, TEntity entity) throws SaveEntityFailedException {
+    public void saveEntity(PgBinaryWriter bw, TEntity entity) throws SaveEntityFailedException {
         synchronized (bw) {
             // Start a New Row:
             bw.startRow(columns.size());
@@ -269,7 +269,7 @@ public abstract class PgBulkInsert<TEntity> implements IPgBulkInsert<TEntity> {
         return this;
     }
 
-    private String getCopyCommand()
+    public String getCopyCommand()
     {
         String commaSeparatedColumns = columns.stream()
                 .map(x -> x.getColumnName())
