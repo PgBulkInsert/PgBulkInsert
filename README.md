@@ -25,7 +25,7 @@ You can add the following dependencies to your pom.xml to include [PgBulkInsert]
 <dependency>
 	<groupId>de.bytefish</groupId>
 	<artifactId>pgbulkinsert</artifactId>
-	<version>1.4</version>
+	<version>2.0</version>
 </dependency>
 ```
 
@@ -143,12 +143,12 @@ private class Person {
 
 ### Bulk Inserter ###
 
-Then you have to implement the ``PgBulkInsert<Person>``, which defines the mapping between the table and the domain model.
+Then you have to implement the ``AbstractMapping<Person>``, which defines the mapping between the table and the domain model.
 
 ```java
-public class PersonBulkInserter extends PgBulkInsert<Person>
+public class PersonMapping extends AbstractMapping<Person>
 {
-    public PersonBulkInserter() {
+    public PersonMapping() {
         super("sample", "unit_test");
 
         mapString("first_name", Person::getFirstName);
@@ -158,22 +158,27 @@ public class PersonBulkInserter extends PgBulkInsert<Person>
 }
 ```
 
+This mapping is used to create the ``PgBulkInsert<Person>``:
+
+```java
+PgBulkInsert<Person> bulkInsert = new PgBulkInsert<Person>(new PersonMapping());
+```
+
 ### Using the Bulk Inserter ###
 
-And finally we can write a Unit Test to insert ``100000`` Persons into the database. You can find the entire Unit Test on GitHub: [IntegrationTest.java](https://github.com/bytefish/PgBulkInsert/blob/master/PgBulkInsert/src/test/de/bytefish/pgbulkinsert/de/bytefish/pgbulkinsert/IntegrationTest.java). 
+[IntegrationTest.java]: https://github.com/bytefish/PgBulkInsert/blob/master/PgBulkInsert/src/test/de/bytefish/pgbulkinsert/de/bytefish/pgbulkinsert/IntegrationTest.java
+
+And finally we can write a Unit Test to insert ``100000`` Persons into the database. You can find the entire Unit Test on GitHub as [IntegrationTest.java].
 
 ```java
 @Test
 public void bulkInsertPersonDataTest() throws SQLException {
     // Create a large list of Persons:
     List<Person> persons = getPersonList(100000);
-    
     // Create the BulkInserter:
-    PersonBulkInserter personBulkInserter = new PersonBulkInserter();
-    
+    PgBulkInsert<Person> bulkInsert = new PgBulkInsert<Person>(new PersonMapping());
     // Now save all entities of a given stream:
-    personBulkInserter.saveAll(PostgreSqlUtils.getPGConnection(connection), persons.stream());
-    
+    bulkInsert.saveAll(PostgreSqlUtils.getPGConnection(connection), persons.stream());
     // And assert all have been written to the database:
     Assert.assertEquals(100000, getRowCount());
 }
