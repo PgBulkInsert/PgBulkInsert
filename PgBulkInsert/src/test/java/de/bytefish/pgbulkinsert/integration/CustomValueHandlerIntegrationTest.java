@@ -4,8 +4,7 @@
 package de.bytefish.pgbulkinsert.integration;
 
 import de.bytefish.pgbulkinsert.PgBulkInsert;
-import de.bytefish.pgbulkinsert.mapping.PersonBulkInserter;
-import de.bytefish.pgbulkinsert.model.Person;
+import de.bytefish.pgbulkinsert.mapping.AbstractMapping;
 import de.bytefish.pgbulkinsert.pgsql.constants.DataType;
 import de.bytefish.pgbulkinsert.pgsql.handlers.BaseValueHandler;
 import de.bytefish.pgbulkinsert.pgsql.handlers.BigDecimalValueHandler;
@@ -73,7 +72,7 @@ public class CustomValueHandlerIntegrationTest extends TransactionalTestBase {
         }
     }
 
-    public class CustomValueHandlerMapping extends PgBulkInsert<SampleEntity> {
+    public class CustomValueHandlerMapping extends AbstractMapping<SampleEntity> {
 
         public CustomValueHandlerMapping() {
             super("sample", "unit_test");
@@ -95,9 +94,10 @@ public class CustomValueHandlerIntegrationTest extends TransactionalTestBase {
 
         entities.add(entity);
 
-        CustomValueHandlerMapping pgBulkInsert = new CustomValueHandlerMapping();
+        CustomValueHandlerMapping mapping = new CustomValueHandlerMapping();
+        PgBulkInsert<SampleEntity> bulkInsert = new PgBulkInsert<>(mapping);
 
-        pgBulkInsert.saveAll(PostgreSqlUtils.getPGConnection(connection), entities.stream());
+        bulkInsert.saveAll(PostgreSqlUtils.getPGConnection(connection), entities.stream());
 
         ResultSet rs = getAll();
 

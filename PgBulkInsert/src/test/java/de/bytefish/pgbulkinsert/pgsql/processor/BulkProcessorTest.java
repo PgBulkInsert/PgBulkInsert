@@ -4,16 +4,15 @@
 package de.bytefish.pgbulkinsert.pgsql.processor;
 
 import de.bytefish.pgbulkinsert.IPgBulkInsert;
+import de.bytefish.pgbulkinsert.PgBulkInsert;
 import de.bytefish.pgbulkinsert.functional.Func1;
-import de.bytefish.pgbulkinsert.mapping.PersonBulkInserter;
+import de.bytefish.pgbulkinsert.mapping.PersonMapping;
 import de.bytefish.pgbulkinsert.model.Person;
-import de.bytefish.pgbulkinsert.pgsql.processor.handler.BulkWriteHandler;
 import de.bytefish.pgbulkinsert.pgsql.processor.handler.IBulkWriteHandler;
 import de.bytefish.pgbulkinsert.util.PostgreSqlUtils;
 import de.bytefish.pgbulkinsert.utils.TransactionalTestBase;
 import org.junit.Assert;
 import org.junit.Test;
-import org.postgresql.PGConnection;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -49,10 +48,14 @@ public class BulkProcessorTest extends TransactionalTestBase {
         }
     }
 
+    private IPgBulkInsert<Person> CreateBulkInserter() {
+        return new PgBulkInsert<>(new PersonMapping());
+    }
+
     @Test
     public void testAdd() throws Exception {
         // Create the BulkInserter to be wrapped:
-        IPgBulkInsert<Person> personBulkInserter = new PersonBulkInserter();
+        IPgBulkInsert<Person> personBulkInserter = CreateBulkInserter();
         // Create the ConnectionFactory:
         Func1<Connection> connectionFactory = () -> connection;
         // Create the BulkHandler:
@@ -73,7 +76,7 @@ public class BulkProcessorTest extends TransactionalTestBase {
     @Test
     public void testAddTimeBased() throws Exception {
         // Create the BulkInserter to be wrapped:
-        IPgBulkInsert<Person> personBulkInserter = new PersonBulkInserter();
+        IPgBulkInsert<Person> personBulkInserter = CreateBulkInserter();
         // Create the ConnectionFactory:
         Func1<Connection> connectionFactory = () -> connection;
         // Create the BulkHandler:
@@ -96,7 +99,7 @@ public class BulkProcessorTest extends TransactionalTestBase {
     @Test
     public void testWriteOnClose() throws Exception {
         // Create the BulkInserter to be wrapped:
-        IPgBulkInsert<Person> personBulkInserter = new PersonBulkInserter();
+        IPgBulkInsert<Person> personBulkInserter = CreateBulkInserter();
         // Create the ConnectionFactory:
         Func1<Connection> connectionFactory = () -> connection;
         // Create the BulkHandler:

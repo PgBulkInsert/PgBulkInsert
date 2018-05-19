@@ -4,6 +4,7 @@
 package de.bytefish.pgbulkinsert.pgsql.handlers;
 
 import de.bytefish.pgbulkinsert.PgBulkInsert;
+import de.bytefish.pgbulkinsert.mapping.AbstractMapping;
 import de.bytefish.pgbulkinsert.pgsql.handlers.utils.GeometricUtils;
 import de.bytefish.pgbulkinsert.pgsql.model.geometric.*;
 import de.bytefish.pgbulkinsert.util.JavaUtils;
@@ -101,9 +102,9 @@ public class GeometricTypesTest extends TransactionalTestBase {
 
     }
 
-    private class SampleEntityBulkInsert extends PgBulkInsert<GeometricEntity> {
+    private class GeometricEntityMapping extends AbstractMapping<GeometricEntity> {
 
-        public SampleEntityBulkInsert() {
+        public GeometricEntityMapping() {
             super("sample", "geometric_table");
 
             mapPoint("col_point", GeometricEntity::getCol_point);
@@ -149,10 +150,11 @@ public class GeometricTypesTest extends TransactionalTestBase {
 
         entities.add(entity);
 
-        // Save them:
-        SampleEntityBulkInsert pgBulkInsert = new SampleEntityBulkInsert();
+        // Construct the Insert:
+        PgBulkInsert<GeometricEntity> bulkInsert = new PgBulkInsert<>(new GeometricEntityMapping());
 
-        pgBulkInsert.saveAll(PostgreSqlUtils.getPGConnection(connection), entities.stream());
+        // Save them:
+        bulkInsert.saveAll(PostgreSqlUtils.getPGConnection(connection), entities.stream());
 
         ResultSet rs = getAll();
 
@@ -189,10 +191,10 @@ public class GeometricTypesTest extends TransactionalTestBase {
 
         entities.add(entity);
 
-        // Save them:
-        SampleEntityBulkInsert pgBulkInsert = new SampleEntityBulkInsert();
+        // Construct the Insert:
+        PgBulkInsert<GeometricEntity> bulkInsert = new PgBulkInsert<>(new GeometricEntityMapping());
 
-        pgBulkInsert.saveAll(PostgreSqlUtils.getPGConnection(connection), entities.stream());
+        bulkInsert.saveAll(PostgreSqlUtils.getPGConnection(connection), entities.stream());
 
         ResultSet rs = getAll();
 
@@ -235,10 +237,10 @@ public class GeometricTypesTest extends TransactionalTestBase {
 
         entities.add(entity);
 
-        // Save them:
-        SampleEntityBulkInsert pgBulkInsert = new SampleEntityBulkInsert();
+        // Construct the Insert:
+        PgBulkInsert<GeometricEntity> bulkInsert = new PgBulkInsert<>(new GeometricEntityMapping());
 
-        pgBulkInsert.saveAll(PostgreSqlUtils.getPGConnection(connection), entities.stream());
+        bulkInsert.saveAll(PostgreSqlUtils.getPGConnection(connection), entities.stream());
 
         ResultSet rs = getAll();
 
@@ -274,10 +276,10 @@ public class GeometricTypesTest extends TransactionalTestBase {
 
         entities.add(entity);
 
-        // Save them:
-        SampleEntityBulkInsert pgBulkInsert = new SampleEntityBulkInsert();
+        // Construct the Insert:
+        PgBulkInsert<GeometricEntity> bulkInsert = new PgBulkInsert<>(new GeometricEntityMapping());
 
-        pgBulkInsert.saveAll(PostgreSqlUtils.getPGConnection(connection), entities.stream());
+        bulkInsert.saveAll(PostgreSqlUtils.getPGConnection(connection), entities.stream());
 
         ResultSet rs = getAll();
 
@@ -311,10 +313,10 @@ public class GeometricTypesTest extends TransactionalTestBase {
 
         entities.add(entity);
 
-        // Save them:
-        SampleEntityBulkInsert pgBulkInsert = new SampleEntityBulkInsert();
+        // Construct the Insert:
+        PgBulkInsert<GeometricEntity> bulkInsert = new PgBulkInsert<>(new GeometricEntityMapping());
 
-        pgBulkInsert.saveAll(PostgreSqlUtils.getPGConnection(connection), entities.stream());
+        bulkInsert.saveAll(PostgreSqlUtils.getPGConnection(connection), entities.stream());
 
         ResultSet rs = getAll();
 
@@ -350,10 +352,10 @@ public class GeometricTypesTest extends TransactionalTestBase {
 
         entities.add(entity);
 
-        // Save them:
-        SampleEntityBulkInsert pgBulkInsert = new SampleEntityBulkInsert();
+        // Construct the Insert:
+        PgBulkInsert<GeometricEntity> bulkInsert = new PgBulkInsert<>(new GeometricEntityMapping());
 
-        pgBulkInsert.saveAll(PostgreSqlUtils.getPGConnection(connection), entities.stream());
+        bulkInsert.saveAll(PostgreSqlUtils.getPGConnection(connection), entities.stream());
 
         ResultSet rs = getAll();
 
@@ -390,10 +392,11 @@ public class GeometricTypesTest extends TransactionalTestBase {
 
         entities.add(entity);
 
-        // Save them:
-        SampleEntityBulkInsert pgBulkInsert = new SampleEntityBulkInsert();
+        // Construct the Insert:
+        PgBulkInsert<GeometricEntity> bulkInsert = new PgBulkInsert<>(new GeometricEntityMapping());
 
-        pgBulkInsert.saveAll(PostgreSqlUtils.getPGConnection(connection), entities.stream());
+        // Save them:
+        bulkInsert.saveAll(PostgreSqlUtils.getPGConnection(connection), entities.stream());
 
         ResultSet rs = getAll();
 

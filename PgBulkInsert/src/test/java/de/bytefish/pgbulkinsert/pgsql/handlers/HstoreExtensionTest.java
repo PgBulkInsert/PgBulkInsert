@@ -4,6 +4,7 @@
 package de.bytefish.pgbulkinsert.pgsql.handlers;
 
 import de.bytefish.pgbulkinsert.PgBulkInsert;
+import de.bytefish.pgbulkinsert.mapping.AbstractMapping;
 import de.bytefish.pgbulkinsert.util.JavaUtils;
 import de.bytefish.pgbulkinsert.util.PostgreSqlUtils;
 import de.bytefish.pgbulkinsert.utils.TransactionalTestBase;
@@ -44,9 +45,9 @@ public class HstoreExtensionTest extends TransactionalTestBase {
 
     }
 
-    private class SampleEntityBulkInsert extends PgBulkInsert<HStoreEntity> {
+    private class HStoreEntityMapping extends AbstractMapping<HStoreEntity> {
 
-        public SampleEntityBulkInsert() {
+        public HStoreEntityMapping() {
             super("sample", "hstore_table");
 
             mapHstore("col_hstore", HStoreEntity::getCol_hstore);
@@ -81,9 +82,9 @@ public class HstoreExtensionTest extends TransactionalTestBase {
 
         entities.add(entity);
 
-        SampleEntityBulkInsert pgBulkInsert = new SampleEntityBulkInsert();
+        PgBulkInsert<HStoreEntity> bulkInsert = new PgBulkInsert<>(new HStoreEntityMapping());
 
-        pgBulkInsert.saveAll(PostgreSqlUtils.getPGConnection(connection), entities.stream());
+        bulkInsert.saveAll(PostgreSqlUtils.getPGConnection(connection), entities.stream());
 
         ResultSet rs = getAll();
 

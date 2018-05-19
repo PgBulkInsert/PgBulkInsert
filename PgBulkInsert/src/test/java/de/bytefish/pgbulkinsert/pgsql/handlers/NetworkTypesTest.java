@@ -4,6 +4,7 @@
 package de.bytefish.pgbulkinsert.pgsql.handlers;
 
 import de.bytefish.pgbulkinsert.PgBulkInsert;
+import de.bytefish.pgbulkinsert.mapping.AbstractMapping;
 import de.bytefish.pgbulkinsert.pgsql.model.geometric.*;
 import de.bytefish.pgbulkinsert.pgsql.model.network.MacAddress;
 import de.bytefish.pgbulkinsert.util.PostgreSqlUtils;
@@ -44,9 +45,9 @@ public class NetworkTypesTest extends TransactionalTestBase {
 
     }
 
-    private class SampleEntityBulkInsert extends PgBulkInsert<NetworkEntity> {
+    private class NetworkEntityMapping extends AbstractMapping<NetworkEntity> {
 
-        public SampleEntityBulkInsert() {
+        public NetworkEntityMapping() {
             super("sample", "network_table");
 
             mapMacAddress("col_mac_addr", NetworkEntity::getCol_mac_addr);
@@ -90,7 +91,7 @@ public class NetworkTypesTest extends TransactionalTestBase {
         entities.add(entity);
 
         // Save them:
-        SampleEntityBulkInsert pgBulkInsert = new SampleEntityBulkInsert();
+        PgBulkInsert<NetworkEntity> pgBulkInsert = new PgBulkInsert<>(new NetworkEntityMapping());
 
         pgBulkInsert.saveAll(PostgreSqlUtils.getPGConnection(connection), entities.stream());
 

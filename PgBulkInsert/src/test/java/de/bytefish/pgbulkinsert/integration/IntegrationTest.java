@@ -3,7 +3,8 @@
 
 package de.bytefish.pgbulkinsert.integration;
 
-import de.bytefish.pgbulkinsert.mapping.PersonBulkInserter;
+import de.bytefish.pgbulkinsert.PgBulkInsert;
+import de.bytefish.pgbulkinsert.mapping.PersonMapping;
 import de.bytefish.pgbulkinsert.model.Person;
 import de.bytefish.pgbulkinsert.util.PostgreSqlUtils;
 import de.bytefish.pgbulkinsert.utils.TransactionalTestBase;
@@ -29,9 +30,9 @@ public class IntegrationTest extends TransactionalTestBase {
         // Create a large list of Persons:
         List<Person> persons = getPersonList(100000);
         // Create the BulkInserter:
-        PersonBulkInserter personBulkInserter = new PersonBulkInserter();
+        PgBulkInsert<Person> bulkInsert = new PgBulkInsert<Person>(new PersonMapping());
         // Now save all entities of a given stream:
-        personBulkInserter.saveAll(PostgreSqlUtils.getPGConnection(connection), persons.stream());
+        bulkInsert.saveAll(PostgreSqlUtils.getPGConnection(connection), persons.stream());
         // And assert all have been written to the database:
         Assert.assertEquals(100000, getRowCount());
     }

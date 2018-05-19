@@ -4,6 +4,7 @@
 package de.bytefish.pgbulkinsert.pgsql.handlers;
 
 import de.bytefish.pgbulkinsert.PgBulkInsert;
+import de.bytefish.pgbulkinsert.mapping.AbstractMapping;
 import de.bytefish.pgbulkinsert.util.JavaUtils;
 import de.bytefish.pgbulkinsert.util.PostgreSqlUtils;
 import de.bytefish.pgbulkinsert.utils.TransactionalTestBase;
@@ -122,9 +123,9 @@ public class PgBulkInsertTest extends TransactionalTestBase {
 
     }
 
-    private class SampleEntityBulkInsert extends PgBulkInsert<SampleEntity> {
+    private class SampleEntityMapping extends AbstractMapping<SampleEntity> {
 
-        public SampleEntityBulkInsert() {
+        public SampleEntityMapping() {
             super("sample", "unit_test");
 
             mapString("col_text", SampleEntity::get_col_text);
@@ -159,7 +160,7 @@ public class PgBulkInsertTest extends TransactionalTestBase {
 
         entities.add(entity);
 
-        SampleEntityBulkInsert pgBulkInsert = new SampleEntityBulkInsert();
+        PgBulkInsert<SampleEntity> pgBulkInsert = new PgBulkInsert<>(new SampleEntityMapping());
 
         pgBulkInsert.saveAll(PostgreSqlUtils.getPGConnection(connection), entities.stream());
 
@@ -185,7 +186,7 @@ public class PgBulkInsertTest extends TransactionalTestBase {
 
         entities.add(entity);
 
-        SampleEntityBulkInsert pgBulkInsert = new SampleEntityBulkInsert();
+        PgBulkInsert<SampleEntity> pgBulkInsert = new PgBulkInsert<>(new SampleEntityMapping());
 
         pgBulkInsert.saveAll(PostgreSqlUtils.getPGConnection(connection), entities.stream());
 
@@ -210,7 +211,7 @@ public class PgBulkInsertTest extends TransactionalTestBase {
 
         entities.add(entity);
 
-        SampleEntityBulkInsert pgBulkInsert = new SampleEntityBulkInsert();
+        PgBulkInsert<SampleEntity> pgBulkInsert = new PgBulkInsert<>(new SampleEntityMapping());
 
         pgBulkInsert.saveAll(PostgreSqlUtils.getPGConnection(connection), entities.stream());
 
@@ -235,7 +236,7 @@ public class PgBulkInsertTest extends TransactionalTestBase {
 
         entities.add(entity);
 
-        SampleEntityBulkInsert pgBulkInsert = new SampleEntityBulkInsert();
+        PgBulkInsert<SampleEntity> pgBulkInsert = new PgBulkInsert<>(new SampleEntityMapping());
 
         pgBulkInsert.saveAll(PostgreSqlUtils.getPGConnection(connection), entities.stream());
 
@@ -260,7 +261,7 @@ public class PgBulkInsertTest extends TransactionalTestBase {
 
         entities.add(entity);
 
-        SampleEntityBulkInsert pgBulkInsert = new SampleEntityBulkInsert();
+        PgBulkInsert<SampleEntity> pgBulkInsert = new PgBulkInsert<>(new SampleEntityMapping());
 
         pgBulkInsert.saveAll(PostgreSqlUtils.getPGConnection(connection), entities.stream());
 
@@ -285,7 +286,7 @@ public class PgBulkInsertTest extends TransactionalTestBase {
 
         entities.add(entity);
 
-        SampleEntityBulkInsert pgBulkInsert = new SampleEntityBulkInsert();
+        PgBulkInsert<SampleEntity> pgBulkInsert = new PgBulkInsert<>(new SampleEntityMapping());
 
         pgBulkInsert.saveAll(PostgreSqlUtils.getPGConnection(connection), entities.stream());
 
@@ -310,7 +311,7 @@ public class PgBulkInsertTest extends TransactionalTestBase {
 
         entities.add(entity);
 
-        SampleEntityBulkInsert pgBulkInsert = new SampleEntityBulkInsert();
+        PgBulkInsert<SampleEntity> pgBulkInsert = new PgBulkInsert<>(new SampleEntityMapping());
 
         pgBulkInsert.saveAll(PostgreSqlUtils.getPGConnection(connection), entities.stream());
 
@@ -335,7 +336,7 @@ public class PgBulkInsertTest extends TransactionalTestBase {
 
         entities.add(entity);
 
-        SampleEntityBulkInsert pgBulkInsert = new SampleEntityBulkInsert();
+        PgBulkInsert<SampleEntity> pgBulkInsert = new PgBulkInsert<>(new SampleEntityMapping());
 
         pgBulkInsert.saveAll(PostgreSqlUtils.getPGConnection(connection), entities.stream());
 
@@ -360,7 +361,7 @@ public class PgBulkInsertTest extends TransactionalTestBase {
 
         entities.add(entity);
 
-        SampleEntityBulkInsert pgBulkInsert = new SampleEntityBulkInsert();
+        PgBulkInsert<SampleEntity> pgBulkInsert = new PgBulkInsert<>(new SampleEntityMapping());
 
         pgBulkInsert.saveAll(PostgreSqlUtils.getPGConnection(connection), entities.stream());
 
@@ -385,7 +386,7 @@ public class PgBulkInsertTest extends TransactionalTestBase {
 
         entities.add(entity);
 
-        SampleEntityBulkInsert pgBulkInsert = new SampleEntityBulkInsert();
+        PgBulkInsert<SampleEntity> pgBulkInsert = new PgBulkInsert<>(new SampleEntityMapping());
 
         pgBulkInsert.saveAll(PostgreSqlUtils.getPGConnection(connection), entities.stream());
 
@@ -411,7 +412,7 @@ public class PgBulkInsertTest extends TransactionalTestBase {
 
         entities.add(entity);
 
-        SampleEntityBulkInsert pgBulkInsert = new SampleEntityBulkInsert();
+        PgBulkInsert<SampleEntity> pgBulkInsert = new PgBulkInsert<>(new SampleEntityMapping());
 
         pgBulkInsert.saveAll(PostgreSqlUtils.getPGConnection(connection), entities.stream());
 
@@ -442,7 +443,7 @@ public class PgBulkInsertTest extends TransactionalTestBase {
 
         entities.add(entity);
 
-        SampleEntityBulkInsert pgBulkInsert = new SampleEntityBulkInsert();
+        PgBulkInsert<SampleEntity> pgBulkInsert = new PgBulkInsert<>(new SampleEntityMapping());
 
         pgBulkInsert.saveAll(PostgreSqlUtils.getPGConnection(connection), entities.stream());
 
@@ -468,7 +469,7 @@ public class PgBulkInsertTest extends TransactionalTestBase {
 
         entities.add(entity);
 
-        SampleEntityBulkInsert pgBulkInsert = new SampleEntityBulkInsert();
+        PgBulkInsert<SampleEntity> pgBulkInsert = new PgBulkInsert<>(new SampleEntityMapping());
 
         pgBulkInsert.saveAll(PostgreSqlUtils.getPGConnection(connection), entities.stream());
 
@@ -494,7 +495,7 @@ public class PgBulkInsertTest extends TransactionalTestBase {
 
         entities.add(entity);
 
-        SampleEntityBulkInsert pgBulkInsert = new SampleEntityBulkInsert();
+        PgBulkInsert<SampleEntity> pgBulkInsert = new PgBulkInsert<>(new SampleEntityMapping());
 
         pgBulkInsert.saveAll(PostgreSqlUtils.getPGConnection(connection), entities.stream());
 
@@ -518,7 +519,7 @@ public class PgBulkInsertTest extends TransactionalTestBase {
 
         entities.add(entity);
 
-        SampleEntityBulkInsert pgBulkInsert = new SampleEntityBulkInsert();
+        PgBulkInsert<SampleEntity> pgBulkInsert = new PgBulkInsert<>(new SampleEntityMapping());
 
         pgBulkInsert.saveAll(PostgreSqlUtils.getPGConnection(connection), entities.stream());
 
@@ -542,7 +543,7 @@ public class PgBulkInsertTest extends TransactionalTestBase {
 
         entities.add(entity);
 
-        SampleEntityBulkInsert pgBulkInsert = new SampleEntityBulkInsert();
+        PgBulkInsert<SampleEntity> pgBulkInsert = new PgBulkInsert<>(new SampleEntityMapping());
 
         pgBulkInsert.saveAll(PostgreSqlUtils.getPGConnection(connection), entities.stream());
 
@@ -568,7 +569,7 @@ public class PgBulkInsertTest extends TransactionalTestBase {
 
         entities.add(entity);
 
-        SampleEntityBulkInsert pgBulkInsert = new SampleEntityBulkInsert();
+        PgBulkInsert<SampleEntity> pgBulkInsert = new PgBulkInsert<>(new SampleEntityMapping());
 
         pgBulkInsert.saveAll(PostgreSqlUtils.getPGConnection(connection), entities.stream());
 
@@ -596,7 +597,7 @@ public class PgBulkInsertTest extends TransactionalTestBase {
 
         entities.add(entity);
 
-        SampleEntityBulkInsert pgBulkInsert = new SampleEntityBulkInsert();
+        PgBulkInsert<SampleEntity> pgBulkInsert = new PgBulkInsert<>(new SampleEntityMapping());
 
         pgBulkInsert.saveAll(PostgreSqlUtils.getPGConnection(connection), entities.stream());
 
@@ -628,7 +629,7 @@ public class PgBulkInsertTest extends TransactionalTestBase {
         entities.add(entity0);
         entities.add(entity1);
 
-        SampleEntityBulkInsert pgBulkInsert = new SampleEntityBulkInsert();
+        PgBulkInsert<SampleEntity> pgBulkInsert = new PgBulkInsert<>(new SampleEntityMapping());
 
         pgBulkInsert.saveAll(PostgreSqlUtils.getPGConnection(connection), entities.stream());
 

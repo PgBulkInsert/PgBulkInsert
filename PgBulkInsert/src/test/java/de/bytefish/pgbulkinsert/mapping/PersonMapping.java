@@ -3,12 +3,11 @@
 
 package de.bytefish.pgbulkinsert.mapping;
 
-import de.bytefish.pgbulkinsert.PgBulkInsert;
 import de.bytefish.pgbulkinsert.model.Person;
 
-public class PersonBulkInserter extends PgBulkInsert<Person>
+public class PersonMapping extends AbstractMapping<Person>
 {
-    public PersonBulkInserter() {
+    public PersonMapping() {
         super("sample", "unit_test");
 
         mapString("first_name", Person::getFirstName);
