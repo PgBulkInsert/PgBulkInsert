@@ -14,11 +14,18 @@ public class PgBinaryWriter implements AutoCloseable {
 
     private transient DataOutputStream buffer;
 
+    private final int bufferSize;
+
     public PgBinaryWriter() {
+        this(8192);
+    }
+
+    public PgBinaryWriter(int bufferSize) {
+        this.bufferSize = bufferSize;
     }
 
     public void open(final OutputStream out) {
-        buffer = new DataOutputStream(new BufferedOutputStream(out));
+        buffer = new DataOutputStream(new BufferedOutputStream(out, bufferSize));
 
         writeHeader();
     }
