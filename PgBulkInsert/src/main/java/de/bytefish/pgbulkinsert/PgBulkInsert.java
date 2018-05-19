@@ -4,33 +4,14 @@
 package de.bytefish.pgbulkinsert;
 
 import de.bytefish.pgbulkinsert.exceptions.SaveEntityFailedException;
-import de.bytefish.pgbulkinsert.functional.Action2;
-import de.bytefish.pgbulkinsert.functional.Func2;
-import de.bytefish.pgbulkinsert.mapping.*;
-import de.bytefish.pgbulkinsert.model.ColumnDefinition;
-import de.bytefish.pgbulkinsert.model.TableDefinition;
+import de.bytefish.pgbulkinsert.mapping.AbstractMapping;
 import de.bytefish.pgbulkinsert.pgsql.PgBinaryWriter;
-import de.bytefish.pgbulkinsert.pgsql.constants.DataType;
-import de.bytefish.pgbulkinsert.pgsql.constants.ObjectIdentifier;
-import de.bytefish.pgbulkinsert.pgsql.handlers.CollectionValueHandler;
-import de.bytefish.pgbulkinsert.pgsql.handlers.IValueHandler;
-import de.bytefish.pgbulkinsert.pgsql.handlers.IValueHandlerProvider;
-import de.bytefish.pgbulkinsert.pgsql.handlers.ValueHandlerProvider;
-import de.bytefish.pgbulkinsert.pgsql.model.geometric.*;
-import de.bytefish.pgbulkinsert.pgsql.model.network.MacAddress;
 import org.postgresql.PGConnection;
 import org.postgresql.copy.CopyIn;
 import org.postgresql.copy.CopyManager;
 import org.postgresql.copy.PGCopyOutputStream;
 
-import java.math.BigDecimal;
-import java.net.Inet4Address;
-import java.net.Inet6Address;
 import java.sql.SQLException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.*;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class PgBulkInsert<TEntity> implements IPgBulkInsert<TEntity> {
