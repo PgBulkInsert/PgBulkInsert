@@ -17,7 +17,7 @@ public class PgBinaryWriter implements AutoCloseable {
     private final int bufferSize;
 
     public PgBinaryWriter() {
-        this(8192);
+        this(65536);
     }
 
     public PgBinaryWriter(int bufferSize) {

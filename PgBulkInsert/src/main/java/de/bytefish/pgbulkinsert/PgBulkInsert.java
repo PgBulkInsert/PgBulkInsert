@@ -50,7 +50,7 @@ public class PgBulkInsert<TEntity> implements IPgBulkInsert<TEntity> {
         try (PgBinaryWriter bw = new PgBinaryWriter()) {
 
             // Wrap the CopyOutputStream in our own Writer:
-            bw.open(new PGCopyOutputStream(copyIn));
+            bw.open(new PGCopyOutputStream(copyIn, 1));
 
             // Insert Each Column:
             entities.forEach(entity -> this.saveEntity(bw, entity));
