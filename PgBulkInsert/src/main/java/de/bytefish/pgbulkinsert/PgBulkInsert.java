@@ -3,6 +3,8 @@
 
 package de.bytefish.pgbulkinsert;
 
+import de.bytefish.pgbulkinsert.configuration.Configuration;
+import de.bytefish.pgbulkinsert.configuration.IConfiguration;
 import de.bytefish.pgbulkinsert.exceptions.SaveEntityFailedException;
 import de.bytefish.pgbulkinsert.mapping.AbstractMapping;
 import de.bytefish.pgbulkinsert.pgsql.PgBinaryWriter;
@@ -16,10 +18,24 @@ import java.util.stream.Stream;
 
 public class PgBulkInsert<TEntity> implements IPgBulkInsert<TEntity> {
 
+    private final IConfiguration configuration;
     private final AbstractMapping<TEntity> mapping;
 
-    public PgBulkInsert(AbstractMapping mapping)
+    public PgBulkInsert(AbstractMapping mapping) {
+        this(new Configuration(), mapping);
+    }
+
+    public PgBulkInsert(IConfiguration configuration, AbstractMapping mapping)
     {
+        if(configuration == null) {
+            throw new IllegalArgumentException("configuration");
+        }
+
+        if(mapping == null) {
+            throw new IllegalArgumentException("mapping");
+        }
+
+        this.configuration = configuration;
         this.mapping = mapping;
     }
 
@@ -28,7 +44,7 @@ public class PgBulkInsert<TEntity> implements IPgBulkInsert<TEntity> {
         CopyManager cpManager = connection.getCopyAPI();
         CopyIn copyIn = cpManager.copyIn(mapping.getCopyCommand());
 
-        try (PgBinaryWriter bw = new PgBinaryWriter()) {
+        try (PgBinaryWriter bw = new PgBinaryWriter(configuration.getBufferSize())) {
 
             // Wrap the CopyOutputStream in our own Writer:
             bw.open(new PGCopyOutputStream(copyIn, 1));
