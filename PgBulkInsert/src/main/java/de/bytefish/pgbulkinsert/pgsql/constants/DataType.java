@@ -53,5 +53,5 @@ public enum DataType {
     VarBit,
     Record,
     Numeric
-    
+
 }

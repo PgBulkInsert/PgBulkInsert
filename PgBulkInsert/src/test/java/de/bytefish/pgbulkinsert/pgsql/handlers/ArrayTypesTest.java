@@ -5,6 +5,7 @@ package de.bytefish.pgbulkinsert.pgsql.handlers;
 
 import de.bytefish.pgbulkinsert.PgBulkInsert;
 import de.bytefish.pgbulkinsert.mapping.AbstractMapping;
+import de.bytefish.pgbulkinsert.pgsql.constants.DataType;
 import de.bytefish.pgbulkinsert.util.PostgreSqlUtils;
 import de.bytefish.pgbulkinsert.utils.TransactionalTestBase;
 import org.junit.Assert;
@@ -46,7 +47,7 @@ public class ArrayTypesTest  extends TransactionalTestBase {
         public ArrayEntityMapping() {
             super("sample", "unit_test");
 
-            mapStringArray("col_string_array", ArrayEntity::getStringArray);
+            mapCollection("col_string_array", DataType.VarChar, ArrayEntity::getStringArray);
         }
 
     }
@@ -92,7 +93,7 @@ public class ArrayTypesTest  extends TransactionalTestBase {
     private boolean createTable() throws SQLException {
         String sqlStatement = "CREATE TABLE sample.unit_test\n" +
                 "            (\n" +
-                "                col_string_array text[]\n" +
+                "                col_string_array varchar[]\n" +
                 "            );";
 
         Statement statement = connection.createStatement();

@@ -138,7 +138,7 @@ public class ObjectIdentifier {
     public static int CharLength = 1042;
 
     // varchar(length), non-blank-padded string, variable storage length
-    public static int VarCharLength = 1042;
+    public static int VarCharLength = 1043;
 
     // Date
     public static int Date = 1082;
@@ -147,7 +147,6 @@ public class ObjectIdentifier {
     public static int Time = 1082;
 
     // endregion
-
 
     // region OIDS 1100 - 1199
 
