@@ -72,12 +72,12 @@ public class ArrayTypesTest  extends TransactionalTestBase {
         ResultSet rs = getAll();
 
         while (rs.next()) {
-            Array z = rs.getArray("col_double_array");
+            Array z = rs.getArray("col_string_array");
 
-            Double[] v = (Double[]) z.getArray();
+            String[] v = (String[]) z.getArray();
 
-            Assert.assertEquals(new Double(1.131), v[0]);
-            Assert.assertEquals(new Double(2.412), v[1]);
+            Assert.assertEquals("A", v[0]);
+            Assert.assertEquals("B", v[1]);
         }
     }
 
@@ -92,7 +92,7 @@ public class ArrayTypesTest  extends TransactionalTestBase {
     private boolean createTable() throws SQLException {
         String sqlStatement = "CREATE TABLE sample.unit_test\n" +
                 "            (\n" +
-                "                col_string_array string[]\n" +
+                "                col_string_array text[]\n" +
                 "            );";
 
         Statement statement = connection.createStatement();
