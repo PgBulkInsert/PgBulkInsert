@@ -11,6 +11,7 @@ import de.bytefish.pgbulkinsert.utils.TransactionalTestBase;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.math.BigDecimal;
 import java.net.UnknownHostException;
 import java.sql.Array;
 import java.sql.ResultSet;
@@ -28,6 +29,12 @@ public class ArrayTypesTest  extends TransactionalTestBase {
 
         public List<String> getStringArray() {
             return stringArray;
+        }
+
+        public List<BigDecimal> numericArray;
+
+        public List<BigDecimal> getNumericArray() {
+            return numericArray;
         }
     }
 
@@ -48,10 +55,42 @@ public class ArrayTypesTest  extends TransactionalTestBase {
             super("sample", "unit_test");
 
             mapCollection("col_string_array", DataType.VarChar, ArrayEntity::getStringArray);
+            mapCollection("col_numeric_array", DataType.Numeric, ArrayEntity::getNumericArray);
         }
 
     }
 
+    @Test
+    public void saveAll_NumericArray_Test() throws SQLException, UnknownHostException {
+
+        // This list will be inserted.
+        List<ArrayEntity> entities = new ArrayList<>();
+
+        // Create the Entity to insert:
+        ArrayEntity entity = new ArrayEntity();
+
+        entity.numericArray = Arrays.asList(
+                new BigDecimal("210000.00011234567"),
+                new BigDecimal("310000.00011234567")
+        );
+
+        entities.add(entity);
+
+        PgBulkInsert<ArrayEntity> pgBulkInsert = new PgBulkInsert<>(new ArrayEntityMapping());
+
+        pgBulkInsert.saveAll(PostgreSqlUtils.getPGConnection(connection), entities.stream());
+
+        ResultSet rs = getAll();
+
+        while (rs.next()) {
+            Array z = rs.getArray("col_numeric_array");
+
+            BigDecimal[] v = (BigDecimal[]) z.getArray();
+
+            Assert.assertEquals(new BigDecimal("210000.00011234567"), v[0].stripTrailingZeros());
+            Assert.assertEquals(new BigDecimal("310000.00011234567"), v[1].stripTrailingZeros());
+        }
+    }
 
     @Test
     public void saveAll_StringArray_Test() throws SQLException, UnknownHostException {
@@ -93,7 +132,8 @@ public class ArrayTypesTest  extends TransactionalTestBase {
     private boolean createTable() throws SQLException {
         String sqlStatement = "CREATE TABLE sample.unit_test\n" +
                 "            (\n" +
-                "                col_string_array varchar[]\n" +
+                "                col_string_array varchar[], \n" +
+                "                col_numeric_array numeric[]\n" +
                 "            );";
 
         Statement statement = connection.createStatement();
