@@ -4,6 +4,7 @@
 package de.bytefish.pgbulkinsert.pgsql.handlers;
 
 import de.bytefish.pgbulkinsert.pgsql.constants.DataType;
+import de.bytefish.pgbulkinsert.util.StringUtils;
 
 import java.io.DataOutputStream;
 
@@ -11,7 +12,7 @@ public class StringValueHandler extends BaseValueHandler<String> {
 
     @Override
     protected void internalHandle(DataOutputStream buffer, final String value) throws Exception {
-        byte[] utf8Bytes = value.getBytes("UTF-8");
+        byte[] utf8Bytes = StringUtils.getUtf8Bytes(value);
 
         buffer.writeInt(utf8Bytes.length);
         buffer.write(utf8Bytes);
