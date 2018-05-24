@@ -17,8 +17,10 @@ import de.bytefish.pgbulkinsert.pgsql.handlers.IValueHandlerProvider;
 import de.bytefish.pgbulkinsert.pgsql.handlers.ValueHandlerProvider;
 import de.bytefish.pgbulkinsert.pgsql.model.geometric.*;
 import de.bytefish.pgbulkinsert.pgsql.model.network.MacAddress;
+import de.bytefish.pgbulkinsert.util.BigDecimalUtils;
 
 import java.math.BigDecimal;
+import java.math.MathContext;
 import java.net.Inet4Address;
 import java.net.Inet6Address;
 import java.time.LocalDate;
@@ -89,9 +91,136 @@ public abstract class AbstractMapping<TEntity> {
         map(columnName, DataType.Int4, propertyGetter);
     }
 
-    protected void mapNumeric(String columnName, Func2<TEntity, BigDecimal> propertyGetter)
-    {
+    protected void mapNumeric(String columnName, Func2<TEntity, BigDecimal> propertyGetter) {
         map(columnName, DataType.Numeric, propertyGetter);
+    }
+
+    protected <TPropertyType> void mapNumeric(String columnName, Class<TPropertyType> type, Func2<TEntity, TPropertyType> propertyGetter)
+    {
+        if(type == Integer.class) {
+
+            final Func2<TEntity, BigDecimal> wrapper = entity -> {
+                Integer val = (Integer) propertyGetter.invoke(entity);
+
+                if (val == null) {
+                    return null;
+                }
+
+                return BigDecimalUtils.toBigDecimal(val);
+            };
+
+            mapNumeric(columnName, wrapper);
+        } else if(type == Long.class) {
+
+            final Func2<TEntity, BigDecimal> wrapper = entity -> {
+                Long val = (Long) propertyGetter.invoke(entity);
+
+                if(val == null) {
+                    return null;
+                }
+
+                return BigDecimalUtils.toBigDecimal(val);
+            };
+
+            mapNumeric(columnName, wrapper);
+
+        }  else if(type == Float.class) {
+
+            final Func2<TEntity, BigDecimal> wrapper = entity -> {
+                Float val = (Float) propertyGetter.invoke(entity);
+
+                if(val == null) {
+                    return null;
+                }
+
+                return BigDecimalUtils.toBigDecimal(val);
+            };
+
+            mapNumeric(columnName, wrapper);
+
+        } else if(type == Double.class) {
+
+            final Func2<TEntity, BigDecimal> wrapper = entity -> {
+                Double val = (Double) propertyGetter.invoke(entity);
+
+                if(val == null) {
+                    return null;
+                }
+
+                return BigDecimalUtils.toBigDecimal(val);
+            };
+
+            mapNumeric(columnName, wrapper);
+
+        } else if(type == BigDecimal.class) {
+            map(columnName, DataType.Numeric, propertyGetter);
+        } else {
+            throw new IllegalArgumentException("Cannot map Type " + type.toString() + " to a BigDecimal");
+        }
+    }
+
+    protected <TPropertyType> void mapNumeric(String columnName, Class<TPropertyType> type, MathContext mathContext, Func2<TEntity, TPropertyType> propertyGetter)
+    {
+        if(type == Integer.class) {
+
+            final Func2<TEntity, BigDecimal> wrapper = entity -> {
+                Integer val = (Integer) propertyGetter.invoke(entity);
+
+                if (val == null) {
+                    return null;
+                }
+
+                return BigDecimalUtils.toBigDecimal(val, mathContext);
+            };
+
+            mapNumeric(columnName, wrapper);
+        } else if(type == Long.class) {
+
+            final Func2<TEntity, BigDecimal> wrapper = entity -> {
+                Long val = (Long) propertyGetter.invoke(entity);
+
+                if(val == null) {
+                    return null;
+                }
+
+                return BigDecimalUtils.toBigDecimal(val, mathContext);
+            };
+
+            mapNumeric(columnName, wrapper);
+
+        }  else if(type == Float.class) {
+
+            final Func2<TEntity, BigDecimal> wrapper = entity -> {
+                Float val = (Float) propertyGetter.invoke(entity);
+
+                if(val == null) {
+                    return null;
+                }
+
+                return BigDecimalUtils.toBigDecimal(val, mathContext);
+            };
+
+            mapNumeric(columnName, wrapper);
+
+        } else if(type == Double.class) {
+
+            final Func2<TEntity, BigDecimal> wrapper = entity -> {
+                Double val = (Double) propertyGetter.invoke(entity);
+
+                if(val == null) {
+                    return null;
+                }
+
+                return BigDecimalUtils.toBigDecimal(val, mathContext);
+            };
+
+            mapNumeric(columnName, wrapper);
+
+        } else if(type == BigDecimal.class) {
+            map(columnName, DataType.Numeric, propertyGetter);
+        } else {
+            throw new IllegalArgumentException("Cannot map Type " + type.toString() + " to a BigDecimal");
+        }
     }
 
     protected void mapLong(String columnName, Func2<TEntity, Long> propertyGetter)
@@ -198,8 +327,12 @@ public abstract class AbstractMapping<TEntity> {
         mapCollection(columnName, DataType.Int8, propertyGetter);
     }
 
-    protected <TCollectionType extends Collection<String>> void mapStringArray(String columnName, Func2<TEntity, TCollectionType> propertyGetter) {
+    protected <TCollectionType extends Collection<String>> void mapTextArray(String columnName, Func2<TEntity, TCollectionType> propertyGetter) {
         mapCollection(columnName, DataType.Text, propertyGetter);
+    }
+
+    protected <TCollectionType extends Collection<String>> void mapVarCharArray(String columnName, Func2<TEntity, TCollectionType> propertyGetter) {
+        mapCollection(columnName, DataType.VarChar, propertyGetter);
     }
 
     protected <TCollectionType extends Collection<Float>> void mapFloatArray(String columnName, Func2<TEntity, TCollectionType> propertyGetter) {
