@@ -71,7 +71,7 @@ public abstract class AbstractMapping<TEntity> {
         map(columnName, DataType.Char, propertyGetter);
     }
 
-    protected void mapSmallInt(String columnName, Func2<TEntity, Number> propertyGetter) {
+    protected void mapShort(String columnName, Func2<TEntity, Number> propertyGetter) {
 
         map(columnName, DataType.Int2, propertyGetter);
     }
