@@ -5,7 +5,6 @@ package de.bytefish.pgbulkinsert.pgsql.handlers;
 
 import de.bytefish.pgbulkinsert.PgBulkInsert;
 import de.bytefish.pgbulkinsert.mapping.AbstractMapping;
-import de.bytefish.pgbulkinsert.util.JavaUtils;
 import de.bytefish.pgbulkinsert.util.PostgreSqlUtils;
 import de.bytefish.pgbulkinsert.utils.TransactionalTestBase;
 import org.junit.Assert;
@@ -130,7 +129,7 @@ public class PgBulkInsertTest extends TransactionalTestBase {
 
             mapText("col_text", SampleEntity::get_col_text);
             mapInteger("col_integer", SampleEntity::get_col_integer);
-            mapSmallInt("col_smallint", SampleEntity::get_col_short);
+            mapShort("col_smallint", SampleEntity::get_col_short);
             mapTimeStamp("col_timestamp", SampleEntity::get_col_datetime);
             mapLong("col_bigint", SampleEntity::get_col_long);
             mapDate("col_date", SampleEntity::getCol_date);

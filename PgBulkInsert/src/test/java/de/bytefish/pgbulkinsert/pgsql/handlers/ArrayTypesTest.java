@@ -5,7 +5,6 @@ package de.bytefish.pgbulkinsert.pgsql.handlers;
 
 import de.bytefish.pgbulkinsert.PgBulkInsert;
 import de.bytefish.pgbulkinsert.mapping.AbstractMapping;
-import de.bytefish.pgbulkinsert.pgsql.constants.DataType;
 import de.bytefish.pgbulkinsert.util.PostgreSqlUtils;
 import de.bytefish.pgbulkinsert.utils.TransactionalTestBase;
 import org.junit.Assert;
@@ -17,8 +16,8 @@ import java.sql.Array;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class ArrayTypesTest  extends TransactionalTestBase {
@@ -26,16 +25,24 @@ public class ArrayTypesTest  extends TransactionalTestBase {
     private class ArrayEntity {
 
         public List<String> stringArray;
+        public List<BigDecimal> bigDecimalArray;
+        public List<Double> doubleArray;
+        public List<Float> floatArray;
+        public List<Long> longArray;
+        public List<Short> shortArray;
+        public List<Integer> integerArray;
+        public List<Boolean> booleanArray;
 
         public List<String> getStringArray() {
             return stringArray;
         }
-
-        public List<BigDecimal> numericArray;
-
-        public List<BigDecimal> getNumericArray() {
-            return numericArray;
-        }
+        public List<BigDecimal> getBigDecimalArray() { return bigDecimalArray; }
+        public List<Double> getDoubleArray() { return doubleArray; }
+        public List<Float> getFloatArray() { return floatArray; }
+        public List<Long> getLongArray() { return longArray; }
+        public List<Short> getShortArray() { return shortArray; }
+        public List<Integer> getIntegerArray() { return integerArray; }
+        public List<Boolean> getBooleanArray() { return booleanArray; }
     }
 
 
@@ -54,56 +61,134 @@ public class ArrayTypesTest  extends TransactionalTestBase {
         public ArrayEntityMapping() {
             super(schema, "unit_test");
 
-            mapCollection("col_string_array", DataType.VarChar, ArrayEntity::getStringArray);
-            mapCollection("col_numeric_array", DataType.Numeric, ArrayEntity::getNumericArray);
+            mapVarCharArray("col_varchar_array", ArrayEntity::getStringArray);
+            mapTextArray("col_text_array", ArrayEntity::getStringArray);
+            mapNumericArray("col_numeric_array", ArrayEntity::getBigDecimalArray);
+            mapDoubleArray("col_double_array", ArrayEntity::getDoubleArray);
+            mapFloatArray("col_float_array", ArrayEntity::getFloatArray);
+            mapLongArray("col_long_array", ArrayEntity::getLongArray);
+            mapShortArray("col_short_array", ArrayEntity::getShortArray);
+            mapIntegerArray("col_integer_array", ArrayEntity::getIntegerArray);
+            mapBooleanArray("col_boolean_array", ArrayEntity::getBooleanArray);
         }
-
     }
 
     @Test
     public void saveAll_NumericArray_Test() throws SQLException, UnknownHostException {
 
-        // This list will be inserted.
-        List<ArrayEntity> entities = new ArrayList<>();
-
         // Create the Entity to insert:
         ArrayEntity entity = new ArrayEntity();
 
-        entity.numericArray = Arrays.asList(
+        entity.bigDecimalArray = Arrays.asList(
                 new BigDecimal("210000.00011234567"),
                 new BigDecimal("310000.00011234567")
         );
 
-        entities.add(entity);
-
-        PgBulkInsert<ArrayEntity> pgBulkInsert = new PgBulkInsert<>(new ArrayEntityMapping());
-
-        pgBulkInsert.saveAll(PostgreSqlUtils.getPGConnection(connection), entities.stream());
-
-        ResultSet rs = getAll();
-
-        while (rs.next()) {
-            Array z = rs.getArray("col_numeric_array");
-
-            BigDecimal[] v = (BigDecimal[]) z.getArray();
-
-            Assert.assertEquals(new BigDecimal("210000.00011234567"), v[0].stripTrailingZeros());
-            Assert.assertEquals(new BigDecimal("310000.00011234567"), v[1].stripTrailingZeros());
-        }
+        testArrayInternal("col_numeric_array", entity, entity.bigDecimalArray);
     }
 
     @Test
-    public void saveAll_StringArray_Test() throws SQLException, UnknownHostException {
+    public void saveAll_VarCharArray_Test() throws SQLException, UnknownHostException {
 
-        // This list will be inserted.
-        List<ArrayEntity> entities = new ArrayList<>();
+        testStringArray("col_varchar_array");
+    }
+
+    @Test
+    public void saveAll_TextArray_Test() throws SQLException, UnknownHostException {
+
+        testStringArray("col_text_array");
+    }
+
+    private void testStringArray(String columnLabel) throws SQLException, UnknownHostException {
 
         // Create the Entity to insert:
         ArrayEntity entity = new ArrayEntity();
-
         entity.stringArray = Arrays.asList("A", "B");
 
-        entities.add(entity);
+        testArrayInternal(columnLabel, entity, entity.stringArray);
+    }
+
+
+    @Test
+    public void saveAll_DoubleArray_Test() throws SQLException, UnknownHostException {
+
+        // Create the Entity to insert:
+        ArrayEntity entity = new ArrayEntity();
+        entity.doubleArray = Arrays.asList(
+                new Double("210000.00011234567"),
+                new Double("310000.00011234567")
+        );
+
+        testArrayInternal("col_double_array", entity, entity.doubleArray);
+    }
+
+    @Test
+    public void saveAll_FloatArray_Test() throws SQLException, UnknownHostException {
+
+        // Create the Entity to insert:
+        ArrayEntity entity = new ArrayEntity();
+        entity.floatArray = Arrays.asList(
+                new Float("210000.00011234567"),
+                new Float("310000.00011234567")
+        );
+
+        testArrayInternal("col_float_array", entity, entity.floatArray);
+    }
+
+    @Test
+    public void saveAll_LongArray_Test() throws SQLException, UnknownHostException {
+
+        // Create the Entity to insert:
+        ArrayEntity entity = new ArrayEntity();
+        entity.longArray = Arrays.asList(
+                new Long("211234"),
+                new Long("4534534")
+        );
+
+        testArrayInternal("col_long_array", entity, entity.longArray);
+    }
+
+    @Test
+    public void saveAll_ShortArray_Test() throws SQLException, UnknownHostException {
+
+        // Create the Entity to insert:
+        ArrayEntity entity = new ArrayEntity();
+        entity.shortArray = Arrays.asList(
+                new Short("42"),
+                new Short("34")
+        );
+
+        testArrayInternal("col_short_array", entity, entity.shortArray);
+    }
+
+    @Test
+    public void saveAll_IntegerArray_Test() throws SQLException, UnknownHostException {
+
+        // Create the Entity to insert:
+        ArrayEntity entity = new ArrayEntity();
+        entity.integerArray = Arrays.asList(
+                new Integer("3453455"),
+                new Integer("5435345")
+        );
+
+        testArrayInternal("col_integer_array", entity, entity.integerArray);
+    }
+
+    @Test
+    public void saveAll_BooleanArray_Test() throws SQLException, UnknownHostException {
+
+        // Create the Entity to insert:
+        ArrayEntity entity = new ArrayEntity();
+        entity.booleanArray = Arrays.asList(
+                Boolean.TRUE,
+                Boolean.FALSE
+        );
+
+        testArrayInternal("col_boolean_array", entity, entity.booleanArray);
+    }
+
+    private <T> void testArrayInternal(String columnLabel, ArrayEntity entity, List<T> samples) throws SQLException, UnknownHostException {
+        List<ArrayEntity> entities = Collections.singletonList(entity);
 
         PgBulkInsert<ArrayEntity> pgBulkInsert = new PgBulkInsert<>(new ArrayEntityMapping());
 
@@ -112,12 +197,13 @@ public class ArrayTypesTest  extends TransactionalTestBase {
         ResultSet rs = getAll();
 
         while (rs.next()) {
-            Array z = rs.getArray("col_string_array");
+            Array z = rs.getArray(columnLabel);
 
-            String[] v = (String[]) z.getArray();
+            T[] v = (T[]) z.getArray();
 
-            Assert.assertEquals("A", v[0]);
-            Assert.assertEquals("B", v[1]);
+            for (int i=0; i<samples.size(); i++) {
+                Assert.assertEquals(samples.get(i), v[i]);
+            }
         }
     }
 
@@ -132,8 +218,15 @@ public class ArrayTypesTest  extends TransactionalTestBase {
     private boolean createTable() throws SQLException {
         String sqlStatement = String.format("CREATE TABLE %s.unit_test\n", schema) +
                 "            (\n" +
-                "                col_string_array varchar[], \n" +
-                "                col_numeric_array numeric[]\n" +
+                "                col_varchar_array varchar[], \n" +
+                "                col_text_array text[], \n" +
+                "                col_numeric_array numeric[],\n" +
+                "                col_double_array double precision[],\n" +
+                "                col_float_array real[],\n" +
+                "                col_long_array int8[],\n" +
+                "                col_short_array int2[],\n" +
+                "                col_integer_array int4[],\n" +
+                "                col_boolean_array boolean[]\n" +
                 "            );";
 
         Statement statement = connection.createStatement();
