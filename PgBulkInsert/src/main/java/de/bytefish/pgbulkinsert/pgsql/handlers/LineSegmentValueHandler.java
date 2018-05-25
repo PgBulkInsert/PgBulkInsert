@@ -3,7 +3,6 @@
 
 package de.bytefish.pgbulkinsert.pgsql.handlers;
 
-import de.bytefish.pgbulkinsert.pgsql.constants.DataType;
 import de.bytefish.pgbulkinsert.pgsql.handlers.utils.GeometricUtils;
 import de.bytefish.pgbulkinsert.pgsql.model.geometric.LineSegment;
 
@@ -17,10 +16,5 @@ public class LineSegmentValueHandler extends BaseValueHandler<LineSegment> {
 
         GeometricUtils.writePoint(buffer, value.getP1());
         GeometricUtils.writePoint(buffer, value.getP2());
-    }
-
-    @Override
-    public DataType getDataType() {
-        return DataType.LineSegment;
     }
 }

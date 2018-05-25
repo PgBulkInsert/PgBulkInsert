@@ -3,7 +3,6 @@
 
 package de.bytefish.pgbulkinsert.pgsql.handlers;
 
-import de.bytefish.pgbulkinsert.pgsql.constants.DataType;
 import de.bytefish.pgbulkinsert.util.StringUtils;
 
 import java.io.DataOutputStream;
@@ -16,10 +15,5 @@ public class StringValueHandler extends BaseValueHandler<String> {
 
         buffer.writeInt(utf8Bytes.length);
         buffer.write(utf8Bytes);
-    }
-
-    @Override
-    public DataType getDataType() {
-        return DataType.Text;
     }
 }

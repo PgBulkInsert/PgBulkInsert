@@ -3,15 +3,12 @@
 
 package de.bytefish.pgbulkinsert.pgsql.handlers;
 
-import com.sun.javafx.image.IntPixelGetter;
-import de.bytefish.pgbulkinsert.pgsql.constants.DataType;
-import de.bytefish.pgbulkinsert.pgsql.handlers.BaseValueHandler;
+import de.bytefish.pgbulkinsert.util.BigDecimalUtils;
 
 import java.io.DataOutputStream;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -20,7 +17,7 @@ import java.util.List;
  * https://github.com/intermine/intermine/blob/master/intermine/objectstore/main/src/org/intermine/sql/writebatch/BatchWriterPostgresCopyImpl.java
  *
  */
-public class BigDecimalValueHandler extends BaseValueHandler<BigDecimal> {
+public class BigDecimalValueHandler<T extends Number> extends BaseValueHandler<T> {
 
     private static final int DECIMAL_DIGITS = 4;
 
@@ -28,18 +25,24 @@ public class BigDecimalValueHandler extends BaseValueHandler<BigDecimal> {
     protected static final BigInteger TEN_THOUSAND = new BigInteger("10000");
 
     @Override
-    protected void internalHandle(DataOutputStream buffer, final BigDecimal value) throws Exception {
+    protected void internalHandle(DataOutputStream buffer, final T value) throws Exception {
 
-        BigInteger unscaledValue = value.unscaledValue();
+        Number tmpValue = value;
+        if (!(value instanceof BigDecimal)) {
+            // TODO does this need to be specific for every numeric type?
+            tmpValue = BigDecimalUtils.toBigDecimal(value.doubleValue());
+        }
 
-        int sign = value.signum();
+        BigInteger unscaledValue = ((BigDecimal)tmpValue).unscaledValue();
+
+        int sign = ((BigDecimal)tmpValue).signum();
 
         if (sign == -1) {
             unscaledValue = unscaledValue.negate();
         }
 
         // Number of fractional digits:
-        int fractionDigits = value.scale();
+        int fractionDigits = ((BigDecimal)tmpValue).scale();
 
         // Number of Fraction Groups:
         int fractionGroups = (fractionDigits + 3) / 4;
@@ -77,10 +80,5 @@ public class BigDecimalValueHandler extends BaseValueHandler<BigDecimal> {
             int valueToWrite = digits.get(pos).intValue();
             buffer.writeShort(valueToWrite);
         }
-    }
-
-    @Override
-    public DataType getDataType() {
-        return DataType.Numeric;
     }
 }

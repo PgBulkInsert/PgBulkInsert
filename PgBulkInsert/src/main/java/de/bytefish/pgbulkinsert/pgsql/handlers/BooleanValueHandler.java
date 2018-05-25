@@ -3,8 +3,6 @@
 
 package de.bytefish.pgbulkinsert.pgsql.handlers;
 
-import de.bytefish.pgbulkinsert.pgsql.constants.DataType;
-
 import java.io.DataOutputStream;
 
 public class BooleanValueHandler extends BaseValueHandler<Boolean> {
@@ -17,10 +15,5 @@ public class BooleanValueHandler extends BaseValueHandler<Boolean> {
         } else {
             buffer.writeByte(0);
         }
-    }
-
-    @Override
-    public DataType getDataType() {
-        return DataType.Boolean;
     }
 }

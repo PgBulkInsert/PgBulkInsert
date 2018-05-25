@@ -3,7 +3,6 @@
 
 package de.bytefish.pgbulkinsert.pgsql.handlers;
 
-import de.bytefish.pgbulkinsert.pgsql.constants.DataType;
 import de.bytefish.pgbulkinsert.pgsql.model.geometric.Line;
 
 import java.io.DataOutputStream;
@@ -17,10 +16,5 @@ public class LineValueHandler extends BaseValueHandler<Line> {
         buffer.writeDouble(value.getA());
         buffer.writeDouble(value.getB());
         buffer.writeDouble(value.getC());
-    }
-
-    @Override
-    public DataType getDataType() {
-        return DataType.Line;
     }
 }

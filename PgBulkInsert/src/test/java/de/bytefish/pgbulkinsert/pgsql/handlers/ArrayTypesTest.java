@@ -52,7 +52,7 @@ public class ArrayTypesTest  extends TransactionalTestBase {
     private class ArrayEntityMapping extends AbstractMapping<ArrayEntity> {
 
         public ArrayEntityMapping() {
-            super("sample", "unit_test");
+            super(schema, "unit_test");
 
             mapCollection("col_string_array", DataType.VarChar, ArrayEntity::getStringArray);
             mapCollection("col_numeric_array", DataType.Numeric, ArrayEntity::getNumericArray);
@@ -122,7 +122,7 @@ public class ArrayTypesTest  extends TransactionalTestBase {
     }
 
     private ResultSet getAll() throws SQLException {
-        String sqlStatement = "SELECT * FROM sample.unit_test";
+        String sqlStatement = String.format("SELECT * FROM %s.unit_test", schema);
 
         Statement statement = connection.createStatement();
 
@@ -130,7 +130,7 @@ public class ArrayTypesTest  extends TransactionalTestBase {
     }
 
     private boolean createTable() throws SQLException {
-        String sqlStatement = "CREATE TABLE sample.unit_test\n" +
+        String sqlStatement = String.format("CREATE TABLE %s.unit_test\n", schema) +
                 "            (\n" +
                 "                col_string_array varchar[], \n" +
                 "                col_numeric_array numeric[]\n" +
@@ -145,7 +145,7 @@ public class ArrayTypesTest  extends TransactionalTestBase {
 
         Statement s = connection.createStatement();
 
-        ResultSet r = s.executeQuery("SELECT COUNT(*) AS rowcount FROM sample.unit_test");
+        ResultSet r = s.executeQuery(String.format("SELECT COUNT(*) AS rowcount FROM %s.unit_test", schema));
         r.next();
         int count = r.getInt("rowcount");
         r.close();

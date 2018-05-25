@@ -3,20 +3,13 @@
 
 package de.bytefish.pgbulkinsert.pgsql.handlers;
 
-import de.bytefish.pgbulkinsert.pgsql.constants.DataType;
-
 import java.io.DataOutputStream;
 
-public class LongValueHandler extends BaseValueHandler<Long> {
+public class LongValueHandler<T extends Number> extends BaseValueHandler<T> {
 
     @Override
-    protected void internalHandle(DataOutputStream buffer, final Long value) throws Exception {
+    protected void internalHandle(DataOutputStream buffer, final T value) throws Exception {
         buffer.writeInt(8);
-        buffer.writeLong(value);
-    }
-
-    @Override
-    public DataType getDataType() {
-        return DataType.Int8;
+        buffer.writeLong(value.longValue());
     }
 }

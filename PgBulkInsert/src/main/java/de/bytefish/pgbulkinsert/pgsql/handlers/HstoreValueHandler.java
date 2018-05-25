@@ -3,7 +3,6 @@
 
 package de.bytefish.pgbulkinsert.pgsql.handlers;
 
-import de.bytefish.pgbulkinsert.pgsql.constants.DataType;
 import de.bytefish.pgbulkinsert.util.StringUtils;
 
 import java.io.ByteArrayOutputStream;
@@ -54,10 +53,5 @@ public class HstoreValueHandler extends BaseValueHandler<Map<String, String>> {
 
         buffer.writeInt(textBytes.length);
         buffer.write(textBytes);
-    }
-
-    @Override
-    public DataType getDataType() {
-        return DataType.Hstore;
     }
 }

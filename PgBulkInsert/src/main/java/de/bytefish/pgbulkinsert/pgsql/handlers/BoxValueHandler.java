@@ -3,10 +3,8 @@
 
 package de.bytefish.pgbulkinsert.pgsql.handlers;
 
-import de.bytefish.pgbulkinsert.pgsql.constants.DataType;
 import de.bytefish.pgbulkinsert.pgsql.handlers.utils.GeometricUtils;
 import de.bytefish.pgbulkinsert.pgsql.model.geometric.Box;
-import de.bytefish.pgbulkinsert.pgsql.model.geometric.Point;
 
 import java.io.DataOutputStream;
 
@@ -18,10 +16,5 @@ public class BoxValueHandler extends BaseValueHandler<Box> {
 
         GeometricUtils.writePoint(buffer, value.getHigh());
         GeometricUtils.writePoint(buffer, value.getLow());
-    }
-
-    @Override
-    public DataType getDataType() {
-        return DataType.Box;
     }
 }
