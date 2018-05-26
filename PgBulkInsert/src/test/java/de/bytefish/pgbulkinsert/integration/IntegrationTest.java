@@ -55,7 +55,7 @@ public void bulkInsertPersonDataTest() throws SQLException {
 
     private boolean createTable() throws SQLException {
 
-        String sqlStatement = "CREATE TABLE sample.unit_test\n" +
+        String sqlStatement = String.format("CREATE TABLE %s.unit_test\n", schema) +
                 "            (\n" +
                 "                first_name text,\n" +
                 "                last_name text,\n" +
@@ -71,7 +71,7 @@ public void bulkInsertPersonDataTest() throws SQLException {
 
         Statement s = connection.createStatement();
 
-        ResultSet r = s.executeQuery("SELECT COUNT(*) AS rowcount FROM sample.unit_test");
+        ResultSet r = s.executeQuery(String.format("SELECT COUNT(*) AS rowcount FROM %s.unit_test", schema));
         r.next();
         int count = r.getInt("rowcount");
         r.close();

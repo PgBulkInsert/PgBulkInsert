@@ -13,6 +13,8 @@ public abstract class TransactionalTestBase {
 
     protected Connection connection;
 
+    protected final String schema = "sample";
+
     @Before
     public void setUp() throws Exception {
         connection = DriverManager.getConnection("jdbc:postgresql://127.0.0.1:5432/sampledb", "philipp", "test_pwd");

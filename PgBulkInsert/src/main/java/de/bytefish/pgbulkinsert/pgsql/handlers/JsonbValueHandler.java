@@ -3,8 +3,6 @@
 
 package de.bytefish.pgbulkinsert.pgsql.handlers;
 
-import de.bytefish.pgbulkinsert.pgsql.constants.DataType;
-
 import java.io.DataOutputStream;
 
 public class JsonbValueHandler extends BaseValueHandler<String> {
@@ -30,10 +28,5 @@ public class JsonbValueHandler extends BaseValueHandler<String> {
         buffer.writeByte(jsonbProtocolVersion);
         // Copy the Data:
         buffer.write(utf8Bytes);
-    }
-
-    @Override
-    public DataType getDataType() {
-        return DataType.Jsonb;
     }
 }

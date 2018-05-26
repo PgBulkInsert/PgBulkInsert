@@ -43,11 +43,6 @@ public class CustomValueHandlerIntegrationTest extends TransactionalTestBase {
         }
 
         @Override
-        public DataType getDataType() {
-            return DataType.Numeric;
-        }
-
-        @Override
         protected void internalHandle(DataOutputStream buffer, Double value) throws Exception {
             BigDecimal decimal = BigDecimal.valueOf(value);
 
@@ -75,7 +70,7 @@ public class CustomValueHandlerIntegrationTest extends TransactionalTestBase {
     public class CustomValueHandlerMapping extends AbstractMapping<SampleEntity> {
 
         public CustomValueHandlerMapping() {
-            super("sample", "unit_test");
+            super(schema, "unit_test");
 
             map("numeric_column", new DoubleNumericValueHandler(), SampleEntity::getDoubleValue);
         }
@@ -111,7 +106,7 @@ public class CustomValueHandlerIntegrationTest extends TransactionalTestBase {
 
     private boolean createTable() throws SQLException {
 
-        String sqlStatement = "CREATE TABLE sample.unit_test\n" +
+        String sqlStatement = String.format("CREATE TABLE %s.unit_test\n", schema) +
                 "            (\n" +
                 "                numeric_column numeric(20, 10)\n" +
                 "            );";
@@ -122,7 +117,7 @@ public class CustomValueHandlerIntegrationTest extends TransactionalTestBase {
     }
 
     private ResultSet getAll() throws SQLException {
-        String sqlStatement = "SELECT * FROM sample.unit_test";
+        String sqlStatement = String.format("SELECT * FROM %s.unit_test", schema);
 
         Statement statement = connection.createStatement();
 

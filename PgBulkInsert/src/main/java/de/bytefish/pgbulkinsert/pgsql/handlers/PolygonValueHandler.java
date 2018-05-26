@@ -3,9 +3,7 @@
 
 package de.bytefish.pgbulkinsert.pgsql.handlers;
 
-import de.bytefish.pgbulkinsert.pgsql.constants.DataType;
 import de.bytefish.pgbulkinsert.pgsql.handlers.utils.GeometricUtils;
-import de.bytefish.pgbulkinsert.pgsql.model.geometric.Path;
 import de.bytefish.pgbulkinsert.pgsql.model.geometric.Point;
 import de.bytefish.pgbulkinsert.pgsql.model.geometric.Polygon;
 
@@ -29,10 +27,5 @@ public class PolygonValueHandler extends BaseValueHandler<Polygon> {
             GeometricUtils.writePoint(buffer, p);
         }
 
-    }
-
-    @Override
-    public DataType getDataType() {
-        return DataType.Polygon;
     }
 }

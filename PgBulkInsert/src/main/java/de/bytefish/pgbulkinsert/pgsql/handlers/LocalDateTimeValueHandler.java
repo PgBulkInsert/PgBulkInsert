@@ -3,7 +3,6 @@
 
 package de.bytefish.pgbulkinsert.pgsql.handlers;
 
-import de.bytefish.pgbulkinsert.pgsql.constants.DataType;
 import de.bytefish.pgbulkinsert.pgsql.converter.IValueConverter;
 import de.bytefish.pgbulkinsert.pgsql.converter.LocalDateTimeConverter;
 
@@ -27,10 +26,5 @@ public class LocalDateTimeValueHandler extends BaseValueHandler<LocalDateTime> {
     protected void internalHandle(DataOutputStream buffer, final LocalDateTime value) throws Exception {
         buffer.writeInt(8);
         buffer.writeLong(dateTimeConverter.convert(value));
-    }
-
-    @Override
-    public DataType getDataType() {
-        return DataType.Timestamp;
     }
 }

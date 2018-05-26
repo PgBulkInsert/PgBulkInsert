@@ -3,8 +3,6 @@
 
 package de.bytefish.pgbulkinsert.pgsql.handlers;
 
-import de.bytefish.pgbulkinsert.pgsql.constants.DataType;
-
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.util.Collection;
@@ -38,10 +36,5 @@ public class CollectionValueHandler<TElementType, TCollectionType extends Collec
 
         buffer.writeInt(byteArrayOutput.size());
         buffer.write(byteArrayOutput.toByteArray());
-    }
-
-    @Override
-    public DataType getDataType() {
-        return valueHandler.getDataType();
     }
 }

@@ -105,7 +105,7 @@ public class GeometricTypesTest extends TransactionalTestBase {
     private class GeometricEntityMapping extends AbstractMapping<GeometricEntity> {
 
         public GeometricEntityMapping() {
-            super("sample", "geometric_table");
+            super(schema, "geometric_table");
 
             mapPoint("col_point", GeometricEntity::getCol_point);
             mapPath("col_path", GeometricEntity::getCol_path);
@@ -118,7 +118,7 @@ public class GeometricTypesTest extends TransactionalTestBase {
     }
 
     private boolean createTable() throws SQLException {
-        String sqlStatement = "CREATE TABLE sample.geometric_table(\n" +
+        String sqlStatement = String.format("CREATE TABLE %s.geometric_table(\n", schema) +
                 "                col_point point, \n" +
                 "                col_path path, \n" +
                 "                col_polygon polygon, \n" +
@@ -414,7 +414,7 @@ public class GeometricTypesTest extends TransactionalTestBase {
 
 
     private ResultSet getAll() throws SQLException {
-        String sqlStatement = "SELECT * FROM sample.geometric_table";
+        String sqlStatement = String.format("SELECT * FROM %s.geometric_table", schema);
 
         Statement statement = connection.createStatement();
 

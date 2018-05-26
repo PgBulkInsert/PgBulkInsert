@@ -48,14 +48,14 @@ public class NetworkTypesTest extends TransactionalTestBase {
     private class NetworkEntityMapping extends AbstractMapping<NetworkEntity> {
 
         public NetworkEntityMapping() {
-            super("sample", "network_table");
+            super(schema, "network_table");
 
             mapMacAddress("col_mac_addr", NetworkEntity::getCol_mac_addr);
         }
     }
 
     private boolean createTable() throws SQLException {
-        String sqlStatement = "CREATE TABLE sample.network_table(\n" +
+        String sqlStatement = String.format("CREATE TABLE %s.network_table(\n", schema) +
                 "                col_mac_addr macaddr \n" +
                 "            );";
 
@@ -108,7 +108,7 @@ public class NetworkTypesTest extends TransactionalTestBase {
     }
 
     private ResultSet getAll() throws SQLException {
-        String sqlStatement = "SELECT * FROM sample.network_table";
+        String sqlStatement = String.format("SELECT * FROM %s.network_table", schema);
 
         Statement statement = connection.createStatement();
 

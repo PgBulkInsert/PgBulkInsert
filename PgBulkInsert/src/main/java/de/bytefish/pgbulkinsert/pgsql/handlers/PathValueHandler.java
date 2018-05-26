@@ -3,7 +3,6 @@
 
 package de.bytefish.pgbulkinsert.pgsql.handlers;
 
-import de.bytefish.pgbulkinsert.pgsql.constants.DataType;
 import de.bytefish.pgbulkinsert.pgsql.handlers.utils.GeometricUtils;
 import de.bytefish.pgbulkinsert.pgsql.model.geometric.Path;
 import de.bytefish.pgbulkinsert.pgsql.model.geometric.Point;
@@ -31,10 +30,5 @@ public class PathValueHandler extends BaseValueHandler<Path> {
             GeometricUtils.writePoint(buffer, p);
         }
 
-    }
-
-    @Override
-    public DataType getDataType() {
-        return DataType.Path;
     }
 }

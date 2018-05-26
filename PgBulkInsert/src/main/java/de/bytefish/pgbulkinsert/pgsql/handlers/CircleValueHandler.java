@@ -3,7 +3,6 @@
 
 package de.bytefish.pgbulkinsert.pgsql.handlers;
 
-import de.bytefish.pgbulkinsert.pgsql.constants.DataType;
 import de.bytefish.pgbulkinsert.pgsql.handlers.utils.GeometricUtils;
 import de.bytefish.pgbulkinsert.pgsql.model.geometric.Circle;
 
@@ -18,10 +17,5 @@ public class CircleValueHandler extends BaseValueHandler<Circle> {
         GeometricUtils.writePoint(buffer, value.getCenter());
         // ... and then the Radius:
         buffer.writeDouble(value.getRadius());
-    }
-
-    @Override
-    public DataType getDataType() {
-        return DataType.Circle;
     }
 }

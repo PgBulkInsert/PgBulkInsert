@@ -5,7 +5,6 @@ package de.bytefish.pgbulkinsert.pgsql.handlers;
 
 import de.bytefish.pgbulkinsert.PgBulkInsert;
 import de.bytefish.pgbulkinsert.mapping.AbstractMapping;
-import de.bytefish.pgbulkinsert.util.JavaUtils;
 import de.bytefish.pgbulkinsert.util.PostgreSqlUtils;
 import de.bytefish.pgbulkinsert.utils.TransactionalTestBase;
 import org.junit.Assert;
@@ -126,11 +125,11 @@ public class PgBulkInsertTest extends TransactionalTestBase {
     private class SampleEntityMapping extends AbstractMapping<SampleEntity> {
 
         public SampleEntityMapping() {
-            super("sample", "unit_test");
+            super(schema, "unit_test");
 
-            mapString("col_text", SampleEntity::get_col_text);
+            mapText("col_text", SampleEntity::get_col_text);
             mapInteger("col_integer", SampleEntity::get_col_integer);
-            mapSmallInt("col_smallint", SampleEntity::get_col_short);
+            mapShort("col_smallint", SampleEntity::get_col_short);
             mapTimeStamp("col_timestamp", SampleEntity::get_col_datetime);
             mapLong("col_bigint", SampleEntity::get_col_long);
             mapDate("col_date", SampleEntity::getCol_date);
@@ -139,7 +138,7 @@ public class PgBulkInsertTest extends TransactionalTestBase {
             mapUUID("col_uuid", SampleEntity::get_col_uuid);
             mapByteArray("col_bytea", SampleEntity::getCol_bytearray);
             mapDouble("col_double", SampleEntity::get_col_double);
-            mapReal("col_real", SampleEntity::get_col_float);
+            mapFloat("col_real", SampleEntity::get_col_float);
             mapBoolean("col_boolean", SampleEntity::getCol_boolean);
             mapIntegerArray("col_int_array", SampleEntity::getCol_int_array);
             mapDoubleArray("col_double_array", SampleEntity::getCol_double_array);
@@ -649,7 +648,7 @@ public class PgBulkInsertTest extends TransactionalTestBase {
     }
 
     private ResultSet getAll() throws SQLException {
-        String sqlStatement = "SELECT * FROM sample.unit_test";
+        String sqlStatement = String.format("SELECT * FROM %s.unit_test", schema);
 
         Statement statement = connection.createStatement();
 
@@ -657,7 +656,7 @@ public class PgBulkInsertTest extends TransactionalTestBase {
     }
 
     private boolean createTable() throws SQLException {
-        String sqlStatement = "CREATE TABLE sample.unit_test\n" +
+        String sqlStatement = String.format("CREATE TABLE %s.unit_test\n", schema) +
                 "            (\n" +
                 "                col_smallint smallint,\n" +
                 "                col_integer integer,\n" +
@@ -691,7 +690,7 @@ public class PgBulkInsertTest extends TransactionalTestBase {
 
         Statement s = connection.createStatement();
 
-        ResultSet r = s.executeQuery("SELECT COUNT(*) AS rowcount FROM sample.unit_test");
+        ResultSet r = s.executeQuery(String.format("SELECT COUNT(*) AS rowcount FROM %s.unit_test", schema));
         r.next();
         int count = r.getInt("rowcount");
         r.close();
