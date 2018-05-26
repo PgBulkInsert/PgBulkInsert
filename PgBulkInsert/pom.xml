@@ -30,10 +30,13 @@
     <!-- Developers -->
     <developers>
         <developer>
-            <email>bytefish@gmx.de</email>
+            <email>pwag86@googlemail.com</email>
             <name>Philipp Wagner</name>
-            <url>http://www.bytefish.de</url>
+            <url>https://www.bytefish.de</url>
             <id>bytefish</id>
+        </developer>
+        <developer>
+            <name>Irmo Manie</name>
         </developer>
     </developers>
 

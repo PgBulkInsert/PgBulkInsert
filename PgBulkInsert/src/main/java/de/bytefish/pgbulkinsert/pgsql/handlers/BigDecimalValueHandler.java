@@ -8,6 +8,7 @@ import de.bytefish.pgbulkinsert.util.BigDecimalUtils;
 import java.io.DataOutputStream;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.MathContext;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,8 +29,9 @@ public class BigDecimalValueHandler<T extends Number> extends BaseValueHandler<T
     protected void internalHandle(DataOutputStream buffer, final T value) throws Exception {
 
         Number tmpValue = value;
+
+        // TODO This could be optimized
         if (!(value instanceof BigDecimal)) {
-            // TODO does this need to be specific for every numeric type?
             tmpValue = BigDecimalUtils.toBigDecimal(value.doubleValue());
         }
 

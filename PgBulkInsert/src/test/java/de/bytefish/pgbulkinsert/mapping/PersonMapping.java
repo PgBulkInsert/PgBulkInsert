@@ -7,8 +7,8 @@ import de.bytefish.pgbulkinsert.model.Person;
 
 public class PersonMapping extends AbstractMapping<Person>
 {
-    public PersonMapping() {
-        super("public", "unit_test");
+    public PersonMapping(String schema) {
+        super(schema, "unit_test");
 
         mapText("first_name", Person::getFirstName);
         mapText("last_name", Person::getLastName);

@@ -25,17 +25,17 @@ public class IntegrationTest extends TransactionalTestBase {
         createTable();
     }
 
-@Test
-public void bulkInsertPersonDataTest() throws SQLException {
-    // Create a large list of Persons:
-    List<Person> persons = getPersonList(100000);
-    // Create the BulkInserter:
-    PgBulkInsert<Person> bulkInsert = new PgBulkInsert<Person>(new PersonMapping());
-    // Now save all entities of a given stream:
-    bulkInsert.saveAll(PostgreSqlUtils.getPGConnection(connection), persons.stream());
-    // And assert all have been written to the database:
-    Assert.assertEquals(100000, getRowCount());
-}
+    @Test
+    public void bulkInsertPersonDataTest() throws SQLException {
+        // Create a large list of Persons:
+        List<Person> persons = getPersonList(100000);
+        // Create the BulkInserter:
+        PgBulkInsert<Person> bulkInsert = new PgBulkInsert<Person>(new PersonMapping(schema));
+        // Now save all entities of a given stream:
+        bulkInsert.saveAll(PostgreSqlUtils.getPGConnection(connection), persons.stream());
+        // And assert all have been written to the database:
+        Assert.assertEquals(100000, getRowCount());
+    }
 
     private List<Person> getPersonList(int numPersons) {
         List<Person> persons = new ArrayList<>();

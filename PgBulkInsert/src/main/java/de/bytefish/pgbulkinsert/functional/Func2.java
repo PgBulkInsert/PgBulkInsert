@@ -5,5 +5,5 @@ package de.bytefish.pgbulkinsert.functional;
 
 @FunctionalInterface
 public interface Func2<S, T> {
-    T invoke(S s) throws Exception;
+    T invoke(S s);
 }

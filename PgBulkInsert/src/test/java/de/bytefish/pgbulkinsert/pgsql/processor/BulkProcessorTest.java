@@ -49,7 +49,7 @@ public class BulkProcessorTest extends TransactionalTestBase {
     }
 
     private IPgBulkInsert<Person> CreateBulkInserter() {
-        return new PgBulkInsert<>(new PersonMapping());
+        return new PgBulkInsert<>(new PersonMapping(schema));
     }
 
     @Test
