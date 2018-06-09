@@ -151,8 +151,8 @@ public class PersonMapping extends AbstractMapping<Person>
     public PersonMapping() {
         super("sample", "unit_test");
 
-        mapString("first_name", Person::getFirstName);
-        mapString("last_name", Person::getLastName);
+        mapText("first_name", Person::getFirstName);
+        mapText("last_name", Person::getLastName);
         mapDate("birth_date", Person::getBirthDate);
     }
 }
