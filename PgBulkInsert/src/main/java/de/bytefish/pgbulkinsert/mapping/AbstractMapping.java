@@ -84,7 +84,6 @@ public abstract class AbstractMapping<TEntity> {
         map(columnName, DataType.Numeric, propertyGetter);
     }
 
-
     protected void mapLong(String columnName, Func2<TEntity, Number> propertyGetter) {
         map(columnName, DataType.Int8, propertyGetter);
     }
