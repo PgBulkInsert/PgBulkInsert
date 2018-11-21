@@ -3,15 +3,16 @@
 
 package de.bytefish.pgbulkinsert.pgsql.handlers;
 
-import de.bytefish.pgbulkinsert.util.StringUtils;
-
 import java.io.DataOutputStream;
+import java.nio.charset.Charset;
 
 public class StringValueHandler extends BaseValueHandler<String> {
+	
+	private Charset utf8Charset = Charset.forName("UTF-8");
 
     @Override
     protected void internalHandle(DataOutputStream buffer, final String value) throws Exception {
-        byte[] utf8Bytes = StringUtils.getUtf8Bytes(value);
+        byte[] utf8Bytes = value.getBytes(utf8Charset);
 
         buffer.writeInt(utf8Bytes.length);
         buffer.write(utf8Bytes);
