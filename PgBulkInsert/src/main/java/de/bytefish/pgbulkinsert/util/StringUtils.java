@@ -3,7 +3,11 @@
 
 package de.bytefish.pgbulkinsert.util;
 
+import java.nio.charset.Charset;
+
 public class StringUtils {
+	
+	private static Charset utf8Charset = Charset.forName("UTF-8");
 
     private StringUtils() {}
 
@@ -12,11 +16,7 @@ public class StringUtils {
     }
 
     public static byte[] getUtf8Bytes(String value) {
-        try {
-            return value.getBytes("UTF-8");
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        return value.getBytes(utf8Charset);
     }
 
 }

@@ -3,17 +3,7 @@
 
 package de.bytefish.pgbulkinsert.pgsql.handlers;
 
-import de.bytefish.pgbulkinsert.PgBulkInsert;
-import de.bytefish.pgbulkinsert.functional.Func1;
-import de.bytefish.pgbulkinsert.functional.Func2;
-import de.bytefish.pgbulkinsert.mapping.AbstractMapping;
-import de.bytefish.pgbulkinsert.util.PostgreSqlUtils;
-import de.bytefish.pgbulkinsert.utils.TransactionalTestBase;
-import org.junit.Assert;
-import org.junit.Test;
-
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.net.UnknownHostException;
 import java.sql.Array;
 import java.sql.ResultSet;
@@ -22,6 +12,15 @@ import java.sql.Statement;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Function;
+
+import org.junit.Assert;
+import org.junit.Test;
+
+import de.bytefish.pgbulkinsert.PgBulkInsert;
+import de.bytefish.pgbulkinsert.mapping.AbstractMapping;
+import de.bytefish.pgbulkinsert.util.PostgreSqlUtils;
+import de.bytefish.pgbulkinsert.utils.TransactionalTestBase;
 
 public class NumericArrayTypesTest extends TransactionalTestBase {
 
@@ -147,7 +146,7 @@ public class NumericArrayTypesTest extends TransactionalTestBase {
         testArrayInternal("col_integer_array", entity, entity.integerArray, BigDecimal::intValue);
     }
 
-    private <T> void testArrayInternal(String columnLabel, ArrayEntity entity, List<T> samples, Func2<BigDecimal, T> converter) throws SQLException, UnknownHostException {
+    private <T> void testArrayInternal(String columnLabel, ArrayEntity entity, List<T> samples, Function<BigDecimal, T> converter) throws SQLException, UnknownHostException {
 
         List<ArrayEntity> entities = Collections.singletonList(entity);
 
@@ -164,7 +163,7 @@ public class NumericArrayTypesTest extends TransactionalTestBase {
 
             for (int i=0; i<samples.size(); i++) {
 
-                T element = converter.invoke(v[i]);
+                T element = converter.apply(v[i]);
 
                 Assert.assertEquals(samples.get(i), element);
             }

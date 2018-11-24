@@ -3,9 +3,9 @@
 
 package de.bytefish.pgbulkinsert.pgsql.handlers;
 
-import de.bytefish.pgbulkinsert.util.StringUtils;
-
 import java.io.DataOutputStream;
+
+import de.bytefish.pgbulkinsert.util.StringUtils;
 
 public class StringValueHandler extends BaseValueHandler<String> {
 

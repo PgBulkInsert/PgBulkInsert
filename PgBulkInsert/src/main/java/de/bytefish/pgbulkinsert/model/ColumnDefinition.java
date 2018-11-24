@@ -3,16 +3,17 @@
 
 package de.bytefish.pgbulkinsert.model;
 
-import de.bytefish.pgbulkinsert.functional.Action2;
+import java.util.function.BiConsumer;
+
 import de.bytefish.pgbulkinsert.pgsql.PgBinaryWriter;
 
 public class ColumnDefinition<TEntity>
 {
     private final String columnName;
 
-    private final Action2<PgBinaryWriter, TEntity> write;
+    private final BiConsumer<PgBinaryWriter, TEntity> write;
 
-    public ColumnDefinition(String columnName, Action2<PgBinaryWriter, TEntity> write) {
+    public ColumnDefinition(String columnName, BiConsumer<PgBinaryWriter, TEntity> write) {
         this.columnName = columnName;
         this.write = write;
     }
@@ -21,7 +22,7 @@ public class ColumnDefinition<TEntity>
         return columnName;
     }
 
-    public Action2<PgBinaryWriter, TEntity> getWrite() {
+    public BiConsumer<PgBinaryWriter, TEntity> getWrite() {
         return write;
     }
 

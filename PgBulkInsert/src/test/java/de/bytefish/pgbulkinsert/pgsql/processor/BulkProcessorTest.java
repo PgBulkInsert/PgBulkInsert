@@ -5,7 +5,6 @@ package de.bytefish.pgbulkinsert.pgsql.processor;
 
 import de.bytefish.pgbulkinsert.IPgBulkInsert;
 import de.bytefish.pgbulkinsert.PgBulkInsert;
-import de.bytefish.pgbulkinsert.functional.Func1;
 import de.bytefish.pgbulkinsert.mapping.PersonMapping;
 import de.bytefish.pgbulkinsert.model.Person;
 import de.bytefish.pgbulkinsert.pgsql.processor.handler.IBulkWriteHandler;
@@ -22,6 +21,7 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 
 public class BulkProcessorTest extends TransactionalTestBase {
 
@@ -34,15 +34,15 @@ public class BulkProcessorTest extends TransactionalTestBase {
     class CustomBulkWriteHandler<TEntity> implements IBulkWriteHandler<TEntity> {
 
         private final IPgBulkInsert<TEntity> client;
-        private final Func1<Connection> connectionFactory;
+        private final Supplier<Connection> connectionFactory;
 
-        public CustomBulkWriteHandler(IPgBulkInsert<TEntity> client, Func1<Connection> connectionFactory) {
+        public CustomBulkWriteHandler(IPgBulkInsert<TEntity> client, Supplier<Connection> connectionFactory) {
             this.client = client;
             this.connectionFactory = connectionFactory;
         }
 
         public void write(List<TEntity> entities) throws Exception {
-            Connection connection = connectionFactory.invoke();
+            Connection connection = connectionFactory.get();
 
             client.saveAll(PostgreSqlUtils.getPGConnection(connection), entities.stream());
         }
@@ -57,7 +57,7 @@ public class BulkProcessorTest extends TransactionalTestBase {
         // Create the BulkInserter to be wrapped:
         IPgBulkInsert<Person> personBulkInserter = CreateBulkInserter();
         // Create the ConnectionFactory:
-        Func1<Connection> connectionFactory = () -> connection;
+        Supplier<Connection> connectionFactory = () -> connection;
         // Create the BulkHandler:
         IBulkWriteHandler<Person> bulkWriteHandler = new CustomBulkWriteHandler<>(personBulkInserter, connectionFactory);
         // Create the BulkProcessor:
@@ -78,7 +78,7 @@ public class BulkProcessorTest extends TransactionalTestBase {
         // Create the BulkInserter to be wrapped:
         IPgBulkInsert<Person> personBulkInserter = CreateBulkInserter();
         // Create the ConnectionFactory:
-        Func1<Connection> connectionFactory = () -> connection;
+        Supplier<Connection> connectionFactory = () -> connection;
         // Create the BulkHandler:
         IBulkWriteHandler<Person> bulkWriteHandler = new CustomBulkWriteHandler<>(personBulkInserter, connectionFactory);
         // Create the BulkProcessor:
@@ -101,7 +101,7 @@ public class BulkProcessorTest extends TransactionalTestBase {
         // Create the BulkInserter to be wrapped:
         IPgBulkInsert<Person> personBulkInserter = CreateBulkInserter();
         // Create the ConnectionFactory:
-        Func1<Connection> connectionFactory = () -> connection;
+        Supplier<Connection> connectionFactory = () -> connection;
         // Create the BulkHandler:
         IBulkWriteHandler<Person> bulkWriteHandler = new CustomBulkWriteHandler<>(personBulkInserter, connectionFactory);
         // Create the BulkProcessor:

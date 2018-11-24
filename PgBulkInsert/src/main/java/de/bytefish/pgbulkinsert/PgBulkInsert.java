@@ -14,6 +14,7 @@ import org.postgresql.copy.CopyManager;
 import org.postgresql.copy.PGCopyOutputStream;
 
 import java.sql.SQLException;
+import java.util.Objects;
 import java.util.stream.Stream;
 
 public class PgBulkInsert<TEntity> implements IPgBulkInsert<TEntity> {
@@ -21,19 +22,14 @@ public class PgBulkInsert<TEntity> implements IPgBulkInsert<TEntity> {
     private final IConfiguration configuration;
     private final AbstractMapping<TEntity> mapping;
 
-    public PgBulkInsert(AbstractMapping mapping) {
+    public PgBulkInsert(AbstractMapping<TEntity> mapping) {
         this(new Configuration(), mapping);
     }
 
-    public PgBulkInsert(IConfiguration configuration, AbstractMapping mapping)
+    public PgBulkInsert(IConfiguration configuration, AbstractMapping<TEntity> mapping)
     {
-        if(configuration == null) {
-            throw new IllegalArgumentException("configuration");
-        }
-
-        if(mapping == null) {
-            throw new IllegalArgumentException("mapping");
-        }
+        Objects.requireNonNull(configuration, "'configuration' has to be set");
+        Objects.requireNonNull(mapping, "'mapping' has to be set");
 
         this.configuration = configuration;
         this.mapping = mapping;
@@ -62,7 +58,7 @@ public class PgBulkInsert<TEntity> implements IPgBulkInsert<TEntity> {
             // Iterate over each column mapping:
             mapping.getColumns().forEach(column -> {
                 try {
-                    column.getWrite().invoke(bw, entity);
+                    column.getWrite().accept(bw, entity);
                 } catch (Exception e) {
                     throw new SaveEntityFailedException(e);
                 }
