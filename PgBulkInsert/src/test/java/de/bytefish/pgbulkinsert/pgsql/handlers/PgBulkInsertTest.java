@@ -34,7 +34,7 @@ public class PgBulkInsertTest extends TransactionalTestBase {
         public UUID col_uuid;
         public Inet4Address col_inet4Address;
         public Inet6Address col_inet6Address;
-        public Byte[] col_bytearray;
+        public byte[] col_bytearray;
         public Boolean col_boolean;
         public List<Integer> col_int_array;
         public List<Double> col_double_array;
@@ -86,7 +86,7 @@ public class PgBulkInsertTest extends TransactionalTestBase {
             return col_inet6Address;
         }
 
-        public Byte[] getCol_bytearray() {
+        public byte[] getCol_bytearray() {
             return col_bytearray;
         }
 
@@ -538,7 +538,11 @@ public class PgBulkInsertTest extends TransactionalTestBase {
 
         // Create the Entity to insert:
         SampleEntity entity = new SampleEntity();
-        entity.col_bytearray = new Byte[]{new Byte((byte) 1), new Byte((byte) 2)};
+
+        byte byte1 = 1;
+        byte byte2 = 2;
+
+        entity.col_bytearray = new byte[]{ byte1, byte2 };
 
         entities.add(entity);
 

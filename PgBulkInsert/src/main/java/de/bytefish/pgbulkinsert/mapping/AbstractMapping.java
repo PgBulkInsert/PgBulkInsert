@@ -124,7 +124,7 @@ public abstract class AbstractMapping<TEntity> {
         map(columnName, DataType.Uuid, propertyGetter);
     }
 
-    protected void mapByteArray(String columnName, Function<TEntity, Byte[]> propertyGetter) {
+    protected void mapByteArray(String columnName, Function<TEntity, byte[]> propertyGetter) {
         map(columnName, DataType.Bytea, propertyGetter);
     }
 
