@@ -7,16 +7,16 @@ import de.bytefish.pgbulkinsert.exceptions.ValueHandlerAlreadyRegisteredExceptio
 import de.bytefish.pgbulkinsert.exceptions.ValueHandlerNotRegisteredException;
 import de.bytefish.pgbulkinsert.pgsql.constants.DataType;
 
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 public class ValueHandlerProvider implements IValueHandlerProvider {
 
-    private Map<DataType, ValueHandler> valueHandlers;
+    private final Map<DataType, IValueHandler> valueHandlers;
 
     public ValueHandlerProvider() {
-        valueHandlers = new HashMap<>();
+        valueHandlers = new EnumMap<>(DataType.class);
 
         add(DataType.Boolean, new BooleanValueHandler());
         add(DataType.Char, new ByteValueHandler<>());
@@ -58,10 +58,13 @@ public class ValueHandlerProvider implements IValueHandlerProvider {
 
     @Override
     public <TTargetType> IValueHandler<TTargetType> resolve(DataType dataType) {
-        if(!valueHandlers.containsKey(dataType)) {
+    	
+    	@SuppressWarnings("unchecked")
+		IValueHandler<TTargetType> handler = valueHandlers.get(dataType);
+        if(handler == null) {
             throw new ValueHandlerNotRegisteredException(String.format("DataType '%s' has not been registered", dataType));
         }
-        return (IValueHandler<TTargetType>) valueHandlers.get(dataType);
+        return handler;
     }
 
 
