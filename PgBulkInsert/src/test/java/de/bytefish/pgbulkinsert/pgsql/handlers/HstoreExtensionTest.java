@@ -48,14 +48,14 @@ public class HstoreExtensionTest extends TransactionalTestBase {
     private class HStoreEntityMapping extends AbstractMapping<HStoreEntity> {
 
         public HStoreEntityMapping() {
-            super(schema, "hstore_table");
+            super(SCHEMA, "hstore_table");
 
             mapHstore("col_hstore", HStoreEntity::getCol_hstore);
         }
     }
 
     private boolean createTable() throws SQLException {
-        String sqlStatement = String.format("CREATE TABLE %s.hstore_table(\n", schema) +
+        String sqlStatement = String.format("CREATE TABLE %s.hstore_table(\n", SCHEMA) +
                 "                col_hstore hstore \n" +
                 "            );";
 
@@ -98,7 +98,7 @@ public class HstoreExtensionTest extends TransactionalTestBase {
     }
 
     private ResultSet getAll() throws SQLException {
-        String sqlStatement = String.format("SELECT * FROM %s.hstore_table", schema);
+        String sqlStatement = String.format("SELECT * FROM %s.hstore_table", SCHEMA);
 
         Statement statement = connection.createStatement();
 

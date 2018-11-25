@@ -125,7 +125,7 @@ public class PgBulkInsertTest extends TransactionalTestBase {
     private class SampleEntityMapping extends AbstractMapping<SampleEntity> {
 
         public SampleEntityMapping() {
-            super(schema, "unit_test");
+            super(SCHEMA, "unit_test");
 
             mapText("col_text", SampleEntity::get_col_text);
             mapInteger("col_integer", SampleEntity::get_col_integer);
@@ -652,7 +652,7 @@ public class PgBulkInsertTest extends TransactionalTestBase {
     }
 
     private ResultSet getAll() throws SQLException {
-        String sqlStatement = String.format("SELECT * FROM %s.unit_test", schema);
+        String sqlStatement = String.format("SELECT * FROM %s.unit_test", SCHEMA);
 
         Statement statement = connection.createStatement();
 
@@ -660,7 +660,7 @@ public class PgBulkInsertTest extends TransactionalTestBase {
     }
 
     private boolean createTable() throws SQLException {
-        String sqlStatement = String.format("CREATE TABLE %s.unit_test\n", schema) +
+        String sqlStatement = String.format("CREATE TABLE %s.unit_test\n", SCHEMA) +
                 "            (\n" +
                 "                col_smallint smallint,\n" +
                 "                col_integer integer,\n" +
@@ -694,7 +694,7 @@ public class PgBulkInsertTest extends TransactionalTestBase {
 
         Statement s = connection.createStatement();
 
-        ResultSet r = s.executeQuery(String.format("SELECT COUNT(*) AS rowcount FROM %s.unit_test", schema));
+        ResultSet r = s.executeQuery(String.format("SELECT COUNT(*) AS rowcount FROM %s.unit_test", SCHEMA));
         r.next();
         int count = r.getInt("rowcount");
         r.close();

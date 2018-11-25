@@ -49,7 +49,7 @@ public class BulkProcessorTest extends TransactionalTestBase {
     }
 
     private IPgBulkInsert<Person> CreateBulkInserter() {
-        return new PgBulkInsert<>(new PersonMapping(schema));
+        return new PgBulkInsert<>(new PersonMapping(SCHEMA));
     }
 
     @Test
@@ -136,7 +136,7 @@ public class BulkProcessorTest extends TransactionalTestBase {
 
     private boolean createTable() throws SQLException {
 
-        String sqlStatement = String.format("CREATE TABLE %s.unit_test\n", schema) +
+        String sqlStatement = String.format("CREATE TABLE %s.unit_test\n", SCHEMA) +
                 "            (\n" +
                 "                first_name text,\n" +
                 "                last_name text,\n" +
@@ -152,7 +152,7 @@ public class BulkProcessorTest extends TransactionalTestBase {
 
         Statement s = connection.createStatement();
 
-        ResultSet r = s.executeQuery(String.format("SELECT COUNT(*) AS rowcount FROM %s.unit_test", schema));
+        ResultSet r = s.executeQuery(String.format("SELECT COUNT(*) AS rowcount FROM %s.unit_test", SCHEMA));
         r.next();
         int count = r.getInt("rowcount");
         r.close();

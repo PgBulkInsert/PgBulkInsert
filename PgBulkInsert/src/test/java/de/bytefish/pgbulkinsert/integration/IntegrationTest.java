@@ -30,7 +30,7 @@ public class IntegrationTest extends TransactionalTestBase {
         // Create a large list of Persons:
         List<Person> persons = getPersonList(100000);
         // Create the BulkInserter:
-        PgBulkInsert<Person> bulkInsert = new PgBulkInsert<Person>(new PersonMapping(schema));
+        PgBulkInsert<Person> bulkInsert = new PgBulkInsert<Person>(new PersonMapping(SCHEMA));
         // Now save all entities of a given stream:
         bulkInsert.saveAll(PostgreSqlUtils.getPGConnection(connection), persons.stream());
         // And assert all have been written to the database:
@@ -55,7 +55,7 @@ public class IntegrationTest extends TransactionalTestBase {
 
     private boolean createTable() throws SQLException {
 
-        String sqlStatement = String.format("CREATE TABLE %s.unit_test\n", schema) +
+        String sqlStatement = String.format("CREATE TABLE %s.unit_test\n", SCHEMA) +
                 "            (\n" +
                 "                first_name text,\n" +
                 "                last_name text,\n" +
@@ -71,7 +71,7 @@ public class IntegrationTest extends TransactionalTestBase {
 
         Statement s = connection.createStatement();
 
-        ResultSet r = s.executeQuery(String.format("SELECT COUNT(*) AS rowcount FROM %s.unit_test", schema));
+        ResultSet r = s.executeQuery(String.format("SELECT COUNT(*) AS rowcount FROM %s.unit_test", SCHEMA));
         r.next();
         int count = r.getInt("rowcount");
         r.close();

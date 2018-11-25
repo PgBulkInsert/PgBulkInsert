@@ -3,21 +3,43 @@
 
 package de.bytefish.pgbulkinsert.utils;
 
-import org.junit.After;
-import org.junit.Before;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.Statement;
+
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+
+import ru.yandex.qatools.embed.postgresql.EmbeddedPostgres;
+import ru.yandex.qatools.embed.postgresql.distribution.Version;
 
 public abstract class TransactionalTestBase {
 
     protected Connection connection;
 
-    protected final String schema = "sample";
+    protected static final String SCHEMA = "sample";
+    
+    private static String url;
+    private static EmbeddedPostgres postgres;
+    
+    @BeforeClass
+    public static void beforeClass() throws Exception {
+    	postgres = new EmbeddedPostgres(Version.V9_6_11);
+    	// predefined data directory
+    	url = postgres.start("localhost", 5432, "sampledb", "philipp", "test_pwd");
+    	createSchema();
+    }
+    
+    @AfterClass
+    public static void afterClass() {
+    	postgres.stop();
+    }
 
     @Before
     public void setUp() throws Exception {
-        connection = DriverManager.getConnection("jdbc:postgresql://127.0.0.1:5432/sampledb", "philipp", "test_pwd");
+    	connection = DriverManager.getConnection(url);
 
         onSetUpBeforeTransaction();
         connection.setAutoCommit(false); // Start the Transaction:
@@ -32,6 +54,14 @@ public abstract class TransactionalTestBase {
         onTearDownAfterTransaction();
 
         connection.close();
+    }
+    
+    
+    private static void createSchema() throws Exception {
+    	try(Connection connection = DriverManager.getConnection(url)) {
+            Statement statement = connection.createStatement();
+            statement.execute("CREATE SCHEMA " + SCHEMA);
+    	}
     }
 
     protected void onSetUpInTransaction() throws Exception {}

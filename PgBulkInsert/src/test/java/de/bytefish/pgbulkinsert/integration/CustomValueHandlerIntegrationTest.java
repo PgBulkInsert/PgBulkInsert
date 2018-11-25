@@ -70,7 +70,7 @@ public class CustomValueHandlerIntegrationTest extends TransactionalTestBase {
     public class CustomValueHandlerMapping extends AbstractMapping<SampleEntity> {
 
         public CustomValueHandlerMapping() {
-            super(schema, "unit_test");
+            super(SCHEMA, "unit_test");
 
             map("numeric_column", new DoubleNumericValueHandler(), SampleEntity::getDoubleValue);
         }
@@ -106,7 +106,7 @@ public class CustomValueHandlerIntegrationTest extends TransactionalTestBase {
 
     private boolean createTable() throws SQLException {
 
-        String sqlStatement = String.format("CREATE TABLE %s.unit_test\n", schema) +
+        String sqlStatement = String.format("CREATE TABLE %s.unit_test\n", SCHEMA) +
                 "            (\n" +
                 "                numeric_column numeric(20, 10)\n" +
                 "            );";
@@ -117,7 +117,7 @@ public class CustomValueHandlerIntegrationTest extends TransactionalTestBase {
     }
 
     private ResultSet getAll() throws SQLException {
-        String sqlStatement = String.format("SELECT * FROM %s.unit_test", schema);
+        String sqlStatement = String.format("SELECT * FROM %s.unit_test", SCHEMA);
 
         Statement statement = connection.createStatement();
 

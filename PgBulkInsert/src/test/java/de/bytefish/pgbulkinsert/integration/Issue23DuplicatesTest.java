@@ -58,7 +58,7 @@ public class Issue23DuplicatesTest extends TransactionalTestBase {
     private class MyObjectMapper extends AbstractMapping<MyObject> {
 
         public MyObjectMapper() {
-            super(schema, "unit_test");
+            super(SCHEMA, "unit_test");
 
             mapInteger("pos", MyObject::getPos);
             mapText("name", MyObject::getName);
@@ -96,7 +96,7 @@ public class Issue23DuplicatesTest extends TransactionalTestBase {
 
     private boolean createTable() throws SQLException {
 
-        String sqlStatement = String.format("CREATE TABLE %s.unit_test\n", schema) +
+        String sqlStatement = String.format("CREATE TABLE %s.unit_test\n", SCHEMA) +
                 "            (\n" +
                 "                pos int,\n" +
                 "                name text,\n" +
@@ -114,7 +114,7 @@ public class Issue23DuplicatesTest extends TransactionalTestBase {
 
         Statement s = connection.createStatement();
 
-        ResultSet r = s.executeQuery(String.format("SELECT COUNT(*) AS rowcount FROM %s.unit_test", schema));
+        ResultSet r = s.executeQuery(String.format("SELECT COUNT(*) AS rowcount FROM %s.unit_test", SCHEMA));
         r.next();
         int count = r.getInt("rowcount");
         r.close();
@@ -126,7 +126,7 @@ public class Issue23DuplicatesTest extends TransactionalTestBase {
 
         Statement s = connection.createStatement();
 
-        ResultSet resultSet = s.executeQuery(String.format("select * from %s.unit_test order by pos asc", schema));
+        ResultSet resultSet = s.executeQuery(String.format("select * from %s.unit_test order by pos asc", SCHEMA));
 
         int pos = 0;
         while (resultSet.next()) {
