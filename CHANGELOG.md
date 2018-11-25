@@ -19,4 +19,24 @@
 
 ## 2.0 ##
 
-* [Pull Request #19](https://github.com/bytefish/PgBulkInsert/pull/19) was a major refactoring of the API by creating an ``AbstractMapping``. This now separates the Mapping and the actual saving, making it possible (and easier) to reuse the PgBulkInsert Mapping API as a standalone implementation. Thanks to [@The-Alchemist](https://github.com/The-Alchemist) for raising the issue and making improvements to the library.
+* [Pull Request #19](https://github.com/bytefish/PgBulkInsert/pull/19) was a major refactoring of the API by creating an ``AbstractMapping``. This now separates the Mapping and the actual saving, making it possible (and easier) to reuse the PgBulkInsert Mapping API as a standalone implementation. As a major breaking change, the major revision has been set to 2.0. Thanks to [@The-Alchemist](https://github.com/The-Alchemist) for raising the issue and making improvements to the library.
+
+## 1.4 ##
+
+* [Issue #11](https://github.com/bytefish/PgBulkInsert/issues/11) added Microsecond resolution for Timestamps. Thanks to [@zach-m](https://github.com/zach-m) for raising the issue.
+
+## 1.3 ##
+
+* [Issue #10](https://github.com/bytefish/PgBulkInsert/issues/10) added support for the Numeric Data Type to the API. Thanks to [@li-xiangdong](https://github.com/li-xiangdong) for raising the issue.
+
+## 1.2 ##
+
+* [Commit b4543db](https://github.com/bytefish/PgBulkInsert/commit/b4543db958437ab88a1683b576e638a65bc11710) restructured the Value Handler API, which was an internal implementation detail, so the major revision wasn't increased.
+
+## 1.1 ##
+
+* Added Geometric Data Types, JSONB.
+
+## 1.0 ##
+
+* Initial Release.
