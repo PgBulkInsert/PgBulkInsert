@@ -84,14 +84,14 @@ public class PgBulkInsert<TEntity> implements IPgBulkInsert<TEntity> {
         // Start a New Row:
         bw.startRow(mapping.getColumns().size());
 
-        // Iterate over each column mapping:
-        mapping.getColumns().forEach(column -> {
-            try {
-                column.getWrite().accept(bw, entity);
-            } catch (Exception e) {
-                throw new SaveEntityFailedException(e);
-            }
-        });
+        try {
+	        // Iterate over each column mapping:
+	        mapping.getColumns().forEach(column -> {
+	        	column.getWrite().accept(bw, entity);
+	        });
+        } catch (Exception e) {
+            throw new SaveEntityFailedException(e);
+        }
     }
     
     private void saveEntitySynchonized(PgBinaryWriter bw, TEntity entity) throws SaveEntityFailedException {
