@@ -15,7 +15,7 @@
 
 ## 2.1 ##
 
-* [Issue #16] updated the PostgreSQL JDBC driver to Version ``42.2.2``. A configurable buffer size was added to the API for improving the throughput to PostgreSQL. Thanks to [@kowalczm](https://github.com/kowalczm) for both improvements.
+* [Issue #16](https://github.com/bytefish/PgBulkInsert/issues/16) updates the PostgreSQL JDBC driver to Version ``42.2.2``. A configurable buffer size was added to the API for improving the throughput to PostgreSQL. Thanks to [@kowalczm](https://github.com/kowalczm) for both improvements.
 
 ## 2.0 ##
 
