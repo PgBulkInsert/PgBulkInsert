@@ -9,8 +9,6 @@ import de.bytefish.pgbulkinsert.exceptions.SaveEntityFailedException;
 import de.bytefish.pgbulkinsert.mapping.AbstractMapping;
 import de.bytefish.pgbulkinsert.pgsql.PgBinaryWriter;
 import org.postgresql.PGConnection;
-import org.postgresql.copy.CopyIn;
-import org.postgresql.copy.CopyManager;
 import org.postgresql.copy.PGCopyOutputStream;
 
 import java.sql.SQLException;
@@ -45,13 +43,10 @@ public class PgBulkInsert<TEntity> implements IPgBulkInsert<TEntity> {
      */
     public void saveAll(PGConnection connection, Stream<TEntity> entities) throws SQLException {
 
-        CopyManager cpManager = connection.getCopyAPI();
-        CopyIn copyIn = cpManager.copyIn(mapping.getCopyCommand());
-
         try (PgBinaryWriter bw = new PgBinaryWriter(configuration.getBufferSize())) {
 
             // Wrap the CopyOutputStream in our own Writer:
-            bw.open(new PGCopyOutputStream(copyIn, 1));
+            bw.open(new PGCopyOutputStream(connection, mapping.getCopyCommand(), 1));
 
             // Insert Each Column:
             entities.forEach(entity -> saveEntitySynchonized(bw, entity));
@@ -67,13 +62,10 @@ public class PgBulkInsert<TEntity> implements IPgBulkInsert<TEntity> {
      */
     public void saveAll(PGConnection connection, Collection<TEntity> entities) throws SQLException {
 
-        CopyManager cpManager = connection.getCopyAPI();
-        CopyIn copyIn = cpManager.copyIn(mapping.getCopyCommand());
-
         try (PgBinaryWriter bw = new PgBinaryWriter(configuration.getBufferSize())) {
 
             // Wrap the CopyOutputStream in our own Writer:
-            bw.open(new PGCopyOutputStream(copyIn, 1));
+            bw.open(new PGCopyOutputStream(connection, mapping.getCopyCommand(), 1));
 
             // Insert Each Column:
             entities.forEach(entity -> saveEntity(bw, entity));
