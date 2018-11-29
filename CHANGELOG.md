@@ -1,5 +1,9 @@
 # CHANGELOG #
 
+## 3.2 ##
+
+* [@kowalczm](https://github.com/kowalczm) further improved the ``ByteArrayValueHandler`` in [Pull Request #29](https://github.com/bytefish/PgBulkInsert/pull/29).
+
 ## 3.1 ##
 
 * Thanks to [@kowalczm](https://github.com/kowalczm) for adding support for primitive types (``byte``, ``int``, ``float``, ``double``, ...), see [Pull Request #27](https://github.com/bytefish/PgBulkInsert/pull/27). This makes boxing primitive types unnecessary now and will make it easier to integrate the library into existing applications.
