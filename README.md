@@ -159,7 +159,7 @@ PgBulkInsert<Person> bulkInsert = new PgBulkInsert<Person>(new PersonMapping());
 
 ### Using the Bulk Inserter ###
 
-[IntegrationTest.java]: https://github.com/bytefish/PgBulkInsert/blob/master/PgBulkInsert/src/test/de/bytefish/pgbulkinsert/de/bytefish/pgbulkinsert/IntegrationTest.java
+[IntegrationTest.java]: https://github.com/bytefish/PgBulkInsert/blob/master/PgBulkInsert/src/test/java/de/bytefish/pgbulkinsert/integration/IntegrationTest.java
 
 And finally we can write a Unit Test to insert ``100000`` Persons into the database. You can find the entire Unit Test on GitHub as [IntegrationTest.java].
 
