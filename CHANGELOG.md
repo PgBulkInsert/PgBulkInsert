@@ -1,5 +1,9 @@
 # CHANGELOG #
 
+## 3.3 ##
+
+* [@robsonbittencourt](https://github.com/robsonbittencourt) reported a severe bug in the Numeric Value handling. Everyone should update to 3.3!
+
 ## 3.2 ##
 
 * [@kowalczm](https://github.com/kowalczm) further improved the ``ByteArrayValueHandler`` in [Pull Request #29](https://github.com/bytefish/PgBulkInsert/pull/29).
