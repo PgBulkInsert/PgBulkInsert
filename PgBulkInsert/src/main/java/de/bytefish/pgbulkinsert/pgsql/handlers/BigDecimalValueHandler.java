@@ -28,23 +28,18 @@ public class BigDecimalValueHandler<T extends Number> extends BaseValueHandler<T
     @Override
     protected void internalHandle(DataOutputStream buffer, final T value) throws Exception {
 
-        Number tmpValue = value;
+        BigDecimal tmpValue = getNumericAsBigDecimal(value);
 
-        // TODO This could be optimized
-        if (!(value instanceof BigDecimal)) {
-            tmpValue = BigDecimalUtils.toBigDecimal(value.doubleValue());
-        }
+        BigInteger unscaledValue = tmpValue.unscaledValue();
 
-        BigInteger unscaledValue = ((BigDecimal)tmpValue).unscaledValue();
-
-        int sign = ((BigDecimal)tmpValue).signum();
+        int sign = tmpValue.signum();
 
         if (sign == -1) {
             unscaledValue = unscaledValue.negate();
         }
 
         // Number of fractional digits:
-        int fractionDigits = ((BigDecimal)tmpValue).scale();
+        int fractionDigits = tmpValue.scale();
 
         // Number of Fraction Groups:
         int fractionGroups = (fractionDigits + 3) / 4;
@@ -55,6 +50,7 @@ public class BigDecimalValueHandler<T extends Number> extends BaseValueHandler<T
         int scaleRemainder = fractionDigits % 4;
 
         // Scale the first value:
+        if(scaleRemainder != 0)
         {
             BigInteger[] result = unscaledValue.divideAndRemainder(TEN.pow(scaleRemainder));
 
@@ -82,5 +78,14 @@ public class BigDecimalValueHandler<T extends Number> extends BaseValueHandler<T
             int valueToWrite = digits.get(pos).intValue();
             buffer.writeShort(valueToWrite);
         }
+    }
+
+    private static BigDecimal getNumericAsBigDecimal(Number source) {
+
+        if (!(source instanceof BigDecimal)) {
+            return BigDecimalUtils.toBigDecimal(source.doubleValue());
+        }
+
+        return (BigDecimal) source;
     }
 }
