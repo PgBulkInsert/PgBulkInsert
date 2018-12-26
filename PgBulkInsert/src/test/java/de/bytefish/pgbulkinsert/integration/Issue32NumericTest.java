@@ -76,7 +76,13 @@ public class Issue32NumericTest extends TransactionalTestBase {
 
                 new MyObject(13, new BigDecimal("0000.000")),
                 new MyObject(14, new BigDecimal("000.000")),
-                new MyObject(15, new BigDecimal("00.000"))
+                new MyObject(15, new BigDecimal("00.000")),
+
+                new MyObject(16, new BigDecimal("-12345.12345")),
+                new MyObject(17, new BigDecimal("-1234.12345")),
+                new MyObject(18, new BigDecimal("-123.12345")),
+                new MyObject(19, new BigDecimal("-12.12345")),
+                new MyObject(20, new BigDecimal("-1.12345"))
         );
 
         PgBulkInsert<MyObject> writer = new PgBulkInsert<MyObject>(new MyObjectMapper());
@@ -84,7 +90,7 @@ public class Issue32NumericTest extends TransactionalTestBase {
         writer.saveAll(PostgreSqlUtils.getPGConnection(connection), testData.stream());
 
         // And assert all have been written to the database:
-        Assert.assertEquals(16, getRowCount());
+        Assert.assertEquals(21, getRowCount());
 
         ArrayList<BigDecimal> bigDecimals = getBigDecimals();
 
@@ -108,8 +114,13 @@ public class Issue32NumericTest extends TransactionalTestBase {
         Assert.assertEquals(new BigDecimal("0000.000").stripTrailingZeros(), bigDecimals.get(13).stripTrailingZeros());
         Assert.assertEquals(new BigDecimal("000.000").stripTrailingZeros(), bigDecimals.get(14).stripTrailingZeros());
         Assert.assertEquals(new BigDecimal("00.000").stripTrailingZeros(), bigDecimals.get(15).stripTrailingZeros());
-    }
 
+        Assert.assertEquals(new BigDecimal("-12345.12345").stripTrailingZeros(), bigDecimals.get(16).stripTrailingZeros());
+        Assert.assertEquals(new BigDecimal("-1234.12345").stripTrailingZeros(), bigDecimals.get(17).stripTrailingZeros());
+        Assert.assertEquals(new BigDecimal("-123.12345").stripTrailingZeros(), bigDecimals.get(18).stripTrailingZeros());
+        Assert.assertEquals(new BigDecimal("-12.12345").stripTrailingZeros(), bigDecimals.get(19).stripTrailingZeros());
+        Assert.assertEquals(new BigDecimal("-1.12345").stripTrailingZeros(), bigDecimals.get(20).stripTrailingZeros());
+    }
 
     private boolean createTable() throws SQLException {
 
