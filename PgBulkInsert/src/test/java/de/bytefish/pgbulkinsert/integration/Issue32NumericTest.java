@@ -68,7 +68,15 @@ public class Issue32NumericTest extends TransactionalTestBase {
                 new MyObject(6, new BigDecimal("-1100.123")),
                 new MyObject(7, new BigDecimal("-1100.12")),
                 new MyObject(8, new BigDecimal("-1100.1")),
-                new MyObject(9, new BigDecimal("-1100"))
+                new MyObject(9, new BigDecimal("-1100")),
+
+                new MyObject(10, new BigDecimal("0.01")),
+                new MyObject(11, new BigDecimal("0.001")),
+                new MyObject(12, new BigDecimal("0.0001000")),
+
+                new MyObject(13, new BigDecimal("0000.000")),
+                new MyObject(14, new BigDecimal("000.000")),
+                new MyObject(15, new BigDecimal("00.000"))
         );
 
         PgBulkInsert<MyObject> writer = new PgBulkInsert<MyObject>(new MyObjectMapper());
@@ -76,7 +84,7 @@ public class Issue32NumericTest extends TransactionalTestBase {
         writer.saveAll(PostgreSqlUtils.getPGConnection(connection), testData.stream());
 
         // And assert all have been written to the database:
-        Assert.assertEquals(10, getRowCount());
+        Assert.assertEquals(16, getRowCount());
 
         ArrayList<BigDecimal> bigDecimals = getBigDecimals();
 
@@ -92,6 +100,14 @@ public class Issue32NumericTest extends TransactionalTestBase {
         Assert.assertEquals(new BigDecimal("-1100.1").stripTrailingZeros(), bigDecimals.get(8).stripTrailingZeros());
         Assert.assertEquals(new BigDecimal("-1100").stripTrailingZeros(), bigDecimals.get(9).stripTrailingZeros());
 
+        Assert.assertEquals(new BigDecimal("0.01").stripTrailingZeros(), bigDecimals.get(10).stripTrailingZeros());
+        Assert.assertEquals(new BigDecimal("0.001").stripTrailingZeros(), bigDecimals.get(11).stripTrailingZeros());
+        Assert.assertEquals(new BigDecimal("0.0001000").stripTrailingZeros(), bigDecimals.get(12).stripTrailingZeros());
+
+
+        Assert.assertEquals(new BigDecimal("0000.000").stripTrailingZeros(), bigDecimals.get(13).stripTrailingZeros());
+        Assert.assertEquals(new BigDecimal("000.000").stripTrailingZeros(), bigDecimals.get(14).stripTrailingZeros());
+        Assert.assertEquals(new BigDecimal("00.000").stripTrailingZeros(), bigDecimals.get(15).stripTrailingZeros());
     }
 
 
