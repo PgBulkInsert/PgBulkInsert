@@ -18,7 +18,10 @@ import org.postgresql.PGConnection;
 import java.math.BigDecimal;
 import java.sql.*;
 import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
@@ -67,33 +70,60 @@ public class ParallelInsertTest {
 
         // Create a Fake Data Stream:
         Stream<MyObject> stream = IntStream
-                .range(0, 100000)
+                .range(0, 1000000)
                 .mapToObj(i -> new MyObject(i));
 
         // Partition the Stream into 10000 Element Batches:
         UnmodifiableIterator<List<MyObject>> batches = Iterators.partition(stream.iterator(), 10000);
 
-        // Create the Batch Spliterator, probably it can be improved?
-        Spliterator<List<MyObject>> batchSpliterator = Spliterators.spliteratorUnknownSize(batches, Spliterator.ORDERED);
+        ExecutorService executorService = Executors.newFixedThreadPool(4);
 
-        // Build a Parallel Stream using the Spliterator:
-        Stream<List<MyObject>> parallelBatchesStream = StreamSupport.stream(batchSpliterator, true);
+        batches.forEachRemaining((batch) -> {
+            try {
+                executorService.submit(() -> writeBatch(writer, batch)).get();
+            } catch(Exception e) {
+                e.printStackTrace();
+            }
+        });
 
-        // Now use the Batching Iterator from Guava to insert in Parallel:
-        parallelBatchesStream
-                .forEach(batch -> {
-                    // Always open up a new Connection:
-                    try (Connection connection = DriverManager.getConnection("jdbc:postgresql://127.0.0.1:5432/sampledb", "philipp", "test_pwd")) {
-                        // Cast into the underlying PGConnection:
-                        PGConnection pgConnection = PostgreSqlUtils.getPGConnection(connection);
-                        // And save it to DB:
-                        writer.saveAll(pgConnection, batch);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                });
+        shutdownAndAwaitTermination(executorService);
     }
 
+    public static void shutdownAndAwaitTermination(ExecutorService pool) {
+        pool.shutdown(); // Disable new tasks from being submitted
+        try {
+            // Wait a while for existing tasks to terminate
+            if (!pool.awaitTermination(60, TimeUnit.SECONDS)) {
+                pool.shutdownNow(); // Cancel currently executing tasks
+                // Wait a while for tasks to respond to being cancelled
+                if (!pool.awaitTermination(60, TimeUnit.SECONDS))
+                    System.err.println("Pool did not terminate");
+            }
+        } catch (InterruptedException ie) {
+            // (Re-)Cancel if current thread also interrupted
+            pool.shutdownNow();
+            // Preserve interrupt status
+            Thread.currentThread().interrupt();
+        }
+    }
+
+
+
+    private static void writeBatch(PgBulkInsert<MyObject> writer, List<MyObject> batch) {
+
+        // Print Thread ID:
+        System.out.println(String.format("Thread = %s", Thread.currentThread()));
+
+        // Always open up a new Connection:
+        try (Connection connection = DriverManager.getConnection("jdbc:postgresql://127.0.0.1:5432/sampledb", "philipp", "test_pwd")) {
+            // Cast into the underlying PGConnection:
+            PGConnection pgConnection = PostgreSqlUtils.getPGConnection(connection);
+            // And save it to DB:
+            writer.saveAll(pgConnection, batch);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     private boolean dropTable(Connection connection) throws SQLException {
         String sqlStatement = String.format("DROP TABLE IF EXISTS %s.parallel_inserts\n", "sample");
