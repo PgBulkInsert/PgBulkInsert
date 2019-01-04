@@ -18,10 +18,7 @@ import org.postgresql.PGConnection;
 import java.math.BigDecimal;
 import java.sql.*;
 import java.util.*;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ForkJoinPool;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
@@ -76,17 +73,26 @@ public class ParallelInsertTest {
         // Partition the Stream into 10000 Element Batches:
         UnmodifiableIterator<List<MyObject>> batches = Iterators.partition(stream.iterator(), 10000);
 
-        ExecutorService executorService = Executors.newFixedThreadPool(4);
+        // Use 4 Cores and schedule a maximum 15 Jobs:
+        ThreadPoolExecutor executorService = newFixedThreadPoolWithQueueSize(4, 15);
 
         batches.forEachRemaining((batch) -> {
             try {
-                executorService.submit(() -> writeBatch(writer, batch)).get();
+                System.out.println("Queue Size: " + executorService.getQueue().size());
+
+                executorService.submit(() -> writeBatch(writer, batch));
             } catch(Exception e) {
                 e.printStackTrace();
             }
         });
 
         shutdownAndAwaitTermination(executorService);
+    }
+
+    private static ThreadPoolExecutor newFixedThreadPoolWithQueueSize(int nThreads, int queueSize) {
+        return new ThreadPoolExecutor(nThreads, nThreads,
+                5000L, TimeUnit.MILLISECONDS,
+                new ArrayBlockingQueue<Runnable>(queueSize, true), new ThreadPoolExecutor.CallerRunsPolicy());
     }
 
     public static void shutdownAndAwaitTermination(ExecutorService pool) {
