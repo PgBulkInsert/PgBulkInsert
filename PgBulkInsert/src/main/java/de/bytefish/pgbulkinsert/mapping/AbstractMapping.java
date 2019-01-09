@@ -16,6 +16,7 @@ import de.bytefish.pgbulkinsert.pgsql.handlers.IValueHandlerProvider;
 import de.bytefish.pgbulkinsert.pgsql.handlers.ValueHandlerProvider;
 import de.bytefish.pgbulkinsert.pgsql.model.geometric.*;
 import de.bytefish.pgbulkinsert.pgsql.model.network.MacAddress;
+import mil.nga.sf.Geometry;
 
 import java.net.Inet4Address;
 import java.net.Inet6Address;
@@ -262,10 +263,14 @@ public abstract class AbstractMapping<TEntity> {
         mapCollection(columnName, DataType.Inet6, propertyGetter);
     }
 
+    protected void mapPostgis(String columnName, Function<TEntity, Geometry> propertyGetter) {
+        map(columnName, DataType.Postgis, propertyGetter);
+    }
+
     private void addColumn(String columnName, BiConsumer<PgBinaryWriter, TEntity> action) {
         columns.add(new ColumnDefinition(columnName, action));
     }
-
+    
     public List<ColumnDefinition<TEntity>> getColumns() {
         return columns;
     }
