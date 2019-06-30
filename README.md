@@ -1,3 +1,5 @@
+[![Maven Central](https://img.shields.io/maven-central/v/de.bytefish/pgbulkinsert.svg?label=Maven%20Central)](https://search.maven.org/artifact/de.bytefish/pgbulkinsert)
+
 # PgBulkInsert #
 
 [MIT License]: https://opensource.org/licenses/MIT
