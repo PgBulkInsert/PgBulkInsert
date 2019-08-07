@@ -25,6 +25,7 @@ public class ValueHandlerProvider implements IValueHandlerProvider {
         add(DataType.SinglePrecision, new FloatValueHandler<>());
         add(DataType.Date, new LocalDateValueHandler());
         add(DataType.Timestamp, new LocalDateTimeValueHandler());
+        add(DataType.TimestampTz, new ZonedDateTimeValueHandler());
         add(DataType.Int2, new ShortValueHandler<>());
         add(DataType.Int4, new IntegerValueHandler<>());
         add(DataType.Int8, new LongValueHandler<>());

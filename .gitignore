@@ -1,0 +1,12 @@
+**/.gradle
+PgBulkInsert/local.properties
+**/.DS_Store
+PgBulkInsert/out/production
+PgBulkInsert/out/test
+PgBulkInsert/captures
+PgBulkInsert/target
+PgBulkInsert/out
+**/.idea
+**/.iws
+**/*.iml
+**/workspace.xml
