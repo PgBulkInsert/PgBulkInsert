@@ -34,13 +34,6 @@ public class PgBulkInsert<TEntity> implements IPgBulkInsert<TEntity> {
         this.mapping = mapping;
     }
 
-    /**
-     * Save stream of entities
-     * 
-     * @param connection underlying db connection
-     * @param entities stream of entities
-     * @throws SQLException
-     */
     public void saveAll(PGConnection connection, Stream<TEntity> entities) throws SQLException {
 
         try (PgBinaryWriter bw = new PgBinaryWriter(configuration.getBufferSize())) {
@@ -52,14 +45,7 @@ public class PgBulkInsert<TEntity> implements IPgBulkInsert<TEntity> {
             entities.forEach(entity -> saveEntitySynchonized(bw, entity));
         }
     }
-    
-    /**
-     * Save collections of entities
-     * 
-     * @param connection underlying db connection
-     * @param entities collection of entities
-     * @throws SQLException
-     */
+
     public void saveAll(PGConnection connection, Collection<TEntity> entities) throws SQLException {
 
         try (PgBinaryWriter bw = new PgBinaryWriter(configuration.getBufferSize())) {
