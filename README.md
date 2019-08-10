@@ -40,6 +40,7 @@ You can add the following dependencies to your pom.xml to include [PgBulkInsert]
 	* numeric
 * [Date/Time Types](http://www.postgresql.org/docs/current/static/datatype-datetime.html)
     * timestamp
+    * timestamptz
     * date
 * [Character Types](http://www.postgresql.org/docs/current/static/datatype-character.html)
     * text
