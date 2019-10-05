@@ -44,8 +44,6 @@ You can add the following dependencies to your pom.xml to include [PgBulkInsert]
     * date
 * [Character Types](http://www.postgresql.org/docs/current/static/datatype-character.html)
     * text
-* [Character Types](http://www.postgresql.org/docs/current/static/datatype-character.html)
-    * text
 * [JSON Types](https://www.postgresql.org/docs/current/static/datatype-json.html)
     * jsonb
 * [Boolean Type](http://www.postgresql.org/docs/current/static/datatype-boolean.html)
