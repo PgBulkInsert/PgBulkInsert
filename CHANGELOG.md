@@ -1,5 +1,9 @@
 # CHANGELOG #
 
+## 3.4 ##
+
+* Updates the PostgreSQL JDBC driver to Version ``42.2.9``.
+
 ## 3.3 ##
 
 * [@robsonbittencourt](https://github.com/robsonbittencourt) reported a severe bug in the Numeric Value handling. Everyone should update to 3.3!

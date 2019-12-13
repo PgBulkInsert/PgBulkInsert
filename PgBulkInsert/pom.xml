@@ -59,7 +59,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <postgresql.version>42.2.5</postgresql.version>
+        <postgresql.version>42.2.9</postgresql.version>
     </properties>
 
     <distributionManagement>
