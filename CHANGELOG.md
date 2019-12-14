@@ -1,8 +1,12 @@
 # CHANGELOG #
 
-## 3.4 ##
+## 3.5 ##
 
 * Updates the PostgreSQL JDBC driver to Version ``42.2.9``.
+
+## 3.4 ##
+
+* Improving the ``ZonedDateTime`` handling.
 
 ## 3.3 ##
 
