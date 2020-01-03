@@ -41,22 +41,18 @@ public class PgBinaryWriter implements AutoCloseable {
     public <TTargetType> void write(final IValueHandler<TTargetType> handler, final TTargetType value) {
         handler.handle(buffer, value);
     }
-    
+
     /**
      * Writes primitive boolean to the output stream
-     *  
+     *
      * @param value value to write
-     * 
+     *
      */
 	public void writeBoolean(boolean value) {
 		try {
-			buffer.writeInt(1);
-			if (value) {
-				buffer.writeByte(1);
-			} else {
-				buffer.writeByte(0);
-			}
-		} catch (Exception e) {
+            buffer.writeInt(1);
+            buffer.writeByte(value ? 1 : 0);
+        } catch (Exception e) {
 			throw new BinaryWriteFailedException(e);
 		}
 	}
