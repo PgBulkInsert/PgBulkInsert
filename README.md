@@ -202,3 +202,27 @@ private List<Person> getPersonList(int numPersons) {
 * [Postgres on the wire - A look at the PostgreSQL wire protocol (PGCon 2014)](https://www.pgcon.org/2014/schedule/attachments/330_postgres-for-the-wire.pdf)
 
 
+# Contributions
+
+Before pushing a Pull Request, make sure the build is passing.
+
+You can create the necessary database table via:
+```sql
+CREATE ROLE philipp WITH LOGIN;
+CREATE DATABASE sampledb;
+-- connect to sampledb
+CREATE SCHEMA sample AUTHORIZATION philipp;
+```
+and from the root run:
+```bash
+mvn verify
+```
+
+
+When you're done you can drop the db via:
+```sql
+DROP SCHEMA IF EXISTS sample;
+DROP DATABASE IF EXISTS sampledb;
+DROP OWNED BY philipp;
+DROP ROLE IF EXISTS philipp;
+```
