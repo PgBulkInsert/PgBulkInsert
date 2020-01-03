@@ -64,7 +64,7 @@ public class PgBinaryWriter implements AutoCloseable {
      */
     public void writeByte(int value) {
         try {
-            buffer.writeInt(1);
+            buffer.writeInt(Byte.BYTES);
             buffer.writeByte(value);
         } catch (Exception e) {
             throw new BinaryWriteFailedException(e);
@@ -78,7 +78,7 @@ public class PgBinaryWriter implements AutoCloseable {
      */
     public void writeShort(int value) {
         try {
-            buffer.writeInt(2);
+            buffer.writeInt(Short.BYTES);
             buffer.writeShort(value);
         } catch (Exception e) {
             throw new BinaryWriteFailedException(e);
@@ -92,7 +92,7 @@ public class PgBinaryWriter implements AutoCloseable {
      */
     public void writeInt(int value) {
         try {
-            buffer.writeInt(4);
+            buffer.writeInt(Integer.BYTES);
             buffer.writeInt(value);
         } catch (Exception e) {
             throw new BinaryWriteFailedException(e);
@@ -106,7 +106,7 @@ public class PgBinaryWriter implements AutoCloseable {
      */
     public void writeLong(long value) {
         try {
-            buffer.writeInt(8);
+            buffer.writeInt(Long.BYTES);
             buffer.writeLong(value);
         } catch (Exception e) {
             throw new BinaryWriteFailedException(e);
@@ -120,7 +120,7 @@ public class PgBinaryWriter implements AutoCloseable {
      */
     public void writeFloat(float value) {
         try {
-            buffer.writeInt(4);
+            buffer.writeInt(Float.BYTES);
             buffer.writeFloat(value);
         } catch (Exception e) {
             throw new BinaryWriteFailedException(e);
@@ -134,7 +134,7 @@ public class PgBinaryWriter implements AutoCloseable {
      */
     public void writeDouble(double value) {
         try {
-            buffer.writeInt(8);
+            buffer.writeInt(Double.BYTES);
             buffer.writeDouble(value);
         } catch (Exception e) {
             throw new BinaryWriteFailedException(e);

@@ -7,9 +7,11 @@ import java.io.DataOutputStream;
 
 public class ShortValueHandler<T extends Number> extends BaseValueHandler<T> {
 
+    private static final int SIZE = Short.BYTES;
+
     @Override
     protected void internalHandle(DataOutputStream buffer, final T value) throws Exception {
-        buffer.writeInt(2);
+        buffer.writeInt(SIZE);
         buffer.writeShort(value.shortValue());
     }
 }

@@ -7,9 +7,11 @@ import java.io.DataOutputStream;
 
 public class LongValueHandler<T extends Number> extends BaseValueHandler<T> {
 
+    private static final int SIZE = Long.BYTES;
+
     @Override
     protected void internalHandle(DataOutputStream buffer, final T value) throws Exception {
-        buffer.writeInt(8);
+        buffer.writeInt(SIZE);
         buffer.writeLong(value.longValue());
     }
 }
