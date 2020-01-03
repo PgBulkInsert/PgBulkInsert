@@ -4,29 +4,17 @@
 package de.bytefish.pgbulkinsert.pgsql.handlers;
 
 import java.io.DataOutputStream;
-import java.nio.ByteBuffer;
-import java.util.Arrays;
 import java.util.UUID;
 
 public class UUIDValueHandler extends BaseValueHandler<UUID> {
 
+    private static final int SIZE = 2 * Long.BYTES;
+
     @Override
     protected void internalHandle(DataOutputStream buffer, final UUID value) throws Exception {
-        buffer.writeInt(16);
+        buffer.writeInt(SIZE);
 
-        ByteBuffer bb = toByteBuffer(value);
-
-        buffer.writeInt(bb.getInt(0));
-        buffer.writeShort(bb.getShort(4));
-        buffer.writeShort(bb.getShort(6));
-
-        buffer.write(Arrays.copyOfRange(bb.array(), 8, 16));
-    }
-
-    private static ByteBuffer toByteBuffer(UUID uuid) {
-        ByteBuffer bb = ByteBuffer.wrap(new byte[16]);
-        bb.putLong(uuid.getMostSignificantBits());
-        bb.putLong(uuid.getLeastSignificantBits());
-        return bb;
+        buffer.writeLong(value.getMostSignificantBits());
+        buffer.writeLong(value.getLeastSignificantBits());
     }
 }
