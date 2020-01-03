@@ -33,7 +33,7 @@ public class PgBinaryWriter implements AutoCloseable {
     public void startRow(int numColumns) {
         try {
             buffer.writeShort(numColumns);
-        } catch(Exception e) {
+        } catch (Exception e) {
             throw new BinaryWriteFailedException(e);
         }
     }
@@ -46,107 +46,100 @@ public class PgBinaryWriter implements AutoCloseable {
      * Writes primitive boolean to the output stream
      *
      * @param value value to write
-     *
      */
-	public void writeBoolean(boolean value) {
-		try {
+    public void writeBoolean(boolean value) {
+        try {
             buffer.writeInt(1);
             buffer.writeByte(value ? 1 : 0);
         } catch (Exception e) {
-			throw new BinaryWriteFailedException(e);
-		}
-	}
+            throw new BinaryWriteFailedException(e);
+        }
+    }
 
-	
+
     /**
      * Writes primitive byte to the output stream
-     *  
+     *
      * @param value value to write
-     * 
      */
-	public void writeByte(int value) {
-		try {
-			buffer.writeInt(1);
-			buffer.writeByte(value);
-		} catch (Exception e) {
-			throw new BinaryWriteFailedException(e);
-		}
-	}
+    public void writeByte(int value) {
+        try {
+            buffer.writeInt(1);
+            buffer.writeByte(value);
+        } catch (Exception e) {
+            throw new BinaryWriteFailedException(e);
+        }
+    }
 
     /**
      * Writes primitive short to the output stream
-     *  
+     *
      * @param value value to write
-     * 
      */
-	public void writeShort(int value) {
-		try {
-			buffer.writeInt(2);
-			buffer.writeShort(value);
-		} catch (Exception e) {
-			throw new BinaryWriteFailedException(e);
-		}
-	}
+    public void writeShort(int value) {
+        try {
+            buffer.writeInt(2);
+            buffer.writeShort(value);
+        } catch (Exception e) {
+            throw new BinaryWriteFailedException(e);
+        }
+    }
 
     /**
      * Writes primitive integer to the output stream
-     *  
+     *
      * @param value value to write
-     * 
      */
-	public void writeInt(int value) {
-		try {
-			buffer.writeInt(4);
-			buffer.writeInt(value);
-		} catch (Exception e) {
-			throw new BinaryWriteFailedException(e);
-		}
-	}
+    public void writeInt(int value) {
+        try {
+            buffer.writeInt(4);
+            buffer.writeInt(value);
+        } catch (Exception e) {
+            throw new BinaryWriteFailedException(e);
+        }
+    }
 
     /**
      * Writes primitive long to the output stream
-     *  
+     *
      * @param value value to write
-     * 
      */
-	public void writeLong(long value) {
-		try {
-			buffer.writeInt(8);
-			buffer.writeLong(value);
-		} catch (Exception e) {
-			throw new BinaryWriteFailedException(e);
-		}
-	}
-	
+    public void writeLong(long value) {
+        try {
+            buffer.writeInt(8);
+            buffer.writeLong(value);
+        } catch (Exception e) {
+            throw new BinaryWriteFailedException(e);
+        }
+    }
+
     /**
      * Writes primitive float to the output stream
-     *  
+     *
      * @param value value to write
-     * 
      */
-	public void writeFloat(float value) {
-		try {
-	        buffer.writeInt(4);
-	        buffer.writeFloat(value);
-		} catch (Exception e) {
-			throw new BinaryWriteFailedException(e);
-		}
-	}
+    public void writeFloat(float value) {
+        try {
+            buffer.writeInt(4);
+            buffer.writeFloat(value);
+        } catch (Exception e) {
+            throw new BinaryWriteFailedException(e);
+        }
+    }
 
     /**
      * Writes primitive double to the output stream
-     *  
+     *
      * @param value value to write
-     * 
      */
-	public void writeDouble(double value) {
-		try {
-			buffer.writeInt(8);
-			buffer.writeDouble(value);
-		} catch (Exception e) {
-			throw new BinaryWriteFailedException(e);
-		}
-	}
+    public void writeDouble(double value) {
+        try {
+            buffer.writeInt(8);
+            buffer.writeDouble(value);
+        } catch (Exception e) {
+            throw new BinaryWriteFailedException(e);
+        }
+    }
 
     @Override
     public void close() {
@@ -155,11 +148,11 @@ public class PgBinaryWriter implements AutoCloseable {
 
             buffer.flush();
             buffer.close();
-        } catch(Exception e) {
+        } catch (Exception e) {
             throw new BinaryWriteFailedException(e);
         }
     }
-    
+
     private void writeHeader() {
         try {
 
@@ -170,7 +163,7 @@ public class PgBinaryWriter implements AutoCloseable {
             // 32 bit header extension area length
             buffer.writeInt(0);
 
-        } catch(Exception e) {
+        } catch (Exception e) {
             throw new BinaryWriteFailedException(e);
         }
     }
