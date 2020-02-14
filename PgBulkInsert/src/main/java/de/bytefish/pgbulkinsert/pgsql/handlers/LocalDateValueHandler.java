@@ -18,7 +18,6 @@ public class LocalDateValueHandler extends BaseValueHandler<LocalDate> {
     }
 
     public LocalDateValueHandler(IValueConverter<LocalDate, Integer> dateTimeConverter) {
-
         this.dateConverter = dateTimeConverter;
     }
 

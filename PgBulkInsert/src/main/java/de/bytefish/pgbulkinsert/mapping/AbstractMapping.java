@@ -281,7 +281,7 @@ public abstract class AbstractMapping<TEntity> {
                 .collect(Collectors.joining(", "));
 
         return String.format("COPY %1$s(%2$s) FROM STDIN BINARY",
-                table.GetFullQualifiedTableName(),
+                table.GetFullyQualifiedTableName(),
                 commaSeparatedColumns);
     }
 }

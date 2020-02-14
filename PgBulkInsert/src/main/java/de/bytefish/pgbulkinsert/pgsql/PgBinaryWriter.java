@@ -152,6 +152,17 @@ public class PgBinaryWriter implements AutoCloseable {
 		}
 	}
 
+	/**
+	 * Writes a Null Value.
+	 */
+	public void writeNull() {
+		try {
+			buffer.writeInt(-1);
+		} catch (Exception e) {
+			throw new BinaryWriteFailedException(e);
+		}
+	}
+
     @Override
     public void close() {
         try {

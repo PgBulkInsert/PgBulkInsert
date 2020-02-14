@@ -28,7 +28,7 @@ public class TableDefinition {
         return tableName;
     }
 
-    public String GetFullQualifiedTableName() {
+    public String GetFullyQualifiedTableName() {
         if (StringUtils.isNullOrWhiteSpace(schema)) {
             return tableName;
         }

@@ -59,7 +59,7 @@ public class PgBulkInsert<TEntity> implements IPgBulkInsert<TEntity> {
     }
 
     private void saveEntity(PgBinaryWriter bw, TEntity entity) throws SaveEntityFailedException {
-        // Start a New Row:
+        // Start a new Row in PostgreSQL:
         bw.startRow(mapping.getColumns().size());
 
         try {
