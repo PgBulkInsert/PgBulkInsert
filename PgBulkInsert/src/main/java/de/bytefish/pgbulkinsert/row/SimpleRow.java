@@ -63,9 +63,11 @@ public class SimpleRow {
 
     public void writeRow(PgBinaryWriter writer) {
         for(int ordinalIdx = 0; ordinalIdx < lookup.keySet().size(); ordinalIdx++) {
+
             // If this Ordinal wasn't set, we assume a NULL:
             if(!actions.containsKey(ordinalIdx)) {
                     writer.writeNull();
+
                     continue;
             }
 

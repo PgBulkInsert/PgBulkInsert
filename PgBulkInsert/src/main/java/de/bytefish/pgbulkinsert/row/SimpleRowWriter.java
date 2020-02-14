@@ -21,6 +21,10 @@ public class SimpleRowWriter {
         private final String table;
         private final String[] columns;
 
+        public Table(String table, String... columns) {
+            this(null, table, columns);
+        }
+
         public Table(String schema, String table, String... columns) {
             this.schema = schema;
             this.table = table;
