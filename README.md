@@ -310,9 +310,10 @@ private List<Person> getPersonList(int num) {
 }
 ```
 
-## BulkProcessor ##
+## Additional Reading ##
 
 * [Working with a BulkProcessor in PgBulkInsert](http://bytefish.de/blog/pgbulkinsert_bulkprocessor/)
+* [Writing data using a SimpleRowWriter](https://bytefish.de/blog/pgbulkinsert_row_writer/)
 
 ## Resources ##
 
