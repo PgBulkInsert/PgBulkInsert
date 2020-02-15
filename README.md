@@ -74,9 +74,127 @@ PgBulkInsert is released with under terms of the [MIT License]:
 
 * [https://github.com/bytefish/PgBulkInsert](https://github.com/bytefish/PgBulkInsert)
 
-## Basic Usage ##
+## Usage ##
 
-Imagine we want to bulk insert a large amount of persons into a PostgreSQL database. Each ``Person`` has a first name, a last name and a birthdate.
+You can use [PgBulkInsert] API in two different ways. The first one is to use the ``SimpleRowWriter``, when you don't have 
+an explicit Java POJO, that matches a Table. The second way is to use an ``AbstractMapping<TEntityType>`` to define a mapping 
+between your Java POJO and a PostgreSQL table.
+
+## Using the SimpleRowWriter ##
+
+Using the ``SimpleRowWriter`` is really easy. 
+
+It requires you to define the PostgreSQL table structure using a ``SimpleRowWriter.Table``, that has a schema name (optional), table name and column names:
+
+```java
+// Schema of the Table:
+String schemaName = "sample";
+
+// Name of the Table:
+String tableName = "row_writer_test";
+
+// Define the Columns to be inserted:
+String[] columnNames = new String[] {
+        "value_int",
+        "value_text"
+};
+
+// Create the Table Definition:
+SimpleRowWriter.Table table = new SimpleRowWriter.Table(schemaName, tableName, columnNames);
+
+// Create the Writer:
+SimpleRowWriter writer = new SimpleRowWriter(table);
+```
+
+Once created you are required to open the ``SimpleRowWriter`` by yourself using a ``PGConnection``:
+
+```java
+// ... open it:
+writer.open(pgConnection);
+```
+
+To write a row to PostgreSQL you call the ``startRow`` method. It expects you to pass a ``Consumer<SimpleRow>`` into it, 
+which defines what data to write to the row. The call to ``startRow`` is synchronized, so it is safe to be called from 
+multiple threads.
+
+```java
+// ... write your data rows:
+for(int rowIdx = 0; rowIdx < 10000; rowIdx++) {
+
+    // ... using startRow and work with the row, see how the order doesn't matter:
+    writer.startRow((row) -> {
+        row.setText("value_text", "Hi");
+        row.setInteger("value_int", 1);
+    });
+
+}
+```
+
+And to finish the COPY operation, you need to close the ``SimpleRowWriter``:
+
+```java
+// ... and make sure to close it:
+writer.close();
+```
+
+So the complete example looks like this:
+
+```java
+public class SimpleRowWriterTest extends TransactionalTestBase {
+
+    // ...
+    
+    @Test
+    public void rowBasedWriterTest() throws SQLException {
+
+        // Get the underlying PGConnection:
+        PGConnection pgConnection = PostgreSqlUtils.getPGConnection(connection);
+
+        // Schema of the Table:
+        String schemaName = "sample";
+        
+        // Name of the Table:
+        String tableName = "row_writer_test";
+
+        // Define the Columns to be inserted:
+        String[] columnNames = new String[] {
+                "value_int",
+                "value_text"
+        };
+
+        // Create the Table Definition:
+        SimpleRowWriter.Table table = new SimpleRowWriter.Table(schemaName, tableName, columnNames);
+
+        // Create the Writer:
+        SimpleRowWriter writer = new SimpleRowWriter(table);
+
+        // ... open it:
+        writer.open(pgConnection);
+
+        // ... write your data rows:
+        for(int rowIdx = 0; rowIdx < 10000; rowIdx++) {
+
+            // ... using startRow and work with the row, see how the order doesn't matter:
+            writer.startRow((row) -> {
+                row.setText("value_text", "Hi");
+                row.setInteger("value_int", 1);
+            });
+
+        }
+
+        // ... and make sure to close it:
+        writer.close();
+
+        // Now assert, that we have written 10000 entities:
+
+        Assert.assertEquals(10000, getRowCount());
+    }
+}
+```
+
+## Using the AbstractMapping ##
+
+Imagine we want to bulk insert a large amount of people into a PostgreSQL database. Each ``Person`` has a first name, a last name and a birthdate.
 
 ### Database Table ###
 
@@ -160,35 +278,35 @@ PgBulkInsert<Person> bulkInsert = new PgBulkInsert<Person>(new PersonMapping());
 
 [IntegrationTest.java]: https://github.com/bytefish/PgBulkInsert/blob/master/PgBulkInsert/src/test/java/de/bytefish/pgbulkinsert/integration/IntegrationTest.java
 
-And finally we can write a Unit Test to insert ``100000`` Persons into the database. You can find the entire Unit Test on GitHub as [IntegrationTest.java].
+And finally we can write a Unit Test to insert ``100000`` people into the database. You can find the entire Unit Test on GitHub as [IntegrationTest.java].
 
 ```java
 @Test
 public void bulkInsertPersonDataTest() throws SQLException {
-    // Create a large list of Persons:
-    List<Person> persons = getPersonList(100000);
+    // Create a large list of People:
+    List<Person> personList = getPersonList(100000);
     // Create the BulkInserter:
-    PgBulkInsert<Person> bulkInsert = new PgBulkInsert<Person>(new PersonMapping());
+    PgBulkInsert<Person> bulkInsert = new PgBulkInsert<Person>(new PersonMapping(schema));
     // Now save all entities of a given stream:
-    bulkInsert.saveAll(PostgreSqlUtils.getPGConnection(connection), persons.stream());
+    bulkInsert.saveAll(PostgreSqlUtils.getPGConnection(connection), personList.stream());
     // And assert all have been written to the database:
     Assert.assertEquals(100000, getRowCount());
 }
 
-private List<Person> getPersonList(int numPersons) {
-    List<Person> persons = new ArrayList<>();
+private List<Person> getPersonList(int num) {
+    List<Person> personList = new ArrayList<>();
 
-    for (int pos = 0; pos < numPersons; pos++) {
+    for (int pos = 0; pos < num; pos++) {
         Person p = new Person();
 
         p.setFirstName("Philipp");
         p.setLastName("Wagner");
         p.setBirthDate(LocalDate.of(1986, 5, 12));
 
-        persons.add(p);
+        personList.add(p);
     }
 
-    return persons;
+    return personList;
 }
 ```
 
