@@ -5,7 +5,7 @@ import de.bytefish.pgbulkinsert.pgsql.constants.DataType;
 import de.bytefish.pgbulkinsert.pgsql.constants.ObjectIdentifier;
 import de.bytefish.pgbulkinsert.pgsql.handlers.CollectionValueHandler;
 import de.bytefish.pgbulkinsert.pgsql.handlers.IValueHandler;
-import de.bytefish.pgbulkinsert.pgsql.handlers.ValueHandlerProvider;
+import de.bytefish.pgbulkinsert.pgsql.handlers.IValueHandlerProvider;
 import de.bytefish.pgbulkinsert.pgsql.model.geometric.*;
 import de.bytefish.pgbulkinsert.pgsql.model.network.MacAddress;
 
@@ -22,12 +22,12 @@ import java.util.function.Consumer;
 
 public class SimpleRow {
 
-    private final ValueHandlerProvider provider;
+    private final IValueHandlerProvider provider;
     private final Map<String, Integer> lookup;
     private final Map<Integer, Consumer<PgBinaryWriter>> actions;
 
     @SuppressWarnings("unchecked")
-    public SimpleRow(ValueHandlerProvider provider, Map<String, Integer> lookup) {
+    public SimpleRow(IValueHandlerProvider provider, Map<String, Integer> lookup) {
         this.provider = provider;
         this.lookup = lookup;
         this.actions = new HashMap<>();

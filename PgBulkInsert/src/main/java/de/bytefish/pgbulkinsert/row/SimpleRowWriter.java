@@ -1,6 +1,7 @@
 package de.bytefish.pgbulkinsert.row;
 
 import de.bytefish.pgbulkinsert.pgsql.PgBinaryWriter;
+import de.bytefish.pgbulkinsert.pgsql.handlers.IValueHandlerProvider;
 import de.bytefish.pgbulkinsert.pgsql.handlers.ValueHandlerProvider;
 import de.bytefish.pgbulkinsert.util.StringUtils;
 import org.postgresql.PGConnection;
@@ -53,19 +54,23 @@ public class SimpleRowWriter {
 
     private final Table table;
     private final PgBinaryWriter writer;
-    private final ValueHandlerProvider provider;
+    private final IValueHandlerProvider provider;
     private final Map<String, Integer> lookup;
 
-    public SimpleRowWriter(Table table) {
+    public SimpleRowWriter(Table table, IValueHandlerProvider valueHandlerProvider) {
         this.writer = new PgBinaryWriter();
         this.table = table;
-        this.provider = new ValueHandlerProvider();
+        this.provider = valueHandlerProvider;
 
         this.lookup = new HashMap<>();
 
         for (int ordinal = 0; ordinal < table.columns.length; ordinal++) {
             lookup.put(table.columns[ordinal], ordinal);
         }
+    }
+
+    public SimpleRowWriter(Table table) {
+        this(table, new ValueHandlerProvider());
     }
 
     public void open(PGConnection connection) throws SQLException  {
