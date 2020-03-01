@@ -77,11 +77,15 @@ public class SimpleRowWriter {
         writer.open(new PGCopyOutputStream(connection, getCopyCommand(table), 1));
     }
 
+    protected SimpleRow createRow() {
+        return new SimpleRow(provider, lookup);
+    }
+
     public synchronized void startRow(Consumer<SimpleRow> consumer) {
 
         writer.startRow(table.columns.length);
 
-        SimpleRow row = new SimpleRow(provider, lookup);
+        SimpleRow row = createRow();
 
         consumer.accept(row);
 
