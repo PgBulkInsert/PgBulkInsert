@@ -47,7 +47,7 @@ public class SimpleRowWriter {
             if (StringUtils.isNullOrWhiteSpace(schema)) {
                 return table;
             }
-            return String.format("%1$s.%2$s", schema, table);
+            return String.format("\"%1$s\".\"%2$s\"", schema, table);
         }
     }
 
@@ -89,9 +89,9 @@ public class SimpleRowWriter {
 
     private static String getCopyCommand(Table table) {
         String commaSeparatedColumns = Arrays.stream(table.columns)
-                .collect(Collectors.joining(", "));
+                .collect(Collectors.joining("\", \""));
 
-        return String.format("COPY %1$s(%2$s) FROM STDIN BINARY",
+        return String.format("COPY %1$s(\"%2$s\") FROM STDIN BINARY",
                 table.GetFullyQualifiedTableName(),
                 commaSeparatedColumns);
     }
