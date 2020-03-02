@@ -52,4 +52,72 @@ public final class PostgreSqlUtils {
             return false;
         }
     }
+
+    public static final char QuoteChar = '"';
+
+    public static String quoteIdentifier(String identifier) {
+        return requiresQuoting(identifier) ?
+                (QuoteChar + identifier + QuoteChar) : identifier;
+    }
+
+    public static String getFullyQualifiedTableName(String schemaName, String tableName, boolean usePostgresQuoting)
+    {
+        if(usePostgresQuoting) {
+            return StringUtils.isNullOrWhiteSpace(schemaName) ? quoteIdentifier(tableName)
+                    : String.format("%s.%s", quoteIdentifier(schemaName), quoteIdentifier(tableName));
+        }
+
+        if (StringUtils.isNullOrWhiteSpace(schemaName)) {
+            return tableName;
+        }
+
+        return String.format("%1$s.%2$s", schemaName, tableName);
+    }
+
+    private static boolean requiresQuoting(String identifier) {
+
+        char first = identifier.charAt(0);
+        char last = identifier.charAt(identifier.length() - 1);
+
+        if (first == QuoteChar && last == QuoteChar)
+        {
+            return false;
+        }
+
+        if (!Character.isLowerCase(first) && first != '_')
+        {
+            return true;
+        }
+
+        for (int i = 1; i < identifier.length(); i++)
+        {
+            char c = identifier.charAt(i);
+
+            if (Character.isLowerCase(c))
+            {
+                continue;
+            }
+
+            switch (c)
+            {
+                case '0':
+                case '1':
+                case '2':
+                case '3':
+                case '4':
+                case '5':
+                case '6':
+                case '7':
+                case '8':
+                case '9':
+                case '_':
+                case '$': // yes it's true
+                    continue;
+            }
+
+            return true;
+        }
+
+        return false;
+    }
 }

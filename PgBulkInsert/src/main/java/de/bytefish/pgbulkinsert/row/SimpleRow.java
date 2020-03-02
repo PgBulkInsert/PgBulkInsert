@@ -46,6 +46,16 @@ public class SimpleRow {
         actions.put(ordinal, (writer) -> writer.write(handler, value));
     }
 
+    public <TTargetType> void setValue(String columnName, IValueHandler<TTargetType> handler, TTargetType value) {
+        final int ordinal = lookup.get(columnName);
+
+        setValue(ordinal, handler, value);
+    }
+
+    public <TTargetType> void setValue(int ordinal, IValueHandler<TTargetType> handler, TTargetType value) {
+        actions.put(ordinal, (writer) -> writer.write(handler, value));
+    }
+
     public <TElementType, TCollectionType extends Collection<TElementType>> void setCollection(String columnName, DataType type, TCollectionType value) {
 
         final int ordinal = lookup.get(columnName);

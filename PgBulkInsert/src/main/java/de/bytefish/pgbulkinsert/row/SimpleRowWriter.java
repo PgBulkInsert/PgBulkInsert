@@ -2,6 +2,7 @@ package de.bytefish.pgbulkinsert.row;
 
 import de.bytefish.pgbulkinsert.pgsql.PgBinaryWriter;
 import de.bytefish.pgbulkinsert.pgsql.handlers.ValueHandlerProvider;
+import de.bytefish.pgbulkinsert.util.PostgreSqlUtils;
 import de.bytefish.pgbulkinsert.util.StringUtils;
 import org.postgresql.PGConnection;
 import org.postgresql.copy.PGCopyOutputStream;
@@ -43,24 +44,27 @@ public class SimpleRowWriter {
             return columns;
         }
 
-        public String GetFullyQualifiedTableName() {
-            if (StringUtils.isNullOrWhiteSpace(schema)) {
-                return table;
-            }
-            return String.format("%1$s.%2$s", schema, table);
+        public String GetFullyQualifiedTableName(boolean usePostgresQuoting) {
+            return PostgreSqlUtils.getFullyQualifiedTableName(schema, table, usePostgresQuoting);
         }
     }
 
     private final Table table;
+    private final boolean usePostgresQuoting;
     private final PgBinaryWriter writer;
     private final ValueHandlerProvider provider;
     private final Map<String, Integer> lookup;
 
     public SimpleRowWriter(Table table) {
-        this.writer = new PgBinaryWriter();
-        this.table = table;
-        this.provider = new ValueHandlerProvider();
+        this(table, false);
+    }
 
+    public SimpleRowWriter(Table table, boolean usePostgresQuoting) {
+        this.table = table;
+        this.usePostgresQuoting = usePostgresQuoting;
+
+        this.writer = new PgBinaryWriter();
+        this.provider = new ValueHandlerProvider();
         this.lookup = new HashMap<>();
 
         for (int ordinal = 0; ordinal < table.columns.length; ordinal++) {
@@ -69,7 +73,7 @@ public class SimpleRowWriter {
     }
 
     public void open(PGConnection connection) throws SQLException  {
-        writer.open(new PGCopyOutputStream(connection, getCopyCommand(table), 1));
+        writer.open(new PGCopyOutputStream(connection, getCopyCommand(table, usePostgresQuoting), 1));
     }
 
     public synchronized void startRow(Consumer<SimpleRow> consumer) {
@@ -87,12 +91,14 @@ public class SimpleRowWriter {
         writer.close();
     }
 
-    private static String getCopyCommand(Table table) {
+    private static String getCopyCommand(Table table, boolean usePostgresQuoting) {
+
         String commaSeparatedColumns = Arrays.stream(table.columns)
+                .map(x -> usePostgresQuoting ? PostgreSqlUtils.quoteIdentifier(x) : x)
                 .collect(Collectors.joining(", "));
 
         return String.format("COPY %1$s(%2$s) FROM STDIN BINARY",
-                table.GetFullyQualifiedTableName(),
+                table.GetFullyQualifiedTableName(usePostgresQuoting),
                 commaSeparatedColumns);
     }
 }

@@ -16,6 +16,8 @@ import de.bytefish.pgbulkinsert.pgsql.handlers.IValueHandlerProvider;
 import de.bytefish.pgbulkinsert.pgsql.handlers.ValueHandlerProvider;
 import de.bytefish.pgbulkinsert.pgsql.model.geometric.*;
 import de.bytefish.pgbulkinsert.pgsql.model.network.MacAddress;
+import de.bytefish.pgbulkinsert.row.SimpleRowWriter;
+import de.bytefish.pgbulkinsert.util.PostgreSqlUtils;
 
 import java.net.Inet4Address;
 import java.net.Inet6Address;
@@ -32,6 +34,8 @@ import java.util.stream.Collectors;
 
 public abstract class AbstractMapping<TEntity> {
 
+    private boolean usePostgresQuoting;
+
     private final IValueHandlerProvider provider;
 
     private final TableDefinition table;
@@ -39,15 +43,23 @@ public abstract class AbstractMapping<TEntity> {
     private final List<ColumnDefinition<TEntity>> columns;
 
     protected AbstractMapping(String schemaName, String tableName) {
-        this(new ValueHandlerProvider(), schemaName, tableName);
+        this(new ValueHandlerProvider(), schemaName, tableName, false);
     }
 
-    protected AbstractMapping(IValueHandlerProvider provider, String schemaName, String tableName) {
+    protected AbstractMapping(String schemaName, String tableName, boolean usePostgresQuoting) {
+        this(new ValueHandlerProvider(), schemaName, tableName, usePostgresQuoting);
+    }
+
+    protected AbstractMapping(IValueHandlerProvider provider, String schemaName, String tableName, boolean usePostgresQuoting) {
         this.provider = provider;
         this.table = new TableDefinition(schemaName, tableName);
+        this.usePostgresQuoting = usePostgresQuoting;
         this.columns = new ArrayList<>();
     }
 
+    protected void usePostgresQuoting(boolean enabled) {
+        this.usePostgresQuoting = enabled;
+    }
 
     protected <TElementType, TCollectionType extends Collection<TElementType>> void mapCollection(String columnName, DataType dataType, Function<TEntity, TCollectionType> propertyGetter) {
 
@@ -72,7 +84,7 @@ public abstract class AbstractMapping<TEntity> {
     protected void mapBoolean(String columnName, Function<TEntity, Boolean> propertyGetter) {
         map(columnName, DataType.Boolean, propertyGetter);
     }
-    
+
     protected void mapBoolean(String columnName, ToBooleanFunction<TEntity> propertyGetter) {
         addColumn(columnName, (binaryWriter, entity) -> {
             binaryWriter.writeBoolean(propertyGetter.applyAsBoolean(entity));
@@ -82,7 +94,7 @@ public abstract class AbstractMapping<TEntity> {
     protected void mapByte(String columnName, Function<TEntity, Number> propertyGetter) {
         map(columnName, DataType.Char, propertyGetter);
     }
-    
+
     protected void mapByte(String columnName, ToIntFunction<TEntity> propertyGetter) {
         addColumn(columnName, (binaryWriter, entity) -> {
             binaryWriter.writeByte(propertyGetter.applyAsInt(entity));
@@ -92,7 +104,7 @@ public abstract class AbstractMapping<TEntity> {
     protected void mapShort(String columnName, Function<TEntity, Number> propertyGetter) {
         map(columnName, DataType.Int2, propertyGetter);
     }
-    
+
     protected void mapShort(String columnName, ToIntFunction<TEntity> propertyGetter) {
         addColumn(columnName, (binaryWriter, entity) -> {
             binaryWriter.writeShort(propertyGetter.applyAsInt(entity));
@@ -102,7 +114,7 @@ public abstract class AbstractMapping<TEntity> {
     protected void mapInteger(String columnName, Function<TEntity, Number> propertyGetter) {
         map(columnName, DataType.Int4, propertyGetter);
     }
-    
+
     protected void mapInteger(String columnName, ToIntFunction<TEntity> propertyGetter) {
         addColumn(columnName, (binaryWriter, entity) -> {
             binaryWriter.writeInt(propertyGetter.applyAsInt(entity));
@@ -116,7 +128,7 @@ public abstract class AbstractMapping<TEntity> {
     protected void mapLong(String columnName, Function<TEntity, Number> propertyGetter) {
         map(columnName, DataType.Int8, propertyGetter);
     }
-    
+
     protected void mapLong(String columnName, ToLongFunction<TEntity> propertyGetter) {
         addColumn(columnName, (binaryWriter, entity) -> {
             binaryWriter.writeLong(propertyGetter.applyAsLong(entity));
@@ -126,7 +138,7 @@ public abstract class AbstractMapping<TEntity> {
     protected void mapFloat(String columnName, Function<TEntity, Number> propertyGetter) {
         map(columnName, DataType.SinglePrecision, propertyGetter);
     }
-    
+
     protected void mapFloat(String columnName, ToFloatFunction<TEntity> propertyGetter) {
         addColumn(columnName, (binaryWriter, entity) -> {
             binaryWriter.writeFloat(propertyGetter.applyAsFloat(entity));
@@ -136,7 +148,7 @@ public abstract class AbstractMapping<TEntity> {
     protected void mapDouble(String columnName, Function<TEntity, Number> propertyGetter) {
         map(columnName, DataType.DoublePrecision, propertyGetter);
     }
-    
+
     protected void mapDouble(String columnName, ToDoubleFunction<TEntity> propertyGetter) {
         addColumn(columnName, (binaryWriter, entity) -> {
             binaryWriter.writeDouble(propertyGetter.applyAsDouble(entity));
@@ -278,10 +290,11 @@ public abstract class AbstractMapping<TEntity> {
     public String getCopyCommand() {
         String commaSeparatedColumns = columns.stream()
                 .map(x -> x.getColumnName())
+                .map(x -> usePostgresQuoting ? PostgreSqlUtils.quoteIdentifier(x) : x)
                 .collect(Collectors.joining(", "));
 
         return String.format("COPY %1$s(%2$s) FROM STDIN BINARY",
-                table.GetFullyQualifiedTableName(),
+                table.GetFullyQualifiedTableName(usePostgresQuoting),
                 commaSeparatedColumns);
     }
 }

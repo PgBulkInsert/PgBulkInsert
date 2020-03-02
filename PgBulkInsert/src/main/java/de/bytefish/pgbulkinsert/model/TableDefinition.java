@@ -3,6 +3,7 @@
 
 package de.bytefish.pgbulkinsert.model;
 
+import de.bytefish.pgbulkinsert.util.PostgreSqlUtils;
 import de.bytefish.pgbulkinsert.util.StringUtils;
 
 public class TableDefinition {
@@ -28,11 +29,8 @@ public class TableDefinition {
         return tableName;
     }
 
-    public String GetFullyQualifiedTableName() {
-        if (StringUtils.isNullOrWhiteSpace(schema)) {
-            return tableName;
-        }
-        return String.format("%1$s.%2$s", schema, tableName);
+    public String GetFullyQualifiedTableName(boolean usePostgresQuoting) {
+        return PostgreSqlUtils.getFullyQualifiedTableName(schema, tableName, usePostgresQuoting);
     }
 
     @Override
