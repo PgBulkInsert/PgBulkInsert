@@ -1,5 +1,27 @@
 # CHANGELOG #
 
+## 3.8 ##
+
+* Many improvements added by [@tangyibo](https://github.com/tangyibo/)!
+    * Closing the Stream of the ``SimpleRowWriter``, so it doesn't block anymore.
+    * Improved error logging to get to the underlying cause of the error in the JDBC driver.
+    * Added Null Character Handling, so Null Bytes (``0x00``) do not crash the ``COPY``
+
+You can enable the Null Character Handling like this. It removes all ``0x00`` occurences and replaces them with an empty string:
+    
+```java
+// Create the Table Definition:
+SimpleRowWriter.Table table = new SimpleRowWriter.Table(schema, tableName, columnNames);
+
+// Create the Writer:
+SimpleRowWriter writer = new SimpleRowWriter(table);
+
+// Enable the Null Character Handler:
+writer.enableNullCharacterHandler();
+```
+
+If you need to customize the Null Character Handling, then you can use the ``setNullCharacterHandler(Function<String, String> nullCharacterHandler)`` function.
+    
 ## 3.5 ##
 
 * Updates the PostgreSQL JDBC driver to Version ``42.2.9``.
