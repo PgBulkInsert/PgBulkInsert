@@ -121,7 +121,6 @@ public class SimpleRow {
         setValue(columnName, DataType.Numeric, value);
     }
 
-
     public void setNumeric(int ordinal, Number value) {
         setValue(ordinal, DataType.Numeric, value);
     }
@@ -133,7 +132,6 @@ public class SimpleRow {
     public void setLong(int ordinal, long value) {
         setValue(ordinal, DataType.Int8, value);
     }
-
 
     public void setFloat(String columnName, float value) {
         setValue(columnName, DataType.SinglePrecision, value);

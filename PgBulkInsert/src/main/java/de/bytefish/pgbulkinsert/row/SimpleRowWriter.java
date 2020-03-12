@@ -1,5 +1,6 @@
 package de.bytefish.pgbulkinsert.row;
 
+import de.bytefish.pgbulkinsert.exceptions.BinaryWriteFailedException;
 import de.bytefish.pgbulkinsert.pgsql.PgBinaryWriter;
 import de.bytefish.pgbulkinsert.pgsql.handlers.ValueHandlerProvider;
 import de.bytefish.pgbulkinsert.util.PostgreSqlUtils;
@@ -55,12 +56,15 @@ public class SimpleRowWriter {
     private final ValueHandlerProvider provider;
     private final Map<String, Integer> lookup;
 
+    private boolean isClosed;
+
     public SimpleRowWriter(Table table) {
         this(table, false);
     }
 
     public SimpleRowWriter(Table table, boolean usePostgresQuoting) {
         this.table = table;
+        this.isClosed = false;
         this.usePostgresQuoting = usePostgresQuoting;
 
         this.writer = new PgBinaryWriter();
@@ -78,16 +82,38 @@ public class SimpleRowWriter {
 
     public synchronized void startRow(Consumer<SimpleRow> consumer) {
 
-        writer.startRow(table.columns.length);
+        // We try to write a Row, but the underlying Stream to PostgreSQL has already
+        // been closed. We should not proceed and throw an Exception:
+        if(isClosed) {
+            throw new BinaryWriteFailedException("The PGCopyOutputStream has already been closed");
+        }
 
-        SimpleRow row = new SimpleRow(provider, lookup);
+        try {
 
-        consumer.accept(row);
+            writer.startRow(table.columns.length);
 
-        row.writeRow(writer);
+            SimpleRow row = new SimpleRow(provider, lookup);
+
+            consumer.accept(row);
+
+            row.writeRow(writer);
+
+        } catch(Exception e) {
+
+            // This stream shouldn't be reused, so let's store a flag here:
+            isClosed = true;
+
+            try {
+                close();
+            } catch(Exception ex) {
+                // There is nothing more we can do ...
+            }
+
+            throw e;
+        }
     }
 
-    public void close() throws SQLException  {
+    public void close()  {
         writer.close();
     }
 
