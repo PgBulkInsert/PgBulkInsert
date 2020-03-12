@@ -54,9 +54,6 @@ public class NullTerminatingStringTest extends TransactionalTestBase {
             exceptionHasBeenThrown = true;
         }
 
-
-        // Now assert, that we have written 10000 entities:
-
         Assert.assertEquals(true, exceptionHasBeenThrown);
     }
 
@@ -97,8 +94,6 @@ public class NullTerminatingStringTest extends TransactionalTestBase {
         }
 
 
-        // Now assert, that we have written 10000 entities:
-
         Assert.assertEquals(false, exceptionHasBeenThrown);
     }
 
@@ -113,17 +108,5 @@ public class NullTerminatingStringTest extends TransactionalTestBase {
         Statement statement = connection.createStatement();
 
         return statement.execute(sqlStatement);
-    }
-
-    private int getRowCount() throws SQLException {
-
-        Statement s = connection.createStatement();
-
-        ResultSet r = s.executeQuery(String.format("SELECT COUNT(*) AS rowcount FROM %s.%s", schema, tableName));
-        r.next();
-        int count = r.getInt("rowcount");
-        r.close();
-
-        return count;
     }
 }

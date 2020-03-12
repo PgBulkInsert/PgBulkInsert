@@ -25,7 +25,7 @@ You can add the following dependencies to your pom.xml to include [PgBulkInsert]
 <dependency>
 	<groupId>de.bytefish</groupId>
 	<artifactId>pgbulkinsert</artifactId>
-	<version>3.7</version>
+	<version>3.8</version>
 </dependency>
 ```
 
@@ -191,6 +191,26 @@ public class SimpleRowWriterTest extends TransactionalTestBase {
     }
 }
 ```
+
+### Handling Null Characters or... 'invalid byte sequence for encoding "UTF8": 0x00' ###
+
+If you see the error message ``invalid byte sequence for encoding "UTF8": 0x00`` your data contains Null Characters. Although ``0x00`` is 
+valid UTF-8 PostgreSQL does not support writing it, because it uses C-style string termination internally. 
+
+PgBulkInsert allows you to enable a Null Value handling, that removes all ``0x00`` occurences and replaces them with an empty string:
+    
+```java
+// Create the Table Definition:
+SimpleRowWriter.Table table = new SimpleRowWriter.Table(schema, tableName, columnNames);
+
+// Create the Writer:
+SimpleRowWriter writer = new SimpleRowWriter(table);
+
+// Enable the Null Character Handler:
+writer.enableNullCharacterHandler();
+```
+
+If you need to customize the Null Character Handling, then you can use the ``setNullCharacterHandler(Function<String, String> nullCharacterHandler)`` function.
 
 ## Using the AbstractMapping ##
 
