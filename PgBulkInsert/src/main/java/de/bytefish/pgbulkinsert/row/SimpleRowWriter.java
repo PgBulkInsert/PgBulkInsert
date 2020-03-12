@@ -4,6 +4,7 @@ import de.bytefish.pgbulkinsert.exceptions.BinaryWriteFailedException;
 import de.bytefish.pgbulkinsert.pgsql.PgBinaryWriter;
 import de.bytefish.pgbulkinsert.pgsql.handlers.ValueHandlerProvider;
 import de.bytefish.pgbulkinsert.util.PostgreSqlUtils;
+import de.bytefish.pgbulkinsert.util.StringUtils;
 import org.postgresql.PGConnection;
 import org.postgresql.copy.PGCopyOutputStream;
 
@@ -12,6 +13,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class SimpleRowWriter {
@@ -55,6 +57,7 @@ public class SimpleRowWriter {
     private final ValueHandlerProvider provider;
     private final Map<String, Integer> lookup;
 
+    private Function<String, String> nullCharacterHandler;
     private boolean isOpened;
     private boolean isClosed;
 
@@ -66,6 +69,7 @@ public class SimpleRowWriter {
         this.table = table;
         this.isClosed = false;
         this.isOpened = false;
+        this.nullCharacterHandler = (val) -> val;
         this.usePostgresQuoting = usePostgresQuoting;
 
         this.writer = new PgBinaryWriter();
@@ -102,7 +106,7 @@ public class SimpleRowWriter {
 
             writer.startRow(table.columns.length);
 
-            SimpleRow row = new SimpleRow(provider, lookup);
+            SimpleRow row = new SimpleRow(provider, lookup, nullCharacterHandler);
 
             consumer.accept(row);
 
@@ -128,6 +132,15 @@ public class SimpleRowWriter {
 
         writer.close();
     }
+
+    public void enableNullCharacterHandler() {
+        this.nullCharacterHandler = (val) -> StringUtils.removeNullCharacter(val);
+    }
+
+    public void setNullCharacterHandler(Function<String, String> nullCharacterHandler) {
+        this.nullCharacterHandler = nullCharacterHandler;
+    }
+
 
     private static String getCopyCommand(Table table, boolean usePostgresQuoting) {
 

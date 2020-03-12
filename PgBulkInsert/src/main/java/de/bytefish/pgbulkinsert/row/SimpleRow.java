@@ -20,18 +20,22 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class SimpleRow {
 
     private final ValueHandlerProvider provider;
     private final Map<String, Integer> lookup;
     private final Map<Integer, Consumer<PgBinaryWriter>> actions;
+    private final Function<String, String> nullCharacterHandler;
 
     @SuppressWarnings("unchecked")
-    public SimpleRow(ValueHandlerProvider provider, Map<String, Integer> lookup) {
+    public SimpleRow(ValueHandlerProvider provider, Map<String, Integer> lookup, Function<String, String> nullCharacterHandler) {
         this.provider = provider;
         this.lookup = lookup;
         this.actions = new HashMap<>();
+        this.nullCharacterHandler = nullCharacterHandler;
     }
 
     public <TTargetType> void setValue(String columnName, DataType type, TTargetType value) {
@@ -191,35 +195,19 @@ public class SimpleRow {
     }
 
     public void setText(String columnName, String value) {
-        setValue(columnName, DataType.Text, value);
-    }
-
-    public void setTextEscaped(String columnName, String value) {
-        setValue(columnName, DataType.Text, StringUtils.escapeString(value));
+        setValue(columnName, DataType.Text, nullCharacterHandler.apply(value));
     }
 
     public void setText(int ordinal, String value) {
-        setValue(ordinal, DataType.Text, value);
-    }
-
-    public void setTextEscaped(int ordinal, String value) {
-        setValue(ordinal, DataType.Text, StringUtils.escapeString(value));
+        setValue(ordinal, DataType.Text, nullCharacterHandler.apply(value));
     }
 
     public void setVarChar(String columnName, String value) {
-        setValue(columnName, DataType.Text, value);
-    }
-
-    public void setVarCharEscaped(String columnName, String value) {
-        setValue(columnName, DataType.Text, StringUtils.escapeString(value));
+        setValue(columnName, DataType.Text, nullCharacterHandler.apply(value));
     }
 
     public void setVarChar(int ordinal, String value) {
-        setValue(ordinal, DataType.Text, value);
-    }
-
-    public void setVarCharEscaped(int ordinal, String value) {
-        setValue(ordinal, DataType.Text, StringUtils.escapeString(value));
+        setValue(ordinal, DataType.Text, nullCharacterHandler.apply(value));
     }
 
     public void setUUID(String columnName, UUID value) {
@@ -239,19 +227,11 @@ public class SimpleRow {
     }
 
     public void setJsonb(String columnName, String value) {
-        setValue(columnName, DataType.Jsonb, value);
-    }
-
-    public void setJsonbEscaped(String columnName, String value) {
-        setValue(columnName, DataType.Jsonb, StringUtils.escapeString(value));
+        setValue(columnName, DataType.Jsonb, nullCharacterHandler.apply(value));
     }
 
     public void setJsonb(int ordinal, String value) {
-        setValue(ordinal, DataType.Jsonb, value);
-    }
-
-    public void setJsonbEscaped(int ordinal, String value) {
-        setValue(ordinal, DataType.Jsonb, StringUtils.escapeString(value));
+        setValue(ordinal, DataType.Jsonb, nullCharacterHandler.apply(value));
     }
 
     public void setHstore(String columnName, Map<String, String> value) {
@@ -359,19 +339,36 @@ public class SimpleRow {
     }
 
     public void setTextArray(String columnName, Collection<String> value) {
-        setCollection(columnName, DataType.Text, value);
+        Collection<String> values = value.stream()
+                .map(x -> nullCharacterHandler.apply(x))
+                .collect(Collectors.toList());
+
+        setCollection(columnName, DataType.Text, values);
     }
 
     public void setTextArray(int ordinal, Collection<String> value) {
-        setCollection(ordinal, DataType.Text, value);
+        Collection<String> values = value.stream()
+                .map(x -> nullCharacterHandler.apply(x))
+                .collect(Collectors.toList());
+
+        setCollection(ordinal, DataType.Text, values);
     }
 
     public void setVarCharArray(String columnName, Collection<String> value) {
-        setCollection(columnName, DataType.VarChar, value);
+
+        Collection<String> values = value.stream()
+                .map(x -> nullCharacterHandler.apply(x))
+                .collect(Collectors.toList());
+
+        setCollection(columnName, DataType.VarChar, values);
     }
 
     public void setVarCharArray(int ordinal, Collection<String> value) {
-        setCollection(ordinal, DataType.VarChar, value);
+        Collection<String> values = value.stream()
+                .map(x -> nullCharacterHandler.apply(x))
+                .collect(Collectors.toList());
+
+        setCollection(ordinal, DataType.VarChar, values);
     }
 
     public <T extends Number> void setFloatArray(String columnName, Collection<T> value) {
