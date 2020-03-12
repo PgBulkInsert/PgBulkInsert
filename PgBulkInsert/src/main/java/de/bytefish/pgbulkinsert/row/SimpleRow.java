@@ -191,18 +191,34 @@ public class SimpleRow {
     }
 
     public void setText(String columnName, String value) {
+        setValue(columnName, DataType.Text, value);
+    }
+
+    public void setTextEscaped(String columnName, String value) {
         setValue(columnName, DataType.Text, StringUtils.escapeString(value));
     }
 
     public void setText(int ordinal, String value) {
+        setValue(ordinal, DataType.Text, value);
+    }
+
+    public void setTextEscaped(int ordinal, String value) {
         setValue(ordinal, DataType.Text, StringUtils.escapeString(value));
     }
 
     public void setVarChar(String columnName, String value) {
+        setValue(columnName, DataType.Text, value);
+    }
+
+    public void setVarCharEscaped(String columnName, String value) {
         setValue(columnName, DataType.Text, StringUtils.escapeString(value));
     }
 
     public void setVarChar(int ordinal, String value) {
+        setValue(ordinal, DataType.Text, value);
+    }
+
+    public void setVarCharEscaped(int ordinal, String value) {
         setValue(ordinal, DataType.Text, StringUtils.escapeString(value));
     }
 
@@ -223,10 +239,18 @@ public class SimpleRow {
     }
 
     public void setJsonb(String columnName, String value) {
+        setValue(columnName, DataType.Jsonb, value);
+    }
+
+    public void setJsonbEscaped(String columnName, String value) {
         setValue(columnName, DataType.Jsonb, StringUtils.escapeString(value));
     }
 
     public void setJsonb(int ordinal, String value) {
+        setValue(ordinal, DataType.Jsonb, value);
+    }
+
+    public void setJsonbEscaped(int ordinal, String value) {
         setValue(ordinal, DataType.Jsonb, StringUtils.escapeString(value));
     }
 
