@@ -8,6 +8,7 @@ import de.bytefish.pgbulkinsert.pgsql.handlers.IValueHandler;
 import de.bytefish.pgbulkinsert.pgsql.handlers.ValueHandlerProvider;
 import de.bytefish.pgbulkinsert.pgsql.model.geometric.*;
 import de.bytefish.pgbulkinsert.pgsql.model.network.MacAddress;
+import de.bytefish.pgbulkinsert.util.StringUtils;
 
 import java.net.Inet4Address;
 import java.net.Inet6Address;
@@ -85,35 +86,35 @@ public class SimpleRow {
         }
     }
 
-    public void setBoolean(String columnName, boolean value) {
+    public void setBoolean(String columnName, Boolean value) {
         setValue(columnName, DataType.Boolean, value);
     }
 
-    public void setBoolean(int ordinal, boolean value) {
+    public void setBoolean(int ordinal, Boolean value) {
         setValue(ordinal, DataType.Boolean, value);
     }
 
-    public void setByte(String columnName, byte value) {
+    public void setByte(String columnName, Byte value) {
         setValue(columnName, DataType.Char, value);
     }
 
-    public void setByte(int ordinal, byte value) {
+    public void setByte(int ordinal, Byte value) {
         setValue(ordinal, DataType.Char, value);
     }
 
-    public void setShort(String columnName, short value) {
+    public void setShort(String columnName, Short value) {
         setValue(columnName, DataType.Int2, value);
     }
 
-    public void setShort(int ordinal, short value) {
+    public void setShort(int ordinal, Short value) {
         setValue(ordinal, DataType.Int2, value);
     }
 
-    public void setInteger(String columnName, int value) {
+    public void setInteger(String columnName, Integer value) {
         setValue(columnName, DataType.Int4, value);
     }
 
-    public void setInteger(int ordinal, int value) {
+    public void setInteger(int ordinal, Integer value) {
         setValue(ordinal, DataType.Int4, value);
     }
 
@@ -125,25 +126,29 @@ public class SimpleRow {
         setValue(ordinal, DataType.Numeric, value);
     }
 
-    public void setLong(String columnName, long value) {
+    public void setLong(String columnName, Long value) {
         setValue(columnName, DataType.Int8, value);
     }
 
-    public void setLong(int ordinal, long value) {
+    public void setLong(int ordinal, Long value) {
         setValue(ordinal, DataType.Int8, value);
     }
 
-    public void setFloat(String columnName, float value) {
+    public void setFloat(String columnName, Float value) {
         setValue(columnName, DataType.SinglePrecision, value);
     }
 
-    public void setFloat(int ordinal, float value) {
+    public void setFloat(int ordinal, Float value) {
         setValue(ordinal, DataType.SinglePrecision, value);
     }
 
-    public void setDouble(String columnName, double value) {
+    public void setDouble(String columnName, Double value) {
         setValue(columnName, DataType.DoublePrecision, value);
     }
+    
+	public void setDouble(int ordinal, Double value) {
+		setValue(ordinal, DataType.DoublePrecision, value);
+	}
 
     public void setDate(String columnName, LocalDate value) {
         setValue(columnName, DataType.Date, value);
@@ -186,19 +191,19 @@ public class SimpleRow {
     }
 
     public void setText(String columnName, String value) {
-        setValue(columnName, DataType.Text, value);
+        setValue(columnName, DataType.Text, StringUtils.escapeString(value));
     }
 
     public void setText(int ordinal, String value) {
-        setValue(ordinal, DataType.Text, value);
+        setValue(ordinal, DataType.Text, StringUtils.escapeString(value));
     }
 
     public void setVarChar(String columnName, String value) {
-        setValue(columnName, DataType.Text, value);
+        setValue(columnName, DataType.Text, StringUtils.escapeString(value));
     }
 
     public void setVarChar(int ordinal, String value) {
-        setValue(ordinal, DataType.Text, value);
+        setValue(ordinal, DataType.Text, StringUtils.escapeString(value));
     }
 
     public void setUUID(String columnName, UUID value) {
@@ -218,11 +223,11 @@ public class SimpleRow {
     }
 
     public void setJsonb(String columnName, String value) {
-        setValue(columnName, DataType.Jsonb, value);
+        setValue(columnName, DataType.Jsonb, StringUtils.escapeString(value));
     }
 
     public void setJsonb(int ordinal, String value) {
-        setValue(ordinal, DataType.Jsonb, value);
+        setValue(ordinal, DataType.Jsonb, StringUtils.escapeString(value));
     }
 
     public void setHstore(String columnName, Map<String, String> value) {
