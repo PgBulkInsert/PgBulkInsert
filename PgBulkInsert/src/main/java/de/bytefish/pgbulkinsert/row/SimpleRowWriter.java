@@ -4,7 +4,6 @@ import de.bytefish.pgbulkinsert.exceptions.BinaryWriteFailedException;
 import de.bytefish.pgbulkinsert.pgsql.PgBinaryWriter;
 import de.bytefish.pgbulkinsert.pgsql.handlers.ValueHandlerProvider;
 import de.bytefish.pgbulkinsert.util.PostgreSqlUtils;
-import de.bytefish.pgbulkinsert.util.StringUtils;
 import org.postgresql.PGConnection;
 import org.postgresql.copy.PGCopyOutputStream;
 
@@ -56,6 +55,7 @@ public class SimpleRowWriter {
     private final ValueHandlerProvider provider;
     private final Map<String, Integer> lookup;
 
+    private boolean isOpened;
     private boolean isClosed;
 
     public SimpleRowWriter(Table table) {
@@ -65,6 +65,7 @@ public class SimpleRowWriter {
     public SimpleRowWriter(Table table, boolean usePostgresQuoting) {
         this.table = table;
         this.isClosed = false;
+        this.isOpened = false;
         this.usePostgresQuoting = usePostgresQuoting;
 
         this.writer = new PgBinaryWriter();
@@ -78,9 +79,18 @@ public class SimpleRowWriter {
 
     public void open(PGConnection connection) throws SQLException  {
         writer.open(new PGCopyOutputStream(connection, getCopyCommand(table, usePostgresQuoting), 1));
+
+        isClosed = false;
+        isOpened = true;
     }
 
     public synchronized void startRow(Consumer<SimpleRow> consumer) {
+
+        // We try to write a Row, but the underlying Stream to PostgreSQL has not
+        // been opened yet. We should not proceed and throw an Exception:
+        if(!isOpened) {
+            throw new BinaryWriteFailedException("The SimpleRowWriter has not been opened");
+        }
 
         // We try to write a Row, but the underlying Stream to PostgreSQL has already
         // been closed. We should not proceed and throw an Exception:
@@ -100,9 +110,6 @@ public class SimpleRowWriter {
 
         } catch(Exception e) {
 
-            // This stream shouldn't be reused, so let's store a flag here:
-            isClosed = true;
-
             try {
                 close();
             } catch(Exception ex) {
@@ -114,6 +121,11 @@ public class SimpleRowWriter {
     }
 
     public void close()  {
+
+        // This stream shouldn't be reused, so let's store a flag here:
+        isOpened = false;
+        isClosed = true;
+
         writer.close();
     }
 
