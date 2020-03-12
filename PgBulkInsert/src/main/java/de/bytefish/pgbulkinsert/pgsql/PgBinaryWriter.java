@@ -8,6 +8,7 @@ import de.bytefish.pgbulkinsert.pgsql.handlers.IValueHandler;
 
 import java.io.BufferedOutputStream;
 import java.io.DataOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
 
 public class PgBinaryWriter implements AutoCloseable {
@@ -33,9 +34,14 @@ public class PgBinaryWriter implements AutoCloseable {
     public void startRow(int numColumns) {
         try {
             buffer.writeShort(numColumns);
-        } catch(Exception e) {
-            throw new BinaryWriteFailedException(e);
-        }
+		} catch (IOException e) {
+			Throwable t = e.getCause();
+			if (null != t) {
+				throw new BinaryWriteFailedException(t);
+			} else {
+				throw new BinaryWriteFailedException(e);
+			}
+		}
     }
 
     public <TTargetType> void write(final IValueHandler<TTargetType> handler, final TTargetType value) {
@@ -56,8 +62,13 @@ public class PgBinaryWriter implements AutoCloseable {
 			} else {
 				buffer.writeByte(0);
 			}
-		} catch (Exception e) {
-			throw new BinaryWriteFailedException(e);
+		} catch (IOException e) {
+			Throwable t = e.getCause();
+			if (null != t) {
+				throw new BinaryWriteFailedException(t);
+			} else {
+				throw new BinaryWriteFailedException(e);
+			}
 		}
 	}
 
@@ -72,8 +83,13 @@ public class PgBinaryWriter implements AutoCloseable {
 		try {
 			buffer.writeInt(1);
 			buffer.writeByte(value);
-		} catch (Exception e) {
-			throw new BinaryWriteFailedException(e);
+		} catch (IOException e) {
+			Throwable t = e.getCause();
+			if (null != t) {
+				throw new BinaryWriteFailedException(t);
+			} else {
+				throw new BinaryWriteFailedException(e);
+			}
 		}
 	}
 
@@ -87,8 +103,13 @@ public class PgBinaryWriter implements AutoCloseable {
 		try {
 			buffer.writeInt(2);
 			buffer.writeShort(value);
-		} catch (Exception e) {
-			throw new BinaryWriteFailedException(e);
+		} catch (IOException e) {
+			Throwable t = e.getCause();
+			if (null != t) {
+				throw new BinaryWriteFailedException(t);
+			} else {
+				throw new BinaryWriteFailedException(e);
+			}
 		}
 	}
 
@@ -102,8 +123,13 @@ public class PgBinaryWriter implements AutoCloseable {
 		try {
 			buffer.writeInt(4);
 			buffer.writeInt(value);
-		} catch (Exception e) {
-			throw new BinaryWriteFailedException(e);
+		} catch (IOException e) {
+			Throwable t = e.getCause();
+			if (null != t) {
+				throw new BinaryWriteFailedException(t);
+			} else {
+				throw new BinaryWriteFailedException(e);
+			}
 		}
 	}
 
@@ -117,8 +143,13 @@ public class PgBinaryWriter implements AutoCloseable {
 		try {
 			buffer.writeInt(8);
 			buffer.writeLong(value);
-		} catch (Exception e) {
-			throw new BinaryWriteFailedException(e);
+		} catch (IOException e) {
+			Throwable t = e.getCause();
+			if (null != t) {
+				throw new BinaryWriteFailedException(t);
+			} else {
+				throw new BinaryWriteFailedException(e);
+			}
 		}
 	}
 	
@@ -132,8 +163,13 @@ public class PgBinaryWriter implements AutoCloseable {
 		try {
 	        buffer.writeInt(4);
 	        buffer.writeFloat(value);
-		} catch (Exception e) {
-			throw new BinaryWriteFailedException(e);
+		} catch (IOException e) {
+			Throwable t = e.getCause();
+			if (null != t) {
+				throw new BinaryWriteFailedException(t);
+			} else {
+				throw new BinaryWriteFailedException(e);
+			}
 		}
 	}
 
@@ -147,8 +183,13 @@ public class PgBinaryWriter implements AutoCloseable {
 		try {
 			buffer.writeInt(8);
 			buffer.writeDouble(value);
-		} catch (Exception e) {
-			throw new BinaryWriteFailedException(e);
+		} catch (IOException e) {
+			Throwable t = e.getCause();
+			if (null != t) {
+				throw new BinaryWriteFailedException(t);
+			} else {
+				throw new BinaryWriteFailedException(e);
+			}
 		}
 	}
 
@@ -158,8 +199,13 @@ public class PgBinaryWriter implements AutoCloseable {
 	public void writeNull() {
 		try {
 			buffer.writeInt(-1);
-		} catch (Exception e) {
-			throw new BinaryWriteFailedException(e);
+		} catch (IOException e) {
+			Throwable t = e.getCause();
+			if (null != t) {
+				throw new BinaryWriteFailedException(t);
+			} else {
+				throw new BinaryWriteFailedException(e);
+			}
 		}
 	}
 
@@ -170,9 +216,14 @@ public class PgBinaryWriter implements AutoCloseable {
 
             buffer.flush();
             buffer.close();
-        } catch(Exception e) {
-            throw new BinaryWriteFailedException(e);
-        }
+		} catch (IOException e) {
+			Throwable t = e.getCause();
+			if (null != t) {
+				throw new BinaryWriteFailedException(t);
+			} else {
+				throw new BinaryWriteFailedException(e);
+			}
+		}
     }
     
     private void writeHeader() {
@@ -185,8 +236,13 @@ public class PgBinaryWriter implements AutoCloseable {
             // 32 bit header extension area length
             buffer.writeInt(0);
 
-        } catch(Exception e) {
-            throw new BinaryWriteFailedException(e);
-        }
+		} catch (IOException e) {
+			Throwable t = e.getCause();
+			if (null != t) {
+				throw new BinaryWriteFailedException(t);
+			} else {
+				throw new BinaryWriteFailedException(e);
+			}
+		}
     }
 }
