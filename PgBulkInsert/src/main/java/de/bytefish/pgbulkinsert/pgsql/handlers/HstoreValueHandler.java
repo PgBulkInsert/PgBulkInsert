@@ -4,7 +4,6 @@
 package de.bytefish.pgbulkinsert.pgsql.handlers;
 
 import de.bytefish.pgbulkinsert.util.StringUtils;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
@@ -58,6 +57,6 @@ public class HstoreValueHandler extends BaseValueHandler<Map<String, String>> {
 
     @Override
     public int getLength(Map<String, String> value) {
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 }

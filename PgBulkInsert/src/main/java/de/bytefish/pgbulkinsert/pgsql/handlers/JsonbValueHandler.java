@@ -3,8 +3,6 @@
 
 package de.bytefish.pgbulkinsert.pgsql.handlers;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
 import java.io.DataOutputStream;
 
 public class JsonbValueHandler extends BaseValueHandler<String> {
@@ -34,6 +32,6 @@ public class JsonbValueHandler extends BaseValueHandler<String> {
 
     @Override
     public int getLength(String value) {
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 }

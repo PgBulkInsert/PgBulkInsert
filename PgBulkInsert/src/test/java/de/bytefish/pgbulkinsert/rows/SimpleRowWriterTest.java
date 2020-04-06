@@ -56,7 +56,6 @@ public class SimpleRowWriterTest extends TransactionalTestBase {
                         ZonedDateTime.of(2020, 3, 1, 0, 0, 0, 0, ZoneId.of("GMT")),
                         ZonedDateTime.of(2020, 3, 1, 0, 0, 0, 0, ZoneId.of("GMT"))));
             });
-
         }
 
         // ... and make sure to close it:
