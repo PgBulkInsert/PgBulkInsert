@@ -187,6 +187,7 @@ public class ArrayTypesTest  extends TransactionalTestBase {
         testArrayInternal("col_boolean_array", entity, entity.booleanArray);
     }
 
+    @SuppressWarnings("unchecked")
     private <T> void testArrayInternal(String columnLabel, ArrayEntity entity, List<T> samples) throws SQLException, UnknownHostException {
         List<ArrayEntity> entities = Collections.singletonList(entity);
 

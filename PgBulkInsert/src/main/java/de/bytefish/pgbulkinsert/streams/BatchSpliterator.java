@@ -17,6 +17,7 @@ public abstract class BatchSpliterator <T> implements Spliterator<T> {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public Spliterator<T> trySplit() {
         final HoldingConsumer consumer = new HoldingConsumer();
         if (!tryAdvance(consumer)) {

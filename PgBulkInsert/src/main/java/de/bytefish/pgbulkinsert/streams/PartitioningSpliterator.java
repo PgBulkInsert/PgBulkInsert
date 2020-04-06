@@ -19,6 +19,7 @@ public class PartitioningSpliterator<T> extends BatchSpliterator<Collection<T>> 
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public boolean tryAdvance(Consumer<? super Collection<T>> consumer) {
         final HoldingConsumer holder = new HoldingConsumer();
         if (!spliterator.tryAdvance(holder)) {

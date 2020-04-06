@@ -288,7 +288,7 @@ public abstract class AbstractMapping<TEntity> {
     }
 
     private void addColumn(String columnName, BiConsumer<PgBinaryWriter, TEntity> action) {
-        columns.add(new ColumnDefinition(columnName, action));
+        columns.add(new ColumnDefinition<>(columnName, action));
     }
 
     public List<ColumnDefinition<TEntity>> getColumns() {

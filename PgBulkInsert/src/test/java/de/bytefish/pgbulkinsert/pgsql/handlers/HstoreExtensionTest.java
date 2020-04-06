@@ -62,6 +62,7 @@ public class HstoreExtensionTest extends TransactionalTestBase {
 
     @Test
     @Ignore("This Test Requires the hstore extension to be enabled.")
+    @SuppressWarnings("unchecked")
     public void saveAll_Hstore_Test() throws SQLException {
 
         // This list will be inserted.
