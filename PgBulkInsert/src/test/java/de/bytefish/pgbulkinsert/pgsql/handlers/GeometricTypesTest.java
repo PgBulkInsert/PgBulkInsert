@@ -5,23 +5,18 @@ package de.bytefish.pgbulkinsert.pgsql.handlers;
 
 import de.bytefish.pgbulkinsert.PgBulkInsert;
 import de.bytefish.pgbulkinsert.mapping.AbstractMapping;
-import de.bytefish.pgbulkinsert.pgsql.handlers.utils.GeometricUtils;
 import de.bytefish.pgbulkinsert.pgsql.model.geometric.*;
-import de.bytefish.pgbulkinsert.util.JavaUtils;
 import de.bytefish.pgbulkinsert.util.PostgreSqlUtils;
 import de.bytefish.pgbulkinsert.utils.TransactionalTestBase;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.postgresql.geometric.*;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class GeometricTypesTest extends TransactionalTestBase {
 

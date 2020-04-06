@@ -33,11 +33,7 @@ public class CustomValueHandlerIntegrationTest extends TransactionalTestBase {
         private IValueHandler<BigDecimal> bigDecimalIValueHandler;
 
         public DoubleNumericValueHandler() {
-            this(new BigDecimalValueHandler());
-        }
-
-        public DoubleNumericValueHandler(IValueHandler<BigDecimal> bigDecimalValueHandler) {
-            this.bigDecimalIValueHandler = bigDecimalValueHandler;
+            this.bigDecimalIValueHandler = new BigDecimalValueHandler<>();
         }
 
         @Override

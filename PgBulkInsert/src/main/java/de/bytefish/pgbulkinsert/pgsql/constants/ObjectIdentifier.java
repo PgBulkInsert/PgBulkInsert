@@ -3,9 +3,7 @@
 
 package de.bytefish.pgbulkinsert.pgsql.constants;
 
-import de.bytefish.pgbulkinsert.util.JavaUtils;
-
-import java.util.AbstractMap;
+import java.util.HashMap;
 import java.util.Map;
 
 
@@ -196,54 +194,62 @@ public class ObjectIdentifier {
 
     // endregion
 
-    private static Map<DataType, Integer> mapping = JavaUtils.initializeMap(
-            new AbstractMap.SimpleEntry<>(DataType.Boolean, Boolean),
-            new AbstractMap.SimpleEntry<>(DataType.Bytea, Bytea),
-            new AbstractMap.SimpleEntry<>(DataType.Char, Char),
-            new AbstractMap.SimpleEntry<>(DataType.Name, Name),
-            new AbstractMap.SimpleEntry<>(DataType.Int8, Int8),
-            new AbstractMap.SimpleEntry<>(DataType.Int2, Int2),
-            new AbstractMap.SimpleEntry<>(DataType.Int4, Int4),
-            new AbstractMap.SimpleEntry<>(DataType.Text, Text),
-            new AbstractMap.SimpleEntry<>(DataType.Oid, Oid),
-            new AbstractMap.SimpleEntry<>(DataType.Tid, Tid),
-            new AbstractMap.SimpleEntry<>(DataType.Xid, Xid),
-            new AbstractMap.SimpleEntry<>(DataType.Cid, Cid),
-            new AbstractMap.SimpleEntry<>(DataType.Jsonb, Jsonb),
-            new AbstractMap.SimpleEntry<>(DataType.Xml, Xml),
-            new AbstractMap.SimpleEntry<>(DataType.Point, Point),
-            new AbstractMap.SimpleEntry<>(DataType.LineSegment, LineSegment),
-            new AbstractMap.SimpleEntry<>(DataType.Path, Path),
-            new AbstractMap.SimpleEntry<>(DataType.Box, Box),
-            new AbstractMap.SimpleEntry<>(DataType.Polygon, Polygon),
-            new AbstractMap.SimpleEntry<>(DataType.Line, Line),
-            new AbstractMap.SimpleEntry<>(DataType.SinglePrecision, SinglePrecision),
-            new AbstractMap.SimpleEntry<>(DataType.DoublePrecision, DoublePrecision),
-            new AbstractMap.SimpleEntry<>(DataType.AbsTime, AbsTime),
-            new AbstractMap.SimpleEntry<>(DataType.RelTime, RelTime),
-            new AbstractMap.SimpleEntry<>(DataType.TInterval, TInterval),
-            new AbstractMap.SimpleEntry<>(DataType.Unknown, Unknown),
-            new AbstractMap.SimpleEntry<>(DataType.Circle, Circle),
-            new AbstractMap.SimpleEntry<>(DataType.Cash, Cash),
-            new AbstractMap.SimpleEntry<>(DataType.Money, Money),
-            new AbstractMap.SimpleEntry<>(DataType.MacAddress, MacAddress),
-            new AbstractMap.SimpleEntry<>(DataType.Inet4, Inet),
-            new AbstractMap.SimpleEntry<>(DataType.Inet6, Inet),
-            new AbstractMap.SimpleEntry<>(DataType.Cidr, Cidr),
-            new AbstractMap.SimpleEntry<>(DataType.MacAddress8, MacAddress8),
-            new AbstractMap.SimpleEntry<>(DataType.CharLength, CharLength),
-            new AbstractMap.SimpleEntry<>(DataType.VarChar, VarCharLength),
-            new AbstractMap.SimpleEntry<>(DataType.Date, Date),
-            new AbstractMap.SimpleEntry<>(DataType.Time, Time),
-            new AbstractMap.SimpleEntry<>(DataType.Timestamp, Timestamp),
-            new AbstractMap.SimpleEntry<>(DataType.TimestampTz, TimestampTz),
-            new AbstractMap.SimpleEntry<>(DataType.Interval, Interval),
-            new AbstractMap.SimpleEntry<>(DataType.TimeTz, TimeTz),
-            new AbstractMap.SimpleEntry<>(DataType.Bit, Bit),
-            new AbstractMap.SimpleEntry<>(DataType.VarBit, VarBit),
-            new AbstractMap.SimpleEntry<>(DataType.Numeric, Numeric),
-            new AbstractMap.SimpleEntry<>(DataType.Uuid, Uuid),
-            new AbstractMap.SimpleEntry<>(DataType.Record, Record));
+    private static Map<DataType, Integer> mapping = buildLookupTable();
+
+    private static Map<DataType, Integer> buildLookupTable() {
+
+        final Map<DataType, Integer> mapping = new HashMap<>();
+
+        mapping.put(DataType.Boolean, Boolean);
+        mapping.put(DataType.Bytea, Bytea);
+        mapping.put(DataType.Char, Char);
+        mapping.put(DataType.Name, Name);
+        mapping.put(DataType.Int8, Int8);
+        mapping.put(DataType.Int2, Int2);
+        mapping.put(DataType.Int4, Int4);
+        mapping.put(DataType.Text, Text);
+        mapping.put(DataType.Oid, Oid);
+        mapping.put(DataType.Tid, Tid);
+        mapping.put(DataType.Xid, Xid);
+        mapping.put(DataType.Cid, Cid);
+        mapping.put(DataType.Jsonb, Jsonb);
+        mapping.put(DataType.Xml, Xml);
+        mapping.put(DataType.Point, Point);
+        mapping.put(DataType.LineSegment, LineSegment);
+        mapping.put(DataType.Path, Path);
+        mapping.put(DataType.Box, Box);
+        mapping.put(DataType.Polygon, Polygon);
+        mapping.put(DataType.Line, Line);
+        mapping.put(DataType.SinglePrecision, SinglePrecision);
+        mapping.put(DataType.DoublePrecision, DoublePrecision);
+        mapping.put(DataType.AbsTime, AbsTime);
+        mapping.put(DataType.RelTime, RelTime);
+        mapping.put(DataType.TInterval, TInterval);
+        mapping.put(DataType.Unknown, Unknown);
+        mapping.put(DataType.Circle, Circle);
+        mapping.put(DataType.Cash, Cash);
+        mapping.put(DataType.Money, Money);
+        mapping.put(DataType.MacAddress, MacAddress);
+        mapping.put(DataType.Inet4, Inet);
+        mapping.put(DataType.Inet6, Inet);
+        mapping.put(DataType.Cidr, Cidr);
+        mapping.put(DataType.MacAddress8, MacAddress8);
+        mapping.put(DataType.CharLength, CharLength);
+        mapping.put(DataType.VarChar, VarCharLength);
+        mapping.put(DataType.Date, Date);
+        mapping.put(DataType.Time, Time);
+        mapping.put(DataType.Timestamp, Timestamp);
+        mapping.put(DataType.TimestampTz, TimestampTz);
+        mapping.put(DataType.Interval, Interval);
+        mapping.put(DataType.TimeTz, TimeTz);
+        mapping.put(DataType.Bit, Bit);
+        mapping.put(DataType.VarBit, VarBit);
+        mapping.put(DataType.Numeric, Numeric);
+        mapping.put(DataType.Uuid, Uuid);
+        mapping.put(DataType.Record, Record);
+
+        return mapping;
+    }
 
     public static int mapFrom(DataType type) {
         if(mapping.containsKey(type)) {

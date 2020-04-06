@@ -5,7 +5,6 @@ package de.bytefish.pgbulkinsert.pgsql.handlers;
 
 import de.bytefish.pgbulkinsert.PgBulkInsert;
 import de.bytefish.pgbulkinsert.mapping.AbstractMapping;
-import de.bytefish.pgbulkinsert.util.JavaUtils;
 import de.bytefish.pgbulkinsert.util.PostgreSqlUtils;
 import de.bytefish.pgbulkinsert.utils.TransactionalTestBase;
 import org.junit.Assert;
@@ -15,10 +14,7 @@ import org.junit.Test;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.AbstractMap;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class HstoreExtensionTest extends TransactionalTestBase {
 
@@ -72,9 +68,11 @@ public class HstoreExtensionTest extends TransactionalTestBase {
         List<HStoreEntity> entities = new ArrayList<>();
 
         // Create the Map to Store:
-        Map<String, String> hstoreData = JavaUtils.initializeMap(
-                new AbstractMap.SimpleEntry<String, String>("Philipp", "Cool Cool Cool!")
-        );
+        Map<String, String> hstoreData = new HashMap<>();
+
+
+        hstoreData.put("Philipp", "Cool Cool Cool!");
+
         // Create the Entity to insert:
         HStoreEntity entity = new HStoreEntity();
 
