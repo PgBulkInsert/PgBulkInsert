@@ -5,9 +5,11 @@ import de.bytefish.pgbulkinsert.pgsql.constants.DataType;
 import de.bytefish.pgbulkinsert.pgsql.constants.ObjectIdentifier;
 import de.bytefish.pgbulkinsert.pgsql.handlers.CollectionValueHandler;
 import de.bytefish.pgbulkinsert.pgsql.handlers.IValueHandler;
+import de.bytefish.pgbulkinsert.pgsql.handlers.RangeValueHandler;
 import de.bytefish.pgbulkinsert.pgsql.handlers.ValueHandlerProvider;
 import de.bytefish.pgbulkinsert.pgsql.model.geometric.*;
 import de.bytefish.pgbulkinsert.pgsql.model.network.MacAddress;
+import de.bytefish.pgbulkinsert.pgsql.model.range.Range;
 import de.bytefish.pgbulkinsert.util.StringUtils;
 
 import java.net.Inet4Address;
@@ -417,5 +419,33 @@ public class SimpleRow {
 
     public void setInet6Array(int ordinal, Collection<Inet6Address> value) {
         setCollection(ordinal, DataType.Inet6, value);
+    }
+
+    public <TElementType> void setRange(String columnName, DataType dataType, Range<TElementType> value) {
+
+        final IValueHandler<TElementType> valueHandler = provider.resolve(dataType);
+
+        setValue(columnName, new RangeValueHandler<>(valueHandler), value);
+    }
+
+    public <TElementType> void setRange(int ordinal, DataType dataType, Range<TElementType> value) {
+
+        final IValueHandler<TElementType> valueHandler = provider.resolve(dataType);
+
+        setValue(ordinal, new RangeValueHandler<>(valueHandler), value);
+    }
+
+    public void setTsTzRange(String columnName, Range<ZonedDateTime> value) {
+
+        final IValueHandler<ZonedDateTime> valueHandler = provider.resolve(DataType.TimestampTz);
+
+        setValue(columnName, new RangeValueHandler<>(valueHandler), value);
+    }
+
+    public void setTsTzRange(int ordinal, Range<ZonedDateTime> value) {
+
+        final IValueHandler<ZonedDateTime> valueHandler = provider.resolve(DataType.TimestampTz);
+
+        setValue(ordinal, new RangeValueHandler<>(valueHandler), value);
     }
 }
