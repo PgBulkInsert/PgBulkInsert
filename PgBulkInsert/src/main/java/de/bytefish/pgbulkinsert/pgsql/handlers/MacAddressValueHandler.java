@@ -14,4 +14,9 @@ public class MacAddressValueHandler extends BaseValueHandler<MacAddress> {
         buffer.writeInt(6);
         buffer.write(value.getAddressBytes());
     }
+
+    @Override
+    public int getLength(MacAddress value) {
+        return 6;
+    }
 }

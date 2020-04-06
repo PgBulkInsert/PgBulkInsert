@@ -26,4 +26,9 @@ public class Inet4AddressValueHandler extends BaseValueHandler<Inet4Address> {
         buffer.writeByte(inet4AddressBytes.length);
         buffer.write(inet4AddressBytes);
     }
+
+    @Override
+    public int getLength(Inet4Address value) {
+        return 8;
+    }
 }

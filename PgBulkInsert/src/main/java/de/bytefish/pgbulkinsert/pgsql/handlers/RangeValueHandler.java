@@ -17,6 +17,7 @@ public class RangeValueHandler<TElementType> extends BaseValueHandler<Range<TEle
 
     @Override
     protected void internalHandle(DataOutputStream buffer, Range<TElementType> value) throws Exception {
+        buffer.writeInt(getLength(value));
         buffer.writeByte((byte)value.getFlags());
 
         if (value.isEmpty()) {
@@ -30,6 +31,22 @@ public class RangeValueHandler<TElementType> extends BaseValueHandler<Range<TEle
         if(!value.isUpperBoundInfinite()) {
             valueHandler.handle(buffer, value.getUpperBound());
         }
+    }
+
+    @Override
+    public int getLength(Range<TElementType> value) {
+        int totalLen = 1;
+
+        if (!value.isEmpty())
+        {
+            if (!value.isLowerBoundInfinite())
+                totalLen += 4 + valueHandler.getLength(value.getLowerBound());
+
+            if (!value.isUpperBoundInfinite())
+                totalLen += 4 + valueHandler.getLength(value.getUpperBound());
+        }
+
+        return totalLen;
     }
 }
 

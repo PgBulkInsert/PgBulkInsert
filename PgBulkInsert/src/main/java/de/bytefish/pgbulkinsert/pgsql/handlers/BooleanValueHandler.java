@@ -16,4 +16,10 @@ public class BooleanValueHandler extends BaseValueHandler<Boolean> {
             buffer.writeByte(0);
         }
     }
+
+
+    @Override
+    public int getLength(Boolean value) {
+        return 1;
+    }
 }

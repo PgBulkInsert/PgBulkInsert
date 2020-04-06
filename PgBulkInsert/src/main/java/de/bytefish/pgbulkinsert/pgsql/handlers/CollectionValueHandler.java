@@ -3,6 +3,8 @@
 
 package de.bytefish.pgbulkinsert.pgsql.handlers;
 
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.util.Collection;
@@ -36,5 +38,10 @@ public class CollectionValueHandler<TElementType, TCollectionType extends Collec
 
         buffer.writeInt(byteArrayOutput.size());
         buffer.write(byteArrayOutput.toByteArray());
+    }
+
+    @Override
+    public int getLength(TCollectionType value) {
+        throw new NotImplementedException();
     }
 }

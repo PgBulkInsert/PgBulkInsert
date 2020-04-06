@@ -16,4 +16,11 @@ public class StringValueHandler extends BaseValueHandler<String> {
         buffer.writeInt(utf8Bytes.length);
         buffer.write(utf8Bytes);
     }
+
+    @Override
+    public int getLength(String value) {
+        byte[] utf8Bytes = StringUtils.getUtf8Bytes(value);
+
+        return utf8Bytes.length;
+    }
 }

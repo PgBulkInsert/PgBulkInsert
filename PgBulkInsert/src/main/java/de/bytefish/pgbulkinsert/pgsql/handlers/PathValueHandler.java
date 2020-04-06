@@ -6,6 +6,7 @@ package de.bytefish.pgbulkinsert.pgsql.handlers;
 import de.bytefish.pgbulkinsert.pgsql.handlers.utils.GeometricUtils;
 import de.bytefish.pgbulkinsert.pgsql.model.geometric.Path;
 import de.bytefish.pgbulkinsert.pgsql.model.geometric.Point;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.io.DataOutputStream;
 
@@ -30,5 +31,10 @@ public class PathValueHandler extends BaseValueHandler<Path> {
             GeometricUtils.writePoint(buffer, p);
         }
 
+    }
+
+    @Override
+    public int getLength(Path value) {
+        throw new NotImplementedException();
     }
 }

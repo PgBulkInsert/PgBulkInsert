@@ -13,6 +13,7 @@ import de.bytefish.pgbulkinsert.util.PostgreSqlUtils;
 import de.bytefish.pgbulkinsert.utils.TransactionalTestBase;
 import org.junit.Assert;
 import org.junit.Test;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.io.DataOutputStream;
 import java.math.BigDecimal;
@@ -47,6 +48,11 @@ public class CustomValueHandlerIntegrationTest extends TransactionalTestBase {
             BigDecimal decimal = BigDecimal.valueOf(value);
 
             bigDecimalIValueHandler.handle(buffer, decimal);
+        }
+
+        @Override
+        public int getLength(Double value) {
+            throw new NotImplementedException();
         }
     }
 

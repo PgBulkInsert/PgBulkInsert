@@ -12,4 +12,9 @@ public class ByteValueHandler<T extends Number> extends BaseValueHandler<T> {
         buffer.writeInt(1);
         buffer.writeByte(value.byteValue());
     }
+
+    @Override
+    public int getLength(T value) {
+        return 1;
+    }
 }

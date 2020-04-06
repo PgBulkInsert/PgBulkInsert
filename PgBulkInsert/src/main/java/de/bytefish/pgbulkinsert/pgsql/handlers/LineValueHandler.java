@@ -17,4 +17,9 @@ public class LineValueHandler extends BaseValueHandler<Line> {
         buffer.writeDouble(value.getB());
         buffer.writeDouble(value.getC());
     }
+
+    @Override
+    public int getLength(Line value) {
+        return 24;
+    }
 }

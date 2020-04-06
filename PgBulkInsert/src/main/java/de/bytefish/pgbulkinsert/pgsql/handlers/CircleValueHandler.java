@@ -18,4 +18,9 @@ public class CircleValueHandler extends BaseValueHandler<Circle> {
         // ... and then the Radius:
         buffer.writeDouble(value.getRadius());
     }
+
+    @Override
+    public int getLength(Circle value) {
+        return 24;
+    }
 }

@@ -16,4 +16,9 @@ public class PointValueHandler extends BaseValueHandler<Point> {
 
         GeometricUtils.writePoint(buffer, value);
     }
+
+    @Override
+    public int getLength(Point value) {
+        return 16;
+    }
 }

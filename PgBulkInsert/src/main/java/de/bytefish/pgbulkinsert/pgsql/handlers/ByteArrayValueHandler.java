@@ -12,4 +12,9 @@ public class ByteArrayValueHandler extends BaseValueHandler<byte[]> {
 		buffer.writeInt(value.length);
 		buffer.write(value, 0, value.length);
 	}
+
+	@Override
+	public int getLength(byte[] value) {
+		return value.length;
+	}
 }

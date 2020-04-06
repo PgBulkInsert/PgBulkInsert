@@ -27,4 +27,9 @@ public class LocalDateTimeValueHandler extends BaseValueHandler<LocalDateTime> {
         buffer.writeInt(8);
         buffer.writeLong(dateTimeConverter.convert(value));
     }
+
+    @Override
+    public int getLength(LocalDateTime value) {
+        return 8;
+    }
 }

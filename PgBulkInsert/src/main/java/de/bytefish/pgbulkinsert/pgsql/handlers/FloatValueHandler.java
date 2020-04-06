@@ -12,4 +12,9 @@ public class FloatValueHandler<T extends Number> extends BaseValueHandler<T> {
         buffer.writeInt(4);
         buffer.writeFloat(value.floatValue());
     }
+
+    @Override
+    public int getLength(T value) {
+        return 4;
+    }
 }

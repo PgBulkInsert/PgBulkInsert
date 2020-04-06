@@ -91,7 +91,7 @@ public class RangeTypesTest extends TransactionalTestBase {
     }
 
     private ResultSet getAll() throws SQLException {
-        String sqlStatement = String.format("SELECT * FROM %s.geometric_table", schema);
+        String sqlStatement = String.format("SELECT * FROM %s.time_table", schema);
 
         Statement statement = connection.createStatement();
 

@@ -6,6 +6,7 @@ package de.bytefish.pgbulkinsert.pgsql.handlers;
 import de.bytefish.pgbulkinsert.pgsql.handlers.utils.GeometricUtils;
 import de.bytefish.pgbulkinsert.pgsql.model.geometric.Point;
 import de.bytefish.pgbulkinsert.pgsql.model.geometric.Polygon;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.io.DataOutputStream;
 
@@ -27,5 +28,10 @@ public class PolygonValueHandler extends BaseValueHandler<Polygon> {
             GeometricUtils.writePoint(buffer, p);
         }
 
+    }
+
+    @Override
+    public int getLength(Polygon value) {
+        throw new NotImplementedException();
     }
 }

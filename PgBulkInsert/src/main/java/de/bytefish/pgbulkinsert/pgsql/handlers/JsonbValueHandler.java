@@ -3,6 +3,8 @@
 
 package de.bytefish.pgbulkinsert.pgsql.handlers;
 
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
 import java.io.DataOutputStream;
 
 public class JsonbValueHandler extends BaseValueHandler<String> {
@@ -28,5 +30,10 @@ public class JsonbValueHandler extends BaseValueHandler<String> {
         buffer.writeByte(jsonbProtocolVersion);
         // Copy the Data:
         buffer.write(utf8Bytes);
+    }
+
+    @Override
+    public int getLength(String value) {
+        throw new NotImplementedException();
     }
 }

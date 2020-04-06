@@ -88,4 +88,45 @@ public class BigDecimalValueHandler<T extends Number> extends BaseValueHandler<T
 
         return (BigDecimal) source;
     }
+
+    @Override
+    public int getLength(T value) {
+        BigDecimal tmpValue = getNumericAsBigDecimal(value);
+
+        BigInteger unscaledValue = tmpValue.unscaledValue();
+
+        int sign = tmpValue.signum();
+
+        if (sign == -1) {
+            unscaledValue = unscaledValue.negate();
+        }
+
+        // Number of fractional digits:
+        int fractionDigits = tmpValue.scale();
+
+        List<Integer> digits = new ArrayList<>();
+
+        // The scale needs to be a multiple of 4:
+        int scaleRemainder = fractionDigits % 4;
+
+        // Scale the first value:
+        if(scaleRemainder != 0)
+        {
+            BigInteger[] result = unscaledValue.divideAndRemainder(TEN.pow(scaleRemainder));
+
+            int digit = result[1].intValue() * (int) Math.pow(10, DECIMAL_DIGITS - scaleRemainder);
+
+            digits.add(new Integer(digit));
+
+            unscaledValue = result[0];
+        }
+
+        while (!unscaledValue.equals(BigInteger.ZERO)) {
+            BigInteger[] result = unscaledValue.divideAndRemainder(TEN_THOUSAND);
+            digits.add(new Integer(result[1].intValue()));
+            unscaledValue = result[0];
+        }
+
+        return (8 + (2 * digits.size()));
+    }
 }

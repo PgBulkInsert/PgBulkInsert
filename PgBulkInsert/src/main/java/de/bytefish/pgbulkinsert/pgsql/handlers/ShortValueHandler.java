@@ -12,4 +12,9 @@ public class ShortValueHandler<T extends Number> extends BaseValueHandler<T> {
         buffer.writeInt(2);
         buffer.writeShort(value.shortValue());
     }
+
+    @Override
+    public int getLength(T value) {
+        return 2;
+    }
 }

@@ -26,4 +26,9 @@ public class LocalDateValueHandler extends BaseValueHandler<LocalDate> {
         buffer.writeInt(4);
         buffer.writeInt(dateConverter.convert(value));
     }
+
+    @Override
+    public int getLength(LocalDate value) {
+        return 4;
+    }
 }

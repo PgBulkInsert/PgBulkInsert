@@ -17,4 +17,9 @@ public class BoxValueHandler extends BaseValueHandler<Box> {
         GeometricUtils.writePoint(buffer, value.getHigh());
         GeometricUtils.writePoint(buffer, value.getLow());
     }
+
+    @Override
+    public int getLength(Box value) {
+        return 32;
+    }
 }

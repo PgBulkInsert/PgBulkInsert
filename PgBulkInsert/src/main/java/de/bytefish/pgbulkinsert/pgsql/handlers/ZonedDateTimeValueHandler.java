@@ -25,6 +25,11 @@ public class ZonedDateTimeValueHandler extends BaseValueHandler<ZonedDateTime> {
         buffer.writeLong(dateTimeConverter.convert(value));
     }
 
+    @Override
+    public int getLength(ZonedDateTime value) {
+        return 8;
+    }
+
     private static final class ToUTCStripTimezone implements IValueConverter<ZonedDateTime, Long> {
         private final IValueConverter<LocalDateTime, Long> converter = new LocalDateTimeConverter();
 

@@ -29,4 +29,9 @@ public class UUIDValueHandler extends BaseValueHandler<UUID> {
         bb.putLong(uuid.getLeastSignificantBits());
         return bb;
     }
+
+    @Override
+    public int getLength(UUID value) {
+        return 16;
+    }
 }

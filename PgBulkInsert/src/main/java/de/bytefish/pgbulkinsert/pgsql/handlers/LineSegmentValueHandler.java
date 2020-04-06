@@ -17,4 +17,9 @@ public class LineSegmentValueHandler extends BaseValueHandler<LineSegment> {
         GeometricUtils.writePoint(buffer, value.getP1());
         GeometricUtils.writePoint(buffer, value.getP2());
     }
+
+    @Override
+    public int getLength(LineSegment value) {
+        return 32;
+    }
 }
