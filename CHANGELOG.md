@@ -1,5 +1,11 @@
 # CHANGELOG #
 
+## 4.0-alpha-1 ##
+
+* Added support for Ranges, such as ``tstzrange``
+    * Use ``mapTsTzRange`` if you are using the ``AbstractMapping``
+    * Use ``setTsTzRange`` if you are using the ``SimpleRowWriter``
+
 ## 3.8 ##
 
 * Many improvements added by [@tangyibo](https://github.com/tangyibo/)!
