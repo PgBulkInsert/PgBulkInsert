@@ -2,7 +2,7 @@
 
 ## 4.0-alpha-1 ##
 
-* Added support for Ranges, such as ``tstzrange``
+* Added support for Ranges, such as ``tstzrange``. Thanks to [@csimplestring](https://github.com/csimplestring) for the Feature request!
     * Use ``mapTsTzRange`` if you are using the ``AbstractMapping``
     * Use ``setTsTzRange`` if you are using the ``SimpleRowWriter``
 
