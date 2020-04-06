@@ -44,13 +44,15 @@ public class RangeTypesTest extends TransactionalTestBase {
         public RangeEntityMapping() {
             super(schema, "time_table");
 
-            mapRange("col", DataType.TimestampTz, (x) -> x.timeRange);
+            mapRange("col0", DataType.TimestampTz, (x) -> x.timeRange);
+            mapTsTzRange("col1", (x) -> x.timeRange);
         }
     }
 
     private boolean createTable() throws SQLException {
         String sqlStatement = String.format("CREATE TABLE %s.time_table(\n", schema)
-                + "  col tstzrange"
+                + "  col0 tstzrange"
+                + ",  col1 tstzrange"
                 + ");";
 
         Statement statement = connection.createStatement();
@@ -60,7 +62,7 @@ public class RangeTypesTest extends TransactionalTestBase {
 
 
     @Test
-    public void saveAll_Point_Test() throws SQLException {
+    public void test_SaveTsTzRange() throws SQLException {
 
         // This list will be inserted.
         List<RangeEntity> entities = new ArrayList<>();
@@ -84,9 +86,10 @@ public class RangeTypesTest extends TransactionalTestBase {
         ResultSet rs = getAll();
 
         while (rs.next()) {
-            Object v = rs.getObject("col");
+            Object v0 = rs.getObject("col0");
+            Object v1 = rs.getObject("col1");
 
-            Assert.assertNotNull(v);
+            Assert.assertNotNull(v0);
         }
     }
 

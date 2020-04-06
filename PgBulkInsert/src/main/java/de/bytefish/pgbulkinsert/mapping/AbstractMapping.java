@@ -283,6 +283,11 @@ public abstract class AbstractMapping<TEntity> {
         map(columnName, new RangeValueHandler<>(valueHandler), propertyGetter);
     }
 
+    protected void mapTsTzRange(String columnName, Function<TEntity, Range<ZonedDateTime>> propertyGetter) {
+        final IValueHandler<ZonedDateTime> valueHandler = provider.resolve(DataType.TimestampTz);
+
+        map(columnName, new RangeValueHandler<>(valueHandler), propertyGetter);
+    }
 
     private void addColumn(String columnName, BiConsumer<PgBinaryWriter, TEntity> action) {
         columns.add(new ColumnDefinition(columnName, action));
