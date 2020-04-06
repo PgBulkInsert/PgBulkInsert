@@ -10,12 +10,10 @@ import de.bytefish.pgbulkinsert.model.TableDefinition;
 import de.bytefish.pgbulkinsert.pgsql.PgBinaryWriter;
 import de.bytefish.pgbulkinsert.pgsql.constants.DataType;
 import de.bytefish.pgbulkinsert.pgsql.constants.ObjectIdentifier;
-import de.bytefish.pgbulkinsert.pgsql.handlers.CollectionValueHandler;
-import de.bytefish.pgbulkinsert.pgsql.handlers.IValueHandler;
-import de.bytefish.pgbulkinsert.pgsql.handlers.IValueHandlerProvider;
-import de.bytefish.pgbulkinsert.pgsql.handlers.ValueHandlerProvider;
+import de.bytefish.pgbulkinsert.pgsql.handlers.*;
 import de.bytefish.pgbulkinsert.pgsql.model.geometric.*;
 import de.bytefish.pgbulkinsert.pgsql.model.network.MacAddress;
+import de.bytefish.pgbulkinsert.pgsql.model.range.Range;
 import de.bytefish.pgbulkinsert.row.SimpleRowWriter;
 import de.bytefish.pgbulkinsert.util.PostgreSqlUtils;
 
@@ -278,6 +276,13 @@ public abstract class AbstractMapping<TEntity> {
     protected void mapInet6Array(String columnName, Function<TEntity, Collection<Inet6Address>> propertyGetter) {
         mapCollection(columnName, DataType.Inet6, propertyGetter);
     }
+
+    protected <TElementType> void mapRange(String columnName, DataType dataType, Function<TEntity, Range<TElementType>> propertyGetter) {
+        final IValueHandler<TElementType> valueHandler = provider.resolve(dataType);
+
+        map(columnName, new RangeValueHandler<>(valueHandler), propertyGetter);
+    }
+
 
     private void addColumn(String columnName, BiConsumer<PgBinaryWriter, TEntity> action) {
         columns.add(new ColumnDefinition(columnName, action));
