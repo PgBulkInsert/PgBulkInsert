@@ -5,7 +5,6 @@ package de.bytefish.pgbulkinsert.integration;
 
 import de.bytefish.pgbulkinsert.PgBulkInsert;
 import de.bytefish.pgbulkinsert.mapping.AbstractMapping;
-import de.bytefish.pgbulkinsert.pgsql.constants.DataType;
 import de.bytefish.pgbulkinsert.pgsql.handlers.BaseValueHandler;
 import de.bytefish.pgbulkinsert.pgsql.handlers.BigDecimalValueHandler;
 import de.bytefish.pgbulkinsert.pgsql.handlers.IValueHandler;
@@ -13,14 +12,12 @@ import de.bytefish.pgbulkinsert.util.PostgreSqlUtils;
 import de.bytefish.pgbulkinsert.utils.TransactionalTestBase;
 import org.junit.Assert;
 import org.junit.Test;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.io.DataOutputStream;
 import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,7 +49,7 @@ public class CustomValueHandlerIntegrationTest extends TransactionalTestBase {
 
         @Override
         public int getLength(Double value) {
-            throw new NotImplementedException();
+            throw new UnsupportedOperationException();
         }
     }
 
