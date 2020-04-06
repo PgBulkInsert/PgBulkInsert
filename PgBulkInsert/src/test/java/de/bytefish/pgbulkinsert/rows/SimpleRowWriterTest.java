@@ -1,5 +1,6 @@
 package de.bytefish.pgbulkinsert.rows;
 
+import de.bytefish.pgbulkinsert.pgsql.model.range.Range;
 import de.bytefish.pgbulkinsert.row.SimpleRowWriter;
 import de.bytefish.pgbulkinsert.util.PostgreSqlUtils;
 import de.bytefish.pgbulkinsert.utils.TransactionalTestBase;
@@ -10,6 +11,8 @@ import org.postgresql.PGConnection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 
 public class SimpleRowWriterTest extends TransactionalTestBase {
 
@@ -29,7 +32,8 @@ public class SimpleRowWriterTest extends TransactionalTestBase {
         // Define the Columns to be inserted:
         String[] columnNames = new String[] {
                 "value_int",
-                "value_text"
+                "value_text",
+                "value_range"
         };
 
         // Create the Table Definition:
@@ -48,6 +52,9 @@ public class SimpleRowWriterTest extends TransactionalTestBase {
             writer.startRow((row) -> {
                 row.setText("value_text", "Hi");
                 row.setInteger("value_int", 1);
+                row.setTsTzRange("value_range", new Range<>(
+                        ZonedDateTime.of(2020, 3, 1, 0, 0, 0, 0, ZoneId.of("GMT")),
+                        ZonedDateTime.of(2020, 3, 1, 0, 0, 0, 0, ZoneId.of("GMT"))));
             });
 
         }
@@ -64,8 +71,9 @@ public class SimpleRowWriterTest extends TransactionalTestBase {
 
         String sqlStatement = String.format("CREATE TABLE %s.%s\n", schema, tableName) +
                 "            (\n" +
-                "                value_int int,\n"+
-                "                value_text text\n" +
+                "                value_int int\n"+
+                ",                value_text text\n" +
+                ",                value_range tstzrange\n" +
                 "            );";
 
         Statement statement = connection.createStatement();
