@@ -93,7 +93,6 @@ public class NullTerminatingStringTest extends TransactionalTestBase {
             exceptionHasBeenThrown = true;
         }
 
-
         Assert.assertEquals(false, exceptionHasBeenThrown);
     }
 
