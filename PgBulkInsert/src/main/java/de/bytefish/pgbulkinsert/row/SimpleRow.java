@@ -436,16 +436,10 @@ public class SimpleRow {
     }
 
     public void setTsTzRange(String columnName, Range<ZonedDateTime> value) {
-
-        final IValueHandler<ZonedDateTime> valueHandler = provider.resolve(DataType.TimestampTz);
-
-        setValue(columnName, new RangeValueHandler<>(valueHandler), value);
+        setValue(columnName, DataType.TsTzRange, value);
     }
 
     public void setTsTzRange(int ordinal, Range<ZonedDateTime> value) {
-
-        final IValueHandler<ZonedDateTime> valueHandler = provider.resolve(DataType.TimestampTz);
-
-        setValue(ordinal, new RangeValueHandler<>(valueHandler), value);
+        setValue(ordinal, DataType.TsTzRange, value);
     }
 }

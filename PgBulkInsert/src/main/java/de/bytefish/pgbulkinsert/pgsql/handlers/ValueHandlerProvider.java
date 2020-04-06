@@ -45,6 +45,7 @@ public class ValueHandlerProvider implements IValueHandlerProvider {
         add(DataType.Polygon, new PolygonValueHandler());
         add(DataType.Circle, new CircleValueHandler());
         add(DataType.MacAddress, new MacAddressValueHandler());
+        add(DataType.TsTzRange, new RangeValueHandler<>(new ZonedDateTimeValueHandler()));
     }
 
     public <TTargetType> ValueHandlerProvider add(DataType targetType, IValueHandler<TTargetType> valueHandler) {
