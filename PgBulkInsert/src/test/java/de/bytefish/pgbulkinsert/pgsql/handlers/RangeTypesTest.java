@@ -44,15 +44,13 @@ public class RangeTypesTest extends TransactionalTestBase {
         public RangeEntityMapping() {
             super(schema, "time_table");
 
-            mapRange("col0", DataType.TimestampTz, (x) -> x.timeRange);
             mapTsTzRange("col1", (x) -> x.timeRange);
         }
     }
 
     private boolean createTable() throws SQLException {
         String sqlStatement = String.format("CREATE TABLE %s.time_table(\n", schema)
-                + "  col0 tstzrange"
-                + ",  col1 tstzrange"
+                + "  col1 tstzrange"
                 + ");";
 
         Statement statement = connection.createStatement();
@@ -86,12 +84,43 @@ public class RangeTypesTest extends TransactionalTestBase {
         ResultSet rs = getAll();
 
         while (rs.next()) {
-            Object v0 = rs.getObject("col0");
-            Object v1 = rs.getObject("col1");
+            Object v0 = rs.getObject("col1");
 
             Assert.assertNotNull(v0);
         }
     }
+
+    @Test
+    public void test_SaveTsTzRange_Bug_1() throws SQLException {
+
+        // This list will be inserted.
+        List<RangeEntity> entities = new ArrayList<>();
+
+        // Range to insert:
+        RangeEntity entity0 = new RangeEntity();
+
+        ZonedDateTime lower = ZonedDateTime.of(2020, 1, 1, 0, 0, 0 ,0,  ZoneId.of("GMT"));
+        ZonedDateTime upper = null;
+
+        entity0.timeRange = new Range<>(lower, true, upper, false);
+
+        entities.add(entity0);
+
+        // Construct the Insert:
+        PgBulkInsert<RangeEntity> bulkInsert = new PgBulkInsert<>(new RangeEntityMapping());
+
+        // Save them:
+        bulkInsert.saveAll(PostgreSqlUtils.getPGConnection(connection), entities.stream());
+
+        ResultSet rs = getAll();
+
+        while (rs.next()) {
+            Object v0 = rs.getObject("col1");
+
+            Assert.assertNotNull(v0);
+        }
+    }
+
 
     private ResultSet getAll() throws SQLException {
         String sqlStatement = String.format("SELECT * FROM %s.time_table", schema);
