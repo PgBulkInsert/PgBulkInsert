@@ -33,6 +33,15 @@ public class Range<TElementType> {
         this.upperBound = (flags & RangeFlags.UpperBoundInfinite) != 0 ? null : upperBound;
         this.flags = flags;
 
+        // TODO Check this!
+        if(lowerBound == null) {
+            this.flags |= RangeFlags.LowerBoundInfinite;
+        }
+
+        if(upperBound == null) {
+            this.flags |= RangeFlags.UpperBoundInfinite;
+        }
+
         if (isEmptyRange(lowerBound, upperBound, flags)) {
             this.lowerBound = null;
             this.upperBound = null;

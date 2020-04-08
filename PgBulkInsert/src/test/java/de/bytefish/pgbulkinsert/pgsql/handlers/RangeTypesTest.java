@@ -13,6 +13,7 @@ import de.bytefish.pgbulkinsert.utils.TransactionalTestBase;
 import org.junit.Assert;
 import org.junit.Test;
 import org.postgresql.geometric.*;
+import org.postgresql.util.PGobject;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -60,7 +61,7 @@ public class RangeTypesTest extends TransactionalTestBase {
 
 
     @Test
-    public void test_SaveTsTzRange() throws SQLException {
+    public void test_SaveTsTzRange_Inclusive_Bounds() throws SQLException {
 
         // This list will be inserted.
         List<RangeEntity> entities = new ArrayList<>();
@@ -84,14 +85,14 @@ public class RangeTypesTest extends TransactionalTestBase {
         ResultSet rs = getAll();
 
         while (rs.next()) {
-            Object v0 = rs.getObject("col1");
+            PGobject v0 = (PGobject) rs.getObject("col1");
 
-            Assert.assertNotNull(v0);
+            Assert.assertEquals("[\"2020-01-01 01:00:00+01\",\"2020-03-01 01:00:00+01\"]", v0.getValue());
         }
     }
 
     @Test
-    public void test_SaveTsTzRange_Bug_1() throws SQLException {
+    public void test_SaveTsTzRange_UpperBound_Null() throws SQLException {
 
         // This list will be inserted.
         List<RangeEntity> entities = new ArrayList<>();
@@ -102,7 +103,7 @@ public class RangeTypesTest extends TransactionalTestBase {
         ZonedDateTime lower = ZonedDateTime.of(2020, 1, 1, 0, 0, 0 ,0,  ZoneId.of("GMT"));
         ZonedDateTime upper = null;
 
-        entity0.timeRange = new Range<>(lower, true, false, upper, false, true);
+        entity0.timeRange = new Range<>(lower, upper);
 
         entities.add(entity0);
 
@@ -115,12 +116,73 @@ public class RangeTypesTest extends TransactionalTestBase {
         ResultSet rs = getAll();
 
         while (rs.next()) {
-            Object v0 = rs.getObject("col1");
+            PGobject v0 = (PGobject) rs.getObject("col1");
 
-            Assert.assertNotNull(v0);
+            Assert.assertEquals("[\"2020-01-01 01:00:00+01\",)", v0.getValue());
         }
     }
 
+    @Test
+    public void test_SaveTsTzRange_LowerBound_Null() throws SQLException {
+
+        // This list will be inserted.
+        List<RangeEntity> entities = new ArrayList<>();
+
+        // Range to insert:
+        RangeEntity entity0 = new RangeEntity();
+
+        ZonedDateTime lower = null;
+        ZonedDateTime upper = ZonedDateTime.of(2020, 1, 1, 0, 0, 0 ,0,  ZoneId.of("GMT"));
+
+        entity0.timeRange = new Range<>(lower, upper);
+
+        entities.add(entity0);
+
+        // Construct the Insert:
+        PgBulkInsert<RangeEntity> bulkInsert = new PgBulkInsert<>(new RangeEntityMapping());
+
+        // Save them:
+        bulkInsert.saveAll(PostgreSqlUtils.getPGConnection(connection), entities.stream());
+
+        ResultSet rs = getAll();
+
+        while (rs.next()) {
+            PGobject v0 = (PGobject) rs.getObject("col1");
+
+            Assert.assertEquals("(,\"2020-01-01 01:00:00+01\"]", v0.getValue());
+        }
+    }
+
+    @Test
+    public void test_SaveTsTzRange_Empty() throws SQLException {
+
+        // This list will be inserted.
+        List<RangeEntity> entities = new ArrayList<>();
+
+        // Range to insert:
+        RangeEntity entity0 = new RangeEntity();
+
+        ZonedDateTime lower = null;
+        ZonedDateTime upper = null;
+
+        entity0.timeRange = new Range<>(lower, upper);
+
+        entities.add(entity0);
+
+        // Construct the Insert:
+        PgBulkInsert<RangeEntity> bulkInsert = new PgBulkInsert<>(new RangeEntityMapping());
+
+        // Save them:
+        bulkInsert.saveAll(PostgreSqlUtils.getPGConnection(connection), entities.stream());
+
+        ResultSet rs = getAll();
+
+        while (rs.next()) {
+            PGobject v0 = (PGobject)rs.getObject("col1");
+
+            Assert.assertEquals("(,)", v0.getValue());
+        }
+    }
 
     private ResultSet getAll() throws SQLException {
         String sqlStatement = String.format("SELECT * FROM %s.time_table", schema);
