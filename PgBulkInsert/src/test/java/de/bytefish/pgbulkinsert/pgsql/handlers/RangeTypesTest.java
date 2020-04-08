@@ -102,7 +102,7 @@ public class RangeTypesTest extends TransactionalTestBase {
         ZonedDateTime lower = ZonedDateTime.of(2020, 1, 1, 0, 0, 0 ,0,  ZoneId.of("GMT"));
         ZonedDateTime upper = null;
 
-        entity0.timeRange = new Range<>(lower, true, upper, false);
+        entity0.timeRange = new Range<>(lower, true, false, upper, false, true);
 
         entities.add(entity0);
 
