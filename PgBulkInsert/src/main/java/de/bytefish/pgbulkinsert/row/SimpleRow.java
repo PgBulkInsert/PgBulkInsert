@@ -92,6 +92,8 @@ public class SimpleRow {
         }
     }
 
+    // region Numeric
+
     public void setBoolean(String columnName, Boolean value) {
         setValue(columnName, DataType.Boolean, value);
     }
@@ -156,6 +158,10 @@ public class SimpleRow {
 		setValue(ordinal, DataType.DoublePrecision, value);
 	}
 
+    // endregion
+
+    // region Temporal
+
     public void setDate(String columnName, LocalDate value) {
         setValue(columnName, DataType.Date, value);
     }
@@ -163,6 +169,27 @@ public class SimpleRow {
     public void setDate(int ordinal, LocalDate value) {
         setValue(ordinal, DataType.Date, value);
     }
+
+    public void setTimeStamp(String columnName, LocalDateTime value) {
+        setValue(columnName, DataType.Timestamp, value);
+    }
+
+    public void setTimeStamp(int ordinal, LocalDateTime value) {
+
+        setValue(ordinal, DataType.Timestamp, value);
+    }
+
+    public void setTimeStampTz(String columnName, ZonedDateTime value) {
+        setValue(columnName, DataType.TimestampTz, value);
+    }
+
+    public void setTimeStampTz(int ordinal, ZonedDateTime value) {
+        setValue(ordinal, DataType.TimestampTz, value);
+    }
+
+    // endregion
+
+    // region Network
 
     public void setInet6Addr(String columnName, Inet6Address value) {
         setValue(columnName, DataType.Inet6, value);
@@ -180,21 +207,18 @@ public class SimpleRow {
         setValue(ordinal, DataType.Inet4, value);
     }
 
-    public void setTimeStamp(String columnName, LocalDateTime value) {
-        setValue(columnName, DataType.Timestamp, value);
+    public void setMacAddress(String columnName, MacAddress value) {
+        setValue(columnName, DataType.MacAddress, value);
     }
 
-    public void setTimeStamp(int ordinal, LocalDateTime value) {
-        setValue(ordinal, DataType.Timestamp, value);
+    public void setMacAddress(int ordinal, MacAddress value) {
+        setValue(ordinal, DataType.MacAddress, value);
     }
 
-    public void setTimeStampTz(String columnName, ZonedDateTime value) {
-        setValue(columnName, DataType.TimestampTz, value);
-    }
 
-    public void setTimeStampTz(int ordinal, ZonedDateTime value) {
-        setValue(ordinal, DataType.TimestampTz, value);
-    }
+    // endregion
+
+    // region Text
 
     public void setText(String columnName, String value) {
         setValue(columnName, DataType.Text, nullCharacterHandler.apply(value));
@@ -212,6 +236,10 @@ public class SimpleRow {
         setValue(ordinal, DataType.Text, nullCharacterHandler.apply(value));
     }
 
+    // endregion
+
+    // region UUID
+
     public void setUUID(String columnName, UUID value) {
         setValue(columnName, DataType.Uuid, value);
     }
@@ -220,13 +248,9 @@ public class SimpleRow {
         setValue(ordinal, DataType.Uuid, value);
     }
 
-    public void setByteArray(String columnName, byte[] value) {
-        setValue(columnName, DataType.Bytea, value);
-    }
+    // endregion
 
-    public void setByteArray(int ordinal, byte[] value) {
-        setValue(ordinal, DataType.Bytea, value);
-    }
+    // region JSON
 
     public void setJsonb(String columnName, String value) {
         setValue(columnName, DataType.Jsonb, nullCharacterHandler.apply(value));
@@ -236,6 +260,10 @@ public class SimpleRow {
         setValue(ordinal, DataType.Jsonb, nullCharacterHandler.apply(value));
     }
 
+    // endregion
+
+    // region hstore
+
     public void setHstore(String columnName, Map<String, String> value) {
         setValue(columnName, DataType.Hstore, value);
     }
@@ -243,6 +271,10 @@ public class SimpleRow {
     public void setHstore(int ordinal, Map<String, String> value) {
         setValue(ordinal, DataType.Hstore, value);
     }
+
+    // endregion
+
+    // region Geo
 
     public void setPoint(String columnName, Point value) {
         setValue(columnName, DataType.Point, value);
@@ -300,12 +332,16 @@ public class SimpleRow {
         setValue(ordinal, DataType.Circle, value);
     }
 
-    public void setMacAddress(String columnName, MacAddress value) {
-        setValue(columnName, DataType.MacAddress, value);
+    // endregion
+
+    // region Arrays
+
+    public void setByteArray(String columnName, byte[] value) {
+        setValue(columnName, DataType.Bytea, value);
     }
 
-    public void setMacAddress(int ordinal, MacAddress value) {
-        setValue(ordinal, DataType.MacAddress, value);
+    public void setByteArray(int ordinal, byte[] value) {
+        setValue(ordinal, DataType.Bytea, value);
     }
 
     public void setBooleanArray(String columnName, Collection<Boolean> value) {
@@ -421,6 +457,10 @@ public class SimpleRow {
         setCollection(ordinal, DataType.Inet6, value);
     }
 
+    // endregion
+
+    // region Ranges
+
     public <TElementType> void setRange(String columnName, DataType dataType, Range<TElementType> value) {
 
         final IValueHandler<TElementType> valueHandler = provider.resolve(dataType);
@@ -435,6 +475,14 @@ public class SimpleRow {
         setValue(ordinal, new RangeValueHandler<>(valueHandler), value);
     }
 
+    public void setTsRange(String columnName, Range<LocalDateTime> value) {
+        setValue(columnName, DataType.TsRange, value);
+    }
+
+    public void setTsRange(int ordinal, Range<LocalDateTime> value) {
+        setValue(ordinal, DataType.TsRange, value);
+    }
+
     public void setTsTzRange(String columnName, Range<ZonedDateTime> value) {
         setValue(columnName, DataType.TsTzRange, value);
     }
@@ -442,4 +490,32 @@ public class SimpleRow {
     public void setTsTzRange(int ordinal, Range<ZonedDateTime> value) {
         setValue(ordinal, DataType.TsTzRange, value);
     }
+
+    public void setInt4Range(String columnName, Range<Integer> value) {
+        setValue(columnName, DataType.Int4Range, value);
+    }
+
+    public void setInt4Range(int ordinal, Range<Integer> value) {
+        setValue(ordinal, DataType.Int4Range, value);
+    }
+
+    public void setInt8Range(String columnName, Range<Long> value) {
+        setValue(columnName, DataType.Int8Range, value);
+    }
+
+    public void setInt8Range(int ordinal, Range<Long> value) {
+        setValue(ordinal, DataType.Int8Range, value);
+    }
+
+    public void setNumRange(String columnName, Range<Number> value) {
+        setValue(columnName, DataType.NumRange, value);
+    }
+
+    public void setNumRange(int ordinal, Range<Number> value) {
+        setValue(ordinal, DataType.NumRange, value);
+    }
+
+
+
+    // endregion
 }

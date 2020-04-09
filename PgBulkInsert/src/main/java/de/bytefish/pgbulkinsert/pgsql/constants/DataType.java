@@ -53,5 +53,10 @@ public enum DataType {
     VarBit,
     Record,
     Numeric,
+    TsRange,
     TsTzRange,
+    Int4Range,
+    Int8Range,
+    NumRange
+
 }
