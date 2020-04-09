@@ -1,5 +1,22 @@
 # CHANGELOG #
 
+## 4.0 ##
+
+Added support for [Range Types](https://www.postgresql.org/docs/current/rangetypes.html):
+
+* int4range
+* int8range
+* numrange
+* tsrange
+* tstzrange
+* daterange
+
+Thanks to [@csimplestring](https://github.com/csimplestring) for help and valuable feedback!
+
+## 4.0-alpha-2 ##
+
+* Bugfixes for the Range Type
+
 ## 4.0-alpha-1 ##
 
 * Added support for Ranges, such as ``tstzrange``. Thanks to [@csimplestring](https://github.com/csimplestring) for the Feature request!

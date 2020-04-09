@@ -25,7 +25,7 @@ You can add the following dependencies to your pom.xml to include [PgBulkInsert]
 <dependency>
 	<groupId>de.bytefish</groupId>
 	<artifactId>pgbulkinsert</artifactId>
-	<version>3.8</version>
+	<version>4.0</version>
 </dependency>
 ```
 
@@ -57,6 +57,13 @@ You can add the following dependencies to your pom.xml to include [PgBulkInsert]
     * uuid
 * [Array Type](https://www.postgresql.org/docs/current/static/arrays.html)
     * One-Dimensional Arrays
+* [Range Type](https://www.postgresql.org/docs/current/rangetypes.html)
+    * int4range
+    * int8range
+    * numrange
+    * tsrange
+    * tstzrange
+    * daterange
 * [hstore](https://www.postgresql.org/docs/current/static/hstore.html)
     * hstore
 * [Geometric Types](https://www.postgresql.org/docs/current/static/datatype-geometric.html)
