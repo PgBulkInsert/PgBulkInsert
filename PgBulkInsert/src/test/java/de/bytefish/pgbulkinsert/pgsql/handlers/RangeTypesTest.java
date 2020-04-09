@@ -27,7 +27,11 @@ import java.util.List;
 public class RangeTypesTest extends TransactionalTestBase {
 
     private class RangeEntity {
-        public Range<ZonedDateTime> timeRange;
+        public Range<ZonedDateTime> timeTzRange;
+        public Range<LocalDateTime> timeRange;
+        public Range<Integer> int4Range;
+        public Range<Long> int8Range;
+        public Range<Number> numericRange;
     }
 
     @Override
@@ -45,13 +49,21 @@ public class RangeTypesTest extends TransactionalTestBase {
         public RangeEntityMapping() {
             super(schema, "time_table");
 
-            mapTsTzRange("col1", (x) -> x.timeRange);
+            mapTsTzRange("col_tstzrange", (x) -> x.timeTzRange);
+            mapTsRange("col_tsrange", (x) -> x.timeRange);
+            mapInt4Range("col_int4range", (x) -> x.int4Range);
+            mapInt8Range("col_int8range", (x) -> x.int8Range);
+            mapNumRange("col_numrange", (x) -> x.numericRange);
         }
     }
 
     private boolean createTable() throws SQLException {
         String sqlStatement = String.format("CREATE TABLE %s.time_table(\n", schema)
-                + "  col1 tstzrange"
+                + "  col_tstzrange tstzrange"
+                + ",  col_tsrange tsrange"
+                + ",  col_int4range int4range"
+                + ",  col_int8range int8range"
+                + ",  col_numrange numrange"
                 + ");";
 
         Statement statement = connection.createStatement();
@@ -59,9 +71,8 @@ public class RangeTypesTest extends TransactionalTestBase {
         return statement.execute(sqlStatement);
     }
 
-
     @Test
-    public void test_SaveTsTzRange_Inclusive_Bounds() throws SQLException {
+    public void test_SaveTsRange_Inclusive_Bounds() throws SQLException {
 
         // This list will be inserted.
         List<RangeEntity> entities = new ArrayList<>();
@@ -69,8 +80,8 @@ public class RangeTypesTest extends TransactionalTestBase {
         // Range to insert:
         RangeEntity entity0 = new RangeEntity();
 
-        ZonedDateTime lower = ZonedDateTime.of(2020, 1, 1, 0, 0, 0 ,0,  ZoneId.of("GMT"));
-        ZonedDateTime upper = ZonedDateTime.of(2020, 3, 1, 0, 0, 0 ,0,  ZoneId.of("GMT"));
+        LocalDateTime lower = LocalDateTime.of(2020, 1, 1, 0, 0, 0 ,0);
+        LocalDateTime upper = LocalDateTime.of(2020, 3, 1, 0, 0, 0 ,0);
 
         entity0.timeRange = new Range<>(lower, upper);
 
@@ -85,7 +96,155 @@ public class RangeTypesTest extends TransactionalTestBase {
         ResultSet rs = getAll();
 
         while (rs.next()) {
-            PGobject v0 = (PGobject) rs.getObject("col1");
+            PGobject v0 = (PGobject) rs.getObject("col_tsrange");
+
+            Assert.assertEquals("[\"2020-01-01 00:00:00\",\"2020-03-01 00:00:00\"]", v0.getValue());
+        }
+    }
+
+    @Test
+    public void test_SaveInt4Range_Inclusive_Bounds() throws SQLException {
+
+        // This list will be inserted.
+        List<RangeEntity> entities = new ArrayList<>();
+
+        // Range to insert:
+        RangeEntity entity0 = new RangeEntity();
+
+        int lower = 1;
+        int upper = 8;
+
+        entity0.int4Range = new Range<Integer>(lower, upper);
+
+        entities.add(entity0);
+
+        // Construct the Insert:
+        PgBulkInsert<RangeEntity> bulkInsert = new PgBulkInsert<>(new RangeEntityMapping());
+
+        // Save them:
+        bulkInsert.saveAll(PostgreSqlUtils.getPGConnection(connection), entities.stream());
+
+        ResultSet rs = getAll();
+
+        while (rs.next()) {
+            PGobject v0 = (PGobject) rs.getObject("col_int4range");
+
+            // Why is it [1,9):
+            //
+            // https://www.postgresql.org/docs/9.3/rangetypes.html:
+            //
+            //  The built-in range types int4range, int8range, and daterange all use a canonical form
+            //  that includes the lower bound and excludes the upper bound; that is, [). User-defined
+            //  range types can use other conventions, however.
+
+            Assert.assertEquals("[1,9)", v0.getValue());
+        }
+    }
+
+    @Test
+    public void test_SaveInt8Range_Inclusive_Bounds() throws SQLException {
+
+        // This list will be inserted.
+        List<RangeEntity> entities = new ArrayList<>();
+
+        // Range to insert:
+        RangeEntity entity0 = new RangeEntity();
+
+        long lower = 1;
+        long upper = 8;
+
+        entity0.int8Range = new Range<Long>(lower, upper);
+
+        entities.add(entity0);
+
+        // Construct the Insert:
+        PgBulkInsert<RangeEntity> bulkInsert = new PgBulkInsert<>(new RangeEntityMapping());
+
+        // Save them:
+        bulkInsert.saveAll(PostgreSqlUtils.getPGConnection(connection), entities.stream());
+
+        ResultSet rs = getAll();
+
+        while (rs.next()) {
+            PGobject v0 = (PGobject) rs.getObject("col_int8range");
+
+            // Why is it [1,9):
+            //
+            // https://www.postgresql.org/docs/9.3/rangetypes.html:
+            //
+            //  The built-in range types int4range, int8range, and daterange all use a canonical form
+            //  that includes the lower bound and excludes the upper bound; that is, [). User-defined
+            //  range types can use other conventions, however.
+
+            Assert.assertEquals("[1,9)", v0.getValue());
+        }
+    }
+
+    @Test
+    public void test_SaveNumericRange_Inclusive_Bounds() throws SQLException {
+
+        // This list will be inserted.
+        List<RangeEntity> entities = new ArrayList<>();
+
+        // Range to insert:
+        RangeEntity entity0 = new RangeEntity();
+
+        double lower = 1.2;
+        double upper = 8.2;
+
+        entity0.numericRange = new Range<>(lower, upper);
+
+        entities.add(entity0);
+
+        // Construct the Insert:
+        PgBulkInsert<RangeEntity> bulkInsert = new PgBulkInsert<>(new RangeEntityMapping());
+
+        // Save them:
+        bulkInsert.saveAll(PostgreSqlUtils.getPGConnection(connection), entities.stream());
+
+        ResultSet rs = getAll();
+
+        while (rs.next()) {
+            PGobject v0 = (PGobject) rs.getObject("col_numrange");
+
+            // Why is it [1,9):
+            //
+            // https://www.postgresql.org/docs/9.3/rangetypes.html:
+            //
+            //  The built-in range types int4range, int8range, and daterange all use a canonical form
+            //  that includes the lower bound and excludes the upper bound; that is, [). User-defined
+            //  range types can use other conventions, however.
+
+            Assert.assertEquals("[1.2,8.2]", v0.getValue());
+        }
+    }
+
+    @Test
+    public void test_SaveTsTzRange_Inclusive_Bounds() throws SQLException {
+
+        // This list will be inserted.
+        List<RangeEntity> entities = new ArrayList<>();
+
+        // Range to insert:
+        RangeEntity entity0 = new RangeEntity();
+
+        ZonedDateTime lower = ZonedDateTime.of(2020, 1, 1, 0, 0, 0 ,0,  ZoneId.of("GMT"));
+        ZonedDateTime upper = ZonedDateTime.of(2020, 3, 1, 0, 0, 0 ,0,  ZoneId.of("GMT"));
+
+        entity0.timeTzRange = new Range<>(lower, upper);
+
+        entities.add(entity0);
+
+        // Construct the Insert:
+        PgBulkInsert<RangeEntity> bulkInsert = new PgBulkInsert<>(new RangeEntityMapping());
+
+        // Save them:
+        bulkInsert.saveAll(PostgreSqlUtils.getPGConnection(connection), entities.stream());
+
+        ResultSet rs = getAll();
+
+        while (rs.next()) {
+            PGobject v0 = (PGobject) rs.getObject("col_tstzrange");
 
             Assert.assertEquals("[\"2020-01-01 01:00:00+01\",\"2020-03-01 01:00:00+01\"]", v0.getValue());
         }
@@ -103,7 +262,7 @@ public class RangeTypesTest extends TransactionalTestBase {
         ZonedDateTime lower = ZonedDateTime.of(2020, 1, 1, 0, 0, 0 ,0,  ZoneId.of("GMT"));
         ZonedDateTime upper = null;
 
-        entity0.timeRange = new Range<>(lower, upper);
+        entity0.timeTzRange = new Range<>(lower, upper);
 
         entities.add(entity0);
 
@@ -116,7 +275,7 @@ public class RangeTypesTest extends TransactionalTestBase {
         ResultSet rs = getAll();
 
         while (rs.next()) {
-            PGobject v0 = (PGobject) rs.getObject("col1");
+            PGobject v0 = (PGobject) rs.getObject("col_tstzrange");
 
             Assert.assertEquals("[\"2020-01-01 01:00:00+01\",)", v0.getValue());
         }
@@ -134,7 +293,7 @@ public class RangeTypesTest extends TransactionalTestBase {
         ZonedDateTime lower = null;
         ZonedDateTime upper = ZonedDateTime.of(2020, 1, 1, 0, 0, 0 ,0,  ZoneId.of("GMT"));
 
-        entity0.timeRange = new Range<>(lower, upper);
+        entity0.timeTzRange = new Range<>(lower, upper);
 
         entities.add(entity0);
 
@@ -147,7 +306,7 @@ public class RangeTypesTest extends TransactionalTestBase {
         ResultSet rs = getAll();
 
         while (rs.next()) {
-            PGobject v0 = (PGobject) rs.getObject("col1");
+            PGobject v0 = (PGobject) rs.getObject("col_tstzrange");
 
             Assert.assertEquals("(,\"2020-01-01 01:00:00+01\"]", v0.getValue());
         }
@@ -165,7 +324,7 @@ public class RangeTypesTest extends TransactionalTestBase {
         ZonedDateTime lower = null;
         ZonedDateTime upper = null;
 
-        entity0.timeRange = new Range<>(lower, upper);
+        entity0.timeTzRange = new Range<>(lower, upper);
 
         entities.add(entity0);
 
@@ -178,7 +337,7 @@ public class RangeTypesTest extends TransactionalTestBase {
         ResultSet rs = getAll();
 
         while (rs.next()) {
-            PGobject v0 = (PGobject)rs.getObject("col1");
+            PGobject v0 = (PGobject)rs.getObject("col_tstzrange");
 
             Assert.assertEquals("(,)", v0.getValue());
         }
