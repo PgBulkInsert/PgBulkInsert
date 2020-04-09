@@ -57,6 +57,7 @@ public enum DataType {
     TsTzRange,
     Int4Range,
     Int8Range,
-    NumRange
+    NumRange,
+    DateRange
 
 }

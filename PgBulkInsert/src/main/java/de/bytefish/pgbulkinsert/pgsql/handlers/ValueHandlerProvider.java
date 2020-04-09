@@ -50,6 +50,7 @@ public class ValueHandlerProvider implements IValueHandlerProvider {
         add(DataType.Int4Range, new RangeValueHandler<>(new IntegerValueHandler<>()));
         add(DataType.Int8Range, new RangeValueHandler<>(new LongValueHandler<>()));
         add(DataType.NumRange, new RangeValueHandler<>(new BigDecimalValueHandler<>()));
+        add(DataType.DateRange, new RangeValueHandler<>(new LocalDateValueHandler()));
     }
 
     public <TTargetType> ValueHandlerProvider add(DataType targetType, IValueHandler<TTargetType> valueHandler) {

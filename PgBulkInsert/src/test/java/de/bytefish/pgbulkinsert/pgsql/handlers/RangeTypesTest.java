@@ -18,6 +18,7 @@ import org.postgresql.util.PGobject;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -32,6 +33,7 @@ public class RangeTypesTest extends TransactionalTestBase {
         public Range<Integer> int4Range;
         public Range<Long> int8Range;
         public Range<Number> numericRange;
+        public Range<LocalDate> dateRange;
     }
 
     @Override
@@ -54,6 +56,7 @@ public class RangeTypesTest extends TransactionalTestBase {
             mapInt4Range("col_int4range", (x) -> x.int4Range);
             mapInt8Range("col_int8range", (x) -> x.int8Range);
             mapNumRange("col_numrange", (x) -> x.numericRange);
+            mapDateRange("col_daterange", (x) -> x.dateRange);
         }
     }
 
@@ -64,6 +67,7 @@ public class RangeTypesTest extends TransactionalTestBase {
                 + ",  col_int4range int4range"
                 + ",  col_int8range int8range"
                 + ",  col_numrange numrange"
+                + ",  col_daterange daterange"
                 + ");";
 
         Statement statement = connection.createStatement();
@@ -103,6 +107,44 @@ public class RangeTypesTest extends TransactionalTestBase {
     }
 
     @Test
+    public void test_SaveDateRange_Inclusive_Bounds() throws SQLException {
+
+        // This list will be inserted.
+        List<RangeEntity> entities = new ArrayList<>();
+
+        // Range to insert:
+        RangeEntity entity0 = new RangeEntity();
+
+        LocalDate lower = LocalDate.of(2020, 1, 1);
+        LocalDate upper = LocalDate.of(2020, 3, 1);
+
+        entity0.dateRange = new Range<>(lower, upper);
+
+        entities.add(entity0);
+
+        // Construct the Insert:
+        PgBulkInsert<RangeEntity> bulkInsert = new PgBulkInsert<>(new RangeEntityMapping());
+
+        // Save them:
+        bulkInsert.saveAll(PostgreSqlUtils.getPGConnection(connection), entities.stream());
+
+        ResultSet rs = getAll();
+
+        while (rs.next()) {
+            PGobject v0 = (PGobject) rs.getObject("col_daterange");
+
+            // Why [2020-01-01,2020-03-02)?
+            //
+            // https://www.postgresql.org/docs/9.3/rangetypes.html:
+            //
+            //  The built-in range types int4range, int8range, and daterange all use a canonical form
+            //  that includes the lower bound and excludes the upper bound; that is, [). User-defined
+            //  range types can use other conventions, however.
+            Assert.assertEquals("[2020-01-01,2020-03-02)", v0.getValue());
+        }
+    }
+
+    @Test
     public void test_SaveInt4Range_Inclusive_Bounds() throws SQLException {
 
         // This list will be inserted.
@@ -136,7 +178,6 @@ public class RangeTypesTest extends TransactionalTestBase {
             //  The built-in range types int4range, int8range, and daterange all use a canonical form
             //  that includes the lower bound and excludes the upper bound; that is, [). User-defined
             //  range types can use other conventions, however.
-
             Assert.assertEquals("[1,9)", v0.getValue());
         }
     }

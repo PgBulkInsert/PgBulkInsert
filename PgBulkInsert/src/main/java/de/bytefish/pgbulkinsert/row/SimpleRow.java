@@ -516,6 +516,14 @@ public class SimpleRow {
     }
 
 
+    public void setDateRange(String columnName, Range<LocalDate> value) {
+        setValue(columnName, DataType.DateRange, value);
+    }
+
+    public void setDateRange(int ordinal, Range<LocalDate> value) {
+        setValue(ordinal, DataType.DateRange, value);
+    }
+
 
     // endregion
 }

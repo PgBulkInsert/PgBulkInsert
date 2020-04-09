@@ -340,6 +340,10 @@ public abstract class AbstractMapping<TEntity> {
         map(columnName, DataType.NumRange, propertyGetter);
     }
 
+    protected void mapDateRange(String columnName, Function<TEntity, Range<LocalDate>> propertyGetter) {
+        map(columnName, DataType.DateRange, propertyGetter);
+    }
+
     // endregion
 
     private void addColumn(String columnName, BiConsumer<PgBinaryWriter, TEntity> action) {
