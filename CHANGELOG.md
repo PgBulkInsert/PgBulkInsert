@@ -1,5 +1,9 @@
 # CHANGELOG #
 
+## 4.1 ##
+
+* Simplified Quoting identifiers for the ``SimpleRowWriter``
+
 ## 4.0 ##
 
 Added support for [Range Types](https://www.postgresql.org/docs/current/rangetypes.html):
