@@ -56,8 +56,7 @@ public final class PostgreSqlUtils {
     public static final char QuoteChar = '"';
 
     public static String quoteIdentifier(String identifier) {
-        return requiresQuoting(identifier) ?
-                (QuoteChar + identifier + QuoteChar) : identifier;
+        return requiresQuoting(identifier) ? (QuoteChar + identifier + QuoteChar) : identifier;
     }
 
     public static String getFullyQualifiedTableName(String schemaName, String tableName, boolean usePostgresQuoting)
@@ -84,40 +83,6 @@ public final class PostgreSqlUtils {
             return false;
         }
 
-        if (!Character.isLowerCase(first) && first != '_')
-        {
-            return true;
-        }
-
-        for (int i = 1; i < identifier.length(); i++)
-        {
-            char c = identifier.charAt(i);
-
-            if (Character.isLowerCase(c))
-            {
-                continue;
-            }
-
-            switch (c)
-            {
-                case '0':
-                case '1':
-                case '2':
-                case '3':
-                case '4':
-                case '5':
-                case '6':
-                case '7':
-                case '8':
-                case '9':
-                case '_':
-                case '$': // yes it's true
-                    continue;
-            }
-
-            return true;
-        }
-
-        return false;
+        return true;
     }
 }

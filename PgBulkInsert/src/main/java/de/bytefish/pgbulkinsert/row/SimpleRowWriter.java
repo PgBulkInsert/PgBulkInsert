@@ -46,8 +46,19 @@ public class SimpleRowWriter {
             return columns;
         }
 
-        public String GetFullyQualifiedTableName(boolean usePostgresQuoting) {
+        public String getFullyQualifiedTableName(boolean usePostgresQuoting) {
             return PostgreSqlUtils.getFullyQualifiedTableName(schema, table, usePostgresQuoting);
+        }
+
+        public String getCopyCommand(boolean usePostgresQuoting) {
+
+            String commaSeparatedColumns = Arrays.stream(columns)
+                    .map(x -> usePostgresQuoting ? PostgreSqlUtils.quoteIdentifier(x) : x)
+                    .collect(Collectors.joining(", "));
+
+            return String.format("COPY %1$s(%2$s) FROM STDIN BINARY",
+                    getFullyQualifiedTableName(usePostgresQuoting),
+                    commaSeparatedColumns);
         }
     }
 
@@ -82,7 +93,7 @@ public class SimpleRowWriter {
     }
 
     public void open(PGConnection connection) throws SQLException  {
-        writer.open(new PGCopyOutputStream(connection, getCopyCommand(table, usePostgresQuoting), 1));
+        writer.open(new PGCopyOutputStream(connection, table.getCopyCommand(usePostgresQuoting), 1));
 
         isClosed = false;
         isOpened = true;
@@ -139,17 +150,5 @@ public class SimpleRowWriter {
 
     public void setNullCharacterHandler(Function<String, String> nullCharacterHandler) {
         this.nullCharacterHandler = nullCharacterHandler;
-    }
-
-
-    private static String getCopyCommand(Table table, boolean usePostgresQuoting) {
-
-        String commaSeparatedColumns = Arrays.stream(table.columns)
-                .map(x -> usePostgresQuoting ? PostgreSqlUtils.quoteIdentifier(x) : x)
-                .collect(Collectors.joining(", "));
-
-        return String.format("COPY %1$s(%2$s) FROM STDIN BINARY",
-                table.GetFullyQualifiedTableName(usePostgresQuoting),
-                commaSeparatedColumns);
     }
 }
