@@ -68,7 +68,7 @@ public class JpaMappingTests extends TransactionalTestBase {
     }
 
     @Test
-    public void bulkInsertPersonDataTest() throws SQLException {
+    public void bulkImportSampleEntities() throws SQLException {
         // Create a large list of People:
         List<SampleEntity> personList = getSampleEntityList(100000);
         // Create the JpaMapping:
