@@ -6,7 +6,6 @@ package de.bytefish.pgbulkinsert.jpa;
 import de.bytefish.pgbulkinsert.PgBulkInsert;
 import de.bytefish.pgbulkinsert.jpa.utils.TransactionalTestBase;
 import de.bytefish.pgbulkinsert.util.PostgreSqlUtils;
-import javassist.tools.rmi.Sample;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -17,7 +16,6 @@ import javax.persistence.Table;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
