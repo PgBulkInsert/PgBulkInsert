@@ -31,10 +31,10 @@ public class JpaMappingTests extends TransactionalTestBase {
         private Long id;
 
         @Column(name = "int_field")
-        private Integer int_field;
+        private Integer intField;
 
         @Column(name = "text_field")
-        private String text_field;
+        private String textField;
 
         public Long getId() {
             return id;
@@ -44,20 +44,20 @@ public class JpaMappingTests extends TransactionalTestBase {
             this.id = id;
         }
 
-        public Integer getInt_field() {
-            return int_field;
+        public Integer getIntField() {
+            return intField;
         }
 
-        public void setInt_field(Integer int_field) {
-            this.int_field = int_field;
+        public void setIntField(Integer intField) {
+            this.intField = intField;
         }
 
-        public String getText_field() {
-            return text_field;
+        public String getTextField() {
+            return textField;
         }
 
-        public void setText_field(String text_field) {
-            this.text_field = text_field;
+        public void setTextField(String textField) {
+            this.textField = textField;
         }
     }
 
@@ -88,8 +88,8 @@ public class JpaMappingTests extends TransactionalTestBase {
             SampleEntity p = new SampleEntity();
 
             p.setId(pos + 1L);
-            p.setInt_field(pos);
-            p.setText_field(Integer.toString(pos));
+            p.setIntField(pos);
+            p.setTextField(Integer.toString(pos));
 
             results.add(p);
         }
