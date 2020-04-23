@@ -19,6 +19,7 @@
     
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <postgresql.version>42.2.9</postgresql.version>
     </properties>
 
         <!-- Define the License -->
@@ -65,11 +66,6 @@
             </plugin>
         </plugins>
     </build>
-
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <postgresql.version>42.2.9</postgresql.version>
-    </properties>
 
     <distributionManagement>
         <snapshotRepository>
