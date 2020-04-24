@@ -50,7 +50,7 @@ public class JpaMapping<TEntity> extends AbstractMapping<TEntity> {
                 Method fieldGetter = pd.getReadMethod();
 
                 if(enumerated != null) {
-                    mapEnum(columnName, fieldType, fieldGetter);
+                    mapEnum(columnName, enumerated, fieldGetter);
                 } else {
                     mapField(columnName, fieldType, fieldGetter);
                 }
