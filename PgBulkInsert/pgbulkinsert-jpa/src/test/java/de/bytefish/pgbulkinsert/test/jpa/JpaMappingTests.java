@@ -10,10 +10,7 @@ import de.bytefish.pgbulkinsert.utils.TransactionalTestBase;
 import org.junit.Assert;
 import org.junit.Test;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -21,6 +18,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class JpaMappingTests extends TransactionalTestBase {
+
+    public enum SampleEntityTypeEnum {
+        STRING,
+        INTEGER
+    }
 
     @Entity
     @Table(name = "unit_test", schema = "sample")
@@ -35,6 +37,14 @@ public class JpaMappingTests extends TransactionalTestBase {
 
         @Column(name = "text_field")
         private String textField;
+
+        @Enumerated(value = EnumType.STRING)
+        @Column(name = "enum_string_field")
+        private SampleEntityTypeEnum typeStringField;
+
+        @Enumerated(value = EnumType.ORDINAL)
+        @Column(name = "enum_integer_field")
+        private SampleEntityTypeEnum typeOrdinalField;
 
         public Long getId() {
             return id;
@@ -58,6 +68,22 @@ public class JpaMappingTests extends TransactionalTestBase {
 
         public void setTextField(String textField) {
             this.textField = textField;
+        }
+
+        public SampleEntityTypeEnum getTypeStringField() {
+            return typeStringField;
+        }
+
+        public void setTypeStringField(SampleEntityTypeEnum typeStringField) {
+            this.typeStringField = typeStringField;
+        }
+
+        public SampleEntityTypeEnum getTypeOrdinalField() {
+            return typeOrdinalField;
+        }
+
+        public void setTypeOrdinalField(SampleEntityTypeEnum typeOrdinalField) {
+            this.typeOrdinalField = typeOrdinalField;
         }
     }
 
@@ -90,6 +116,8 @@ public class JpaMappingTests extends TransactionalTestBase {
             p.setId(pos + 1L);
             p.setIntField(pos);
             p.setTextField(Integer.toString(pos));
+            p.setTypeOrdinalField(SampleEntityTypeEnum.INTEGER);
+            p.setTypeStringField(SampleEntityTypeEnum.STRING);
 
             results.add(p);
         }
@@ -103,7 +131,9 @@ public class JpaMappingTests extends TransactionalTestBase {
                 "            (\n" +
                 "                id int8,\n" +
                 "                int_field int4,\n" +
-                "                text_field text\n" +
+                "                text_field text,\n" +
+                "                enum_string_field text,\n" +
+                "                enum_integer_field int4\n" +
                 "            );";
 
         Statement statement = connection.createStatement();

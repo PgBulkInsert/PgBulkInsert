@@ -7,6 +7,8 @@ import de.bytefish.pgbulkinsert.mapping.AbstractMapping;
 import de.bytefish.pgbulkinsert.pgsql.handlers.IValueHandlerProvider;
 
 import javax.persistence.Column;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Table;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
@@ -33,6 +35,9 @@ public class JpaMapping<TEntity> extends AbstractMapping<TEntity> {
     private void internalMapFields(Class<TEntity> entityClass) throws Exception {
 
         for (Field f : entityClass.getDeclaredFields()) {
+            // Is this Field an Enum?
+            Enumerated enumerated = f.getAnnotation(Enumerated.class);
+
             // Get the Column to match in Postgres:
             Column column = f.getAnnotation(Column.class);
 
@@ -44,8 +49,34 @@ public class JpaMapping<TEntity> extends AbstractMapping<TEntity> {
                 Type fieldType = f.getType();
                 Method fieldGetter = pd.getReadMethod();
 
-                mapField(columnName, fieldType, fieldGetter);
+                if(enumerated != null) {
+                    mapEnum(columnName, fieldType, fieldGetter);
+                } else {
+                    mapField(columnName, fieldType, fieldGetter);
+                }
             }
+        }
+    }
+    private void mapEnum(String columnName, Enumerated enumerated, Method fieldGetter) {
+
+        if(enumerated.value() == EnumType.ORDINAL) {
+            mapShort(columnName, new Function<TEntity, Number>() {
+                @Override
+                public Short apply(TEntity tEntity) {
+                    Enum<?> enumeration =  (Enum<?>) internalInvoke(fieldGetter, tEntity);
+
+                    return (short) enumeration.ordinal();
+                }
+            });
+        } else if(enumerated.value() == EnumType.STRING) {
+            mapText(columnName, new Function<TEntity, String>() {
+                @Override
+                public String apply(TEntity tEntity) {
+                    Enum<?> enumeration =  (Enum<?>) internalInvoke(fieldGetter, tEntity);
+
+                    return enumeration.name();
+                }
+            });
         }
     }
 
