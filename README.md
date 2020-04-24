@@ -23,9 +23,15 @@ You can add the following dependencies to your pom.xml to include [PgBulkInsert]
 
 ```xml
 <dependency>
-	<groupId>de.bytefish</groupId>
-	<artifactId>pgbulkinsert</artifactId>
-	<version>4.1</version>
+	<groupId>de.bytefish.pgbulkinsert</groupId>
+	<artifactId>pgbulkinsert-core</artifactId>
+	<version>5.0.0</version>
+</dependency>
+
+<dependency>
+	<groupId>de.bytefish.pgbulkinsert</groupId>
+	<artifactId>pgbulkinsert-rowwriter</artifactId>
+	<version>5.0.0</version>
 </dependency>
 ```
 
@@ -75,12 +81,6 @@ You can add the following dependencies to your pom.xml to include [PgBulkInsert]
     * polygon
     * circle
 
-## License ##
-
-PgBulkInsert is released with under terms of the [MIT License]:
-
-* [https://github.com/bytefish/PgBulkInsert](https://github.com/bytefish/PgBulkInsert)
-
 ## Usage ##
 
 You can use [PgBulkInsert] API in two different ways. The first one is to use the ``SimpleRowWriter``, when you don't have 
@@ -89,9 +89,8 @@ between your Java POJO and a PostgreSQL table.
 
 ## Using the SimpleRowWriter ##
 
-Using the ``SimpleRowWriter`` is really easy. 
-
-It requires you to define the PostgreSQL table structure using a ``SimpleRowWriter.Table``, that has a schema name (optional), table name and column names:
+Using the ``SimpleRowWriter`` doesn't require you to define a separate mapping. It requires you to define the PostgreSQL table structure using 
+a ``SimpleRowWriter.Table``, that has a schema name (optional), table name and column names:
 
 ```java
 // Schema of the Table:
@@ -221,7 +220,8 @@ If you need to customize the Null Character Handling, then you can use the ``set
 
 ## Using the AbstractMapping ##
 
-Imagine we want to bulk insert a large amount of people into a PostgreSQL database. Each ``Person`` has a first name, a last name and a birthdate.
+The ``AbstractMapping`` is the second possible way to map a POJO for usage in PgBulkInsert. Imagine we want to bulk insert a large amount of people 
+into a PostgreSQL database. Each ``Person`` has a first name, a last name and a birthdate.
 
 ### Database Table ###
 
@@ -303,7 +303,7 @@ PgBulkInsert<Person> bulkInsert = new PgBulkInsert<Person>(new PersonMapping());
 
 ### Using the Bulk Inserter ###
 
-[IntegrationTest.java]: https://github.com/bytefish/PgBulkInsert/blob/master/PgBulkInsert/src/test/java/de/bytefish/pgbulkinsert/integration/IntegrationTest.java
+[IntegrationTest.java]: https://github.com/bytefish/PgBulkInsert/blob/master/PgBulkInsert/pgbulkinsert-core/src/test/java/de/bytefish/pgbulkinsert/integration/IntegrationTest.java
 
 And finally we can write a Unit Test to insert ``100000`` people into the database. You can find the entire Unit Test on GitHub as [IntegrationTest.java].
 
@@ -337,10 +337,161 @@ private List<Person> getPersonList(int num) {
 }
 ```
 
-## Additional Reading ##
+## Using JPA Mappings ##
 
-* [Working with a BulkProcessor in PgBulkInsert](http://bytefish.de/blog/pgbulkinsert_bulkprocessor/)
-* [Writing data using a SimpleRowWriter](https://bytefish.de/blog/pgbulkinsert_row_writer/)
+### Adding a Dependency to JPA Module ###
+
+In order to map between PgBulkInsert and an existing JPA Mapping you need to use the ``pgbulkinsert-jpa`` module and 
+add it as a dependency to your application:
+
+```xml
+<dependency>
+	<groupId>de.bytefish.pgbulkinsert</groupId>
+	<artifactId>pgbulkinsert-jpa</artifactId>
+	<version>5.0.0</version>
+</dependency>
+```
+
+### Create the Mapping ###
+
+To create the Mapping you simply need to pass your class, like this: ``new JpaMapping<>(SampleEntity.class);``.
+
+Here is a complete example:
+
+```java
+// Copyright (c) Philipp Wagner. All rights reserved.
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
+
+package de.bytefish.pgbulkinsert.test.jpa;
+
+import de.bytefish.pgbulkinsert.PgBulkInsert;
+import de.bytefish.pgbulkinsert.jpa.JpaMapping;
+import de.bytefish.pgbulkinsert.util.PostgreSqlUtils;
+import de.bytefish.pgbulkinsert.utils.TransactionalTestBase;
+import org.junit.Assert;
+import org.junit.Test;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+
+public class JpaMappingTests extends TransactionalTestBase {
+
+    @Entity
+    @Table(name = "unit_test", schema = "sample")
+    public class SampleEntity {
+
+        @Id
+        @Column(name = "id")
+        private Long id;
+
+        @Column(name = "int_field")
+        private Integer intField;
+
+        @Column(name = "text_field")
+        private String textField;
+
+        public Long getId() {
+            return id;
+        }
+
+        public void setId(Long id) {
+            this.id = id;
+        }
+
+        public Integer getIntField() {
+            return intField;
+        }
+
+        public void setIntField(Integer intField) {
+            this.intField = intField;
+        }
+
+        public String getTextField() {
+            return textField;
+        }
+
+        public void setTextField(String textField) {
+            this.textField = textField;
+        }
+    }
+
+
+    @Override
+    protected void onSetUpInTransaction() throws Exception {
+        createTable();
+    }
+
+    @Test
+    public void bulkImportSampleEntities() throws SQLException {
+        // Create a large list of People:
+        List<SampleEntity> personList = getSampleEntityList(100000);
+        // Create the JpaMapping:
+        JpaMapping<SampleEntity> mapping = new JpaMapping<>(SampleEntity.class);
+        // Create the Bulk Inserter:
+        PgBulkInsert<SampleEntity> bulkInsert = new PgBulkInsert<>(mapping);
+        // Now save all entities of a given stream:
+        bulkInsert.saveAll(PostgreSqlUtils.getPGConnection(connection), personList.stream());
+        // And assert all have been written to the database:
+        Assert.assertEquals(100000, getRowCount());
+    }
+
+    private List<SampleEntity> getSampleEntityList(int num) {
+        List<SampleEntity> results = new ArrayList<>();
+
+        for (int pos = 0; pos < num; pos++) {
+            SampleEntity p = new SampleEntity();
+
+            p.setId(pos + 1L);
+            p.setIntField(pos);
+            p.setTextField(Integer.toString(pos));
+
+            results.add(p);
+        }
+
+        return results;
+    }
+
+    private boolean createTable() throws SQLException {
+
+        String sqlStatement = String.format("CREATE TABLE %s.unit_test\n", schema) +
+                "            (\n" +
+                "                id int8,\n" +
+                "                int_field int4,\n" +
+                "                text_field text\n" +
+                "            );";
+
+        Statement statement = connection.createStatement();
+
+        return statement.execute(sqlStatement);
+    }
+
+    private int getRowCount() throws SQLException {
+
+        Statement s = connection.createStatement();
+
+        ResultSet r = s.executeQuery(String.format("SELECT COUNT(*) AS rowcount FROM %s.unit_test", schema));
+        r.next();
+        int count = r.getInt("rowcount");
+        r.close();
+
+        return count;
+    }
+}
+```
+
+## License ##
+
+PgBulkInsert is released with under terms of the [MIT License]:
+
+* [https://github.com/bytefish/PgBulkInsert](https://github.com/bytefish/PgBulkInsert)
+
 
 ## Resources ##
 
