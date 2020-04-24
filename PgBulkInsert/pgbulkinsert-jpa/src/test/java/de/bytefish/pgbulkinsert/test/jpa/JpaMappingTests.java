@@ -1,9 +1,10 @@
 // Copyright (c) Philipp Wagner. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-package de.bytefish.pgbulkinsert.jpa;
+package de.bytefish.pgbulkinsert.test.jpa;
 
 import de.bytefish.pgbulkinsert.PgBulkInsert;
+import de.bytefish.pgbulkinsert.jpa.JpaMapping;
 import de.bytefish.pgbulkinsert.util.PostgreSqlUtils;
 import de.bytefish.pgbulkinsert.utils.TransactionalTestBase;
 import org.junit.Assert;
@@ -20,7 +21,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class JpaMappingTests extends TransactionalTestBase {
-
 
     @Entity
     @Table(name = "unit_test", schema = "sample")

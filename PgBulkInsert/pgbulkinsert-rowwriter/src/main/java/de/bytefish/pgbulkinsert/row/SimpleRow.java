@@ -10,7 +10,6 @@ import de.bytefish.pgbulkinsert.pgsql.handlers.ValueHandlerProvider;
 import de.bytefish.pgbulkinsert.pgsql.model.geometric.*;
 import de.bytefish.pgbulkinsert.pgsql.model.network.MacAddress;
 import de.bytefish.pgbulkinsert.pgsql.model.range.Range;
-import de.bytefish.pgbulkinsert.util.StringUtils;
 
 import java.net.Inet4Address;
 import java.net.Inet6Address;
