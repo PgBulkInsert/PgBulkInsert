@@ -54,87 +54,63 @@ public class JpaMapping<TEntity> extends AbstractMapping<TEntity> {
         if(fieldType.equals(String.class)) {
             mapText(columnName, tEntity -> (String) internalInvoke(fieldGetter, tEntity));
 
-            return;
-        }
-
-        if(fieldType.equals(boolean.class) || fieldType.equals(Boolean.class)) {
+        } else  if(fieldType.equals(boolean.class) || fieldType.equals(Boolean.class)) {
             mapBoolean(columnName, new Function<TEntity, Boolean>() {
                 @Override
                 public Boolean apply(TEntity tEntity) {
                     return (Boolean) internalInvoke(fieldGetter, tEntity);
                 }
             });
-
-            return;
-        }
-
-        if(fieldType.equals(byte.class) || fieldType.equals(Byte.class)) {
+        } else if(fieldType.equals(byte.class) || fieldType.equals(Byte.class)) {
             mapByte(columnName, new Function<TEntity, Number>() {
                 @Override
                 public Number apply(TEntity tEntity) {
                     return (Byte) internalInvoke(fieldGetter, tEntity);
                 }
             });
-
-            return;
-        }
-
-        if(fieldType.equals(short.class) || fieldType.equals(Short.class)) {
+        } else if(fieldType.equals(short.class) || fieldType.equals(Short.class)) {
             mapShort(columnName, new Function<TEntity, Number>() {
                 @Override
                 public Number apply(TEntity tEntity) {
                     return (Short) internalInvoke(fieldGetter, tEntity);
                 }
             });
-
-            return;
-        }
-
-        if(fieldType.equals(int.class) || fieldType.equals(Integer.class)) {
+        } else if(fieldType.equals(int.class) || fieldType.equals(Integer.class)) {
             mapInteger(columnName, new Function<TEntity, Number>() {
                 @Override
                 public Number apply(TEntity tEntity) {
                     return (Integer) internalInvoke(fieldGetter, tEntity);
                 }
             });
-
-            return;
-        }
-
-        if(fieldType.equals(long.class) || fieldType.equals(Long.class)) {
+        } else if(fieldType.equals(long.class) || fieldType.equals(Long.class)) {
             mapLong(columnName, new Function<TEntity, Number>() {
                 @Override
                 public Number apply(TEntity tEntity) {
                     return (Long) internalInvoke(fieldGetter, tEntity);
                 }
             });
-
-            return;
-        }
-
-        if(fieldType.equals(float.class) || fieldType.equals(Float.class)) {
+        } else if(fieldType.equals(float.class) || fieldType.equals(Float.class)) {
             mapFloat(columnName, new Function<TEntity, Number>() {
                 @Override
                 public Number apply(TEntity tEntity) {
                     return (Float) internalInvoke(fieldGetter, tEntity);
                 }
             });
-
-            return;
-        }
-
-        if(fieldType.equals(double.class) || fieldType.equals(Double.class)) {
+        } else if(fieldType.equals(double.class) || fieldType.equals(Double.class)) {
             mapFloat(columnName, new Function<TEntity, Number>() {
                 @Override
                 public Number apply(TEntity tEntity) {
                     return (Double) internalInvoke(fieldGetter, tEntity);
                 }
             });
-
-            return;
+        } else if(fieldType.equals(byte[].class) || fieldType.equals(Byte[].class)) {
+            mapByteArray(columnName, new Function<TEntity, byte[]>() {
+                @Override
+                public byte[] apply(TEntity tEntity) {
+                    return (byte[]) internalInvoke(fieldGetter, tEntity);
+                }
+            });
         }
-
-        //throw new RuntimeException("Could not map type " + fieldType.getTypeName())
     }
 
     private Object internalInvoke(Method method, TEntity obj) {
