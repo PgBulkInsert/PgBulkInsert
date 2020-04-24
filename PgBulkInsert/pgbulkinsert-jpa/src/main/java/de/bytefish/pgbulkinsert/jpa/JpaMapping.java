@@ -57,8 +57,8 @@ public class JpaMapping<TEntity> extends AbstractMapping<TEntity> {
             }
         }
     }
-    private void mapEnum(String columnName, Enumerated enumerated, Method fieldGetter) {
 
+    private void mapEnum(String columnName, Enumerated enumerated, Method fieldGetter) {
         if(enumerated.value() == EnumType.ORDINAL) {
             mapShort(columnName, new Function<TEntity, Number>() {
                 @Override
