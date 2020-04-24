@@ -46,7 +46,7 @@ public class JpaMappingTests extends TransactionalTestBase {
         private SampleEntityTypeEnum typeStringField;
 
         @Enumerated(value = EnumType.ORDINAL)
-        @Column(name = "enum_integer_field")
+        @Column(name = "enum_smallint_field")
         private SampleEntityTypeEnum typeOrdinalField;
 
         public Long getId() {
@@ -117,7 +117,7 @@ public class JpaMappingTests extends TransactionalTestBase {
 
         while (rs.next()) {
             String v0 = rs.getString("enum_string_field");
-            Short v1 = rs.getShort("enum_integer_field");
+            Short v1 = rs.getShort("enum_smallint_field");
 
             Assert.assertEquals("STRING", v0);
             Assert.assertEquals(1, v1.intValue());
@@ -164,7 +164,7 @@ public class JpaMappingTests extends TransactionalTestBase {
                 "                int_field int4,\n" +
                 "                text_field text,\n" +
                 "                enum_string_field text,\n" +
-                "                enum_integer_field smallint\n" +
+                "                enum_smallint_field smallint\n" +
                 "            );";
 
         Statement statement = connection.createStatement();
