@@ -9,12 +9,15 @@ import de.bytefish.pgbulkinsert.util.PostgreSqlUtils;
 import de.bytefish.pgbulkinsert.utils.TransactionalTestBase;
 import org.junit.Assert;
 import org.junit.Test;
+import org.postgresql.PGConnection;
+import org.postgresql.util.PGobject;
 
 import javax.persistence.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class JpaMappingTests extends TransactionalTestBase {
@@ -94,6 +97,34 @@ public class JpaMappingTests extends TransactionalTestBase {
     }
 
     @Test
+    public void writeEnumeratedValueTest() throws SQLException {
+
+        SampleEntity s = new SampleEntity();
+
+        s.setTypeStringField(SampleEntityTypeEnum.STRING);
+        s.setTypeOrdinalField(SampleEntityTypeEnum.INTEGER);
+
+        // Create the JpaMapping:
+        JpaMapping<SampleEntity> mapping = new JpaMapping<>(SampleEntity.class);
+        // Create the Bulk Inserter:
+        PgBulkInsert<SampleEntity> bulkInsert = new PgBulkInsert<>(mapping);
+
+        PGConnection conn = PostgreSqlUtils.getPGConnection(connection);
+
+        bulkInsert.saveAll(conn, Arrays.asList(s));
+
+        ResultSet rs = getAll();
+
+        while (rs.next()) {
+            String v0 = rs.getString("enum_string_field");
+            Short v1 = rs.getShort("enum_integer_field");
+
+            Assert.assertEquals("STRING", v0);
+            Assert.assertEquals(1, v1.intValue());
+        }
+    }
+
+    @Test
     public void bulkImportSampleEntities() throws SQLException {
         // Create a large list of People:
         List<SampleEntity> personList = getSampleEntityList(100000);
@@ -133,12 +164,20 @@ public class JpaMappingTests extends TransactionalTestBase {
                 "                int_field int4,\n" +
                 "                text_field text,\n" +
                 "                enum_string_field text,\n" +
-                "                enum_integer_field int4\n" +
+                "                enum_integer_field smallint\n" +
                 "            );";
 
         Statement statement = connection.createStatement();
 
         return statement.execute(sqlStatement);
+    }
+
+    private ResultSet getAll() throws SQLException {
+        String sqlStatement = "SELECT * FROM sample.unit_test";
+
+        Statement statement = connection.createStatement();
+
+        return statement.executeQuery(sqlStatement);
     }
 
     private int getRowCount() throws SQLException {
