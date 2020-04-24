@@ -24,7 +24,7 @@ public class JpaMappingTests extends TransactionalTestBase {
 
     @Entity
     @Table(name = "unit_test", schema = "sample")
-    private class SampleEntity {
+    public class SampleEntity {
 
         @Id
         @Column(name = "id")
