@@ -12,13 +12,13 @@
     <description>PgBulkInsert is a Java library for Bulk Inserts with PostgreSQL.</description>
     <url>http://www.github.com/bytefish/PgBulkInsert</url>
 
-        <modules>
+    <modules>
         <module>pgbulkinsert-core</module>
         <module>pgbulkinsert-jpa</module>
         <module>pgbulkinsert-rowwriter</module>
+        <module>pgbulkinsert-bulkprocessor</module>
     </modules>
 
-    
     <!-- Define the License -->
     <licenses>
         <license>

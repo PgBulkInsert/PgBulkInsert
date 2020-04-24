@@ -1,9 +1,9 @@
 // Copyright (c) Philipp Wagner. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-package de.bytefish.pgbulkinsert.pgsql.processor;
+package de.bytefish.pgbulkinsert.bulkprocessor;
 
-import de.bytefish.pgbulkinsert.pgsql.processor.handler.IBulkWriteHandler;
+import de.bytefish.pgbulkinsert.bulkprocessor.handler.IBulkWriteHandler;
 
 import java.time.Duration;
 import java.util.ArrayList;

@@ -14,7 +14,6 @@ import de.bytefish.pgbulkinsert.pgsql.handlers.*;
 import de.bytefish.pgbulkinsert.pgsql.model.geometric.*;
 import de.bytefish.pgbulkinsert.pgsql.model.network.MacAddress;
 import de.bytefish.pgbulkinsert.pgsql.model.range.Range;
-import de.bytefish.pgbulkinsert.row.SimpleRowWriter;
 import de.bytefish.pgbulkinsert.util.PostgreSqlUtils;
 
 import java.net.Inet4Address;
