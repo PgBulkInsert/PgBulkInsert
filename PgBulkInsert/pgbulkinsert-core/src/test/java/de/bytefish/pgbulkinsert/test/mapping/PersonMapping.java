@@ -1,9 +1,10 @@
 // Copyright (c) Philipp Wagner. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-package de.bytefish.pgbulkinsert.mapping;
+package de.bytefish.pgbulkinsert.test.mapping;
 
-import de.bytefish.pgbulkinsert.model.Person;
+import de.bytefish.pgbulkinsert.mapping.AbstractMapping;
+import de.bytefish.pgbulkinsert.test.model.Person;
 
 public class PersonMapping extends AbstractMapping<Person>
 {

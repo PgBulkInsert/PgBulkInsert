@@ -1,12 +1,13 @@
 // Copyright (c) Philipp Wagner. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-package de.bytefish.pgbulkinsert.pgsql.processor;
+package de.bytefish.pgbulkinsert.test.pgsql.processor;
 
 import de.bytefish.pgbulkinsert.IPgBulkInsert;
 import de.bytefish.pgbulkinsert.PgBulkInsert;
-import de.bytefish.pgbulkinsert.mapping.PersonMapping;
-import de.bytefish.pgbulkinsert.model.Person;
+import de.bytefish.pgbulkinsert.pgsql.processor.BulkProcessor;
+import de.bytefish.pgbulkinsert.test.mapping.PersonMapping;
+import de.bytefish.pgbulkinsert.test.model.Person;
 import de.bytefish.pgbulkinsert.pgsql.processor.handler.IBulkWriteHandler;
 import de.bytefish.pgbulkinsert.util.PostgreSqlUtils;
 import de.bytefish.pgbulkinsert.utils.TransactionalTestBase;

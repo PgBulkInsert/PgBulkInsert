@@ -1,4 +1,4 @@
-package de.bytefish.pgbulkinsert.rows;
+package de.bytefish.pgbulkinsert.test.rows;
 
 
 import de.bytefish.pgbulkinsert.row.SimpleRowWriter;

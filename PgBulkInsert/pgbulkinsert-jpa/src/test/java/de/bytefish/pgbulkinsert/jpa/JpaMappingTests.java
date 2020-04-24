@@ -4,8 +4,8 @@
 package de.bytefish.pgbulkinsert.jpa;
 
 import de.bytefish.pgbulkinsert.PgBulkInsert;
-import de.bytefish.pgbulkinsert.jpa.utils.TransactionalTestBase;
 import de.bytefish.pgbulkinsert.util.PostgreSqlUtils;
+import de.bytefish.pgbulkinsert.utils.TransactionalTestBase;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -122,5 +122,4 @@ public class JpaMappingTests extends TransactionalTestBase {
 
         return count;
     }
-
 }

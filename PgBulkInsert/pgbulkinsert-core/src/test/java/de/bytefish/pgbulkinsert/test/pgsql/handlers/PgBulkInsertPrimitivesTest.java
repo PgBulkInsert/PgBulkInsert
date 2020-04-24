@@ -1,4 +1,4 @@
-package de.bytefish.pgbulkinsert.pgsql.handlers;
+package de.bytefish.pgbulkinsert.test.pgsql.handlers;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

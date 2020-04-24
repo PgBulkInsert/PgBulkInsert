@@ -1,14 +1,7 @@
 // Copyright (c) Philipp Wagner. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-package de.bytefish.pgbulkinsert.pgsql.handlers;
-
-import de.bytefish.pgbulkinsert.PgBulkInsert;
-import de.bytefish.pgbulkinsert.mapping.AbstractMapping;
-import de.bytefish.pgbulkinsert.util.PostgreSqlUtils;
-import de.bytefish.pgbulkinsert.utils.TransactionalTestBase;
-import org.junit.Assert;
-import org.junit.Test;
+package de.bytefish.pgbulkinsert.test.pgsql.handlers;
 
 import java.math.BigDecimal;
 import java.net.UnknownHostException;
@@ -19,30 +12,33 @@ import java.sql.Statement;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Function;
 
-public class ArrayTypesTest  extends TransactionalTestBase {
+import org.junit.Assert;
+import org.junit.Test;
+
+import de.bytefish.pgbulkinsert.PgBulkInsert;
+import de.bytefish.pgbulkinsert.mapping.AbstractMapping;
+import de.bytefish.pgbulkinsert.util.PostgreSqlUtils;
+import de.bytefish.pgbulkinsert.utils.TransactionalTestBase;
+
+public class NumericArrayTypesTest extends TransactionalTestBase {
 
     private class ArrayEntity {
 
-        public List<String> stringArray;
         public List<BigDecimal> bigDecimalArray;
         public List<Double> doubleArray;
         public List<Float> floatArray;
         public List<Long> longArray;
         public List<Short> shortArray;
         public List<Integer> integerArray;
-        public List<Boolean> booleanArray;
 
-        public List<String> getStringArray() {
-            return stringArray;
-        }
         public List<BigDecimal> getBigDecimalArray() { return bigDecimalArray; }
         public List<Double> getDoubleArray() { return doubleArray; }
         public List<Float> getFloatArray() { return floatArray; }
         public List<Long> getLongArray() { return longArray; }
         public List<Short> getShortArray() { return shortArray; }
         public List<Integer> getIntegerArray() { return integerArray; }
-        public List<Boolean> getBooleanArray() { return booleanArray; }
     }
 
 
@@ -61,15 +57,12 @@ public class ArrayTypesTest  extends TransactionalTestBase {
         public ArrayEntityMapping() {
             super(schema, "unit_test");
 
-            mapVarCharArray("col_varchar_array", ArrayEntity::getStringArray);
-            mapTextArray("col_text_array", ArrayEntity::getStringArray);
             mapNumericArray("col_numeric_array", ArrayEntity::getBigDecimalArray);
-            mapDoubleArray("col_double_array", ArrayEntity::getDoubleArray);
-            mapFloatArray("col_float_array", ArrayEntity::getFloatArray);
-            mapLongArray("col_long_array", ArrayEntity::getLongArray);
-            mapShortArray("col_short_array", ArrayEntity::getShortArray);
-            mapIntegerArray("col_integer_array", ArrayEntity::getIntegerArray);
-            mapBooleanArray("col_boolean_array", ArrayEntity::getBooleanArray);
+            mapNumericArray("col_double_array", ArrayEntity::getDoubleArray);
+            mapNumericArray("col_float_array", ArrayEntity::getFloatArray);
+            mapNumericArray("col_long_array", ArrayEntity::getLongArray);
+            mapNumericArray("col_short_array", ArrayEntity::getShortArray);
+            mapNumericArray("col_integer_array", ArrayEntity::getIntegerArray);
         }
     }
 
@@ -84,28 +77,7 @@ public class ArrayTypesTest  extends TransactionalTestBase {
                 new BigDecimal("310000.00011234567")
         );
 
-        testArrayInternal("col_numeric_array", entity, entity.bigDecimalArray);
-    }
-
-    @Test
-    public void saveAll_VarCharArray_Test() throws SQLException, UnknownHostException {
-
-        testStringArray("col_varchar_array");
-    }
-
-    @Test
-    public void saveAll_TextArray_Test() throws SQLException, UnknownHostException {
-
-        testStringArray("col_text_array");
-    }
-
-    private void testStringArray(String columnLabel) throws SQLException, UnknownHostException {
-
-        // Create the Entity to insert:
-        ArrayEntity entity = new ArrayEntity();
-        entity.stringArray = Arrays.asList("A", "B");
-
-        testArrayInternal(columnLabel, entity, entity.stringArray);
+        testArrayInternal("col_numeric_array", entity, entity.bigDecimalArray, x -> x);
     }
 
 
@@ -119,7 +91,7 @@ public class ArrayTypesTest  extends TransactionalTestBase {
                 new Double("310000.00011234567")
         );
 
-        testArrayInternal("col_double_array", entity, entity.doubleArray);
+        testArrayInternal("col_double_array", entity, entity.doubleArray, BigDecimal::doubleValue);
     }
 
     @Test
@@ -132,7 +104,7 @@ public class ArrayTypesTest  extends TransactionalTestBase {
                 new Float("310000.00011234567")
         );
 
-        testArrayInternal("col_float_array", entity, entity.floatArray);
+        testArrayInternal("col_float_array", entity, entity.floatArray, BigDecimal::floatValue);
     }
 
     @Test
@@ -145,7 +117,7 @@ public class ArrayTypesTest  extends TransactionalTestBase {
                 new Long("4534534")
         );
 
-        testArrayInternal("col_long_array", entity, entity.longArray);
+        testArrayInternal("col_long_array", entity, entity.longArray, BigDecimal::longValue);
     }
 
     @Test
@@ -158,7 +130,7 @@ public class ArrayTypesTest  extends TransactionalTestBase {
                 new Short("34")
         );
 
-        testArrayInternal("col_short_array", entity, entity.shortArray);
+        testArrayInternal("col_short_array", entity, entity.shortArray, BigDecimal::shortValue);
     }
 
     @Test
@@ -171,24 +143,11 @@ public class ArrayTypesTest  extends TransactionalTestBase {
                 new Integer("5435345")
         );
 
-        testArrayInternal("col_integer_array", entity, entity.integerArray);
+        testArrayInternal("col_integer_array", entity, entity.integerArray, BigDecimal::intValue);
     }
 
-    @Test
-    public void saveAll_BooleanArray_Test() throws SQLException, UnknownHostException {
+    private <T> void testArrayInternal(String columnLabel, ArrayEntity entity, List<T> samples, Function<BigDecimal, T> converter) throws SQLException, UnknownHostException {
 
-        // Create the Entity to insert:
-        ArrayEntity entity = new ArrayEntity();
-        entity.booleanArray = Arrays.asList(
-                Boolean.TRUE,
-                Boolean.FALSE
-        );
-
-        testArrayInternal("col_boolean_array", entity, entity.booleanArray);
-    }
-
-    @SuppressWarnings("unchecked")
-    private <T> void testArrayInternal(String columnLabel, ArrayEntity entity, List<T> samples) throws SQLException, UnknownHostException {
         List<ArrayEntity> entities = Collections.singletonList(entity);
 
         PgBulkInsert<ArrayEntity> pgBulkInsert = new PgBulkInsert<>(new ArrayEntityMapping());
@@ -200,10 +159,13 @@ public class ArrayTypesTest  extends TransactionalTestBase {
         while (rs.next()) {
             Array z = rs.getArray(columnLabel);
 
-            T[] v = (T[]) z.getArray();
+            BigDecimal[] v = (BigDecimal[]) z.getArray();
 
             for (int i=0; i<samples.size(); i++) {
-                Assert.assertEquals(samples.get(i), v[i]);
+
+                T element = converter.apply(v[i]);
+
+                Assert.assertEquals(samples.get(i), element);
             }
         }
     }
@@ -219,15 +181,13 @@ public class ArrayTypesTest  extends TransactionalTestBase {
     private boolean createTable() throws SQLException {
         String sqlStatement = String.format("CREATE TABLE %s.unit_test\n", schema) +
                 "            (\n" +
-                "                col_varchar_array varchar[], \n" +
-                "                col_text_array text[], \n" +
                 "                col_numeric_array numeric[],\n" +
-                "                col_double_array double precision[],\n" +
-                "                col_float_array real[],\n" +
-                "                col_long_array int8[],\n" +
-                "                col_short_array int2[],\n" +
-                "                col_integer_array int4[],\n" +
-                "                col_boolean_array boolean[]\n" +
+                "                col_double_array numeric[],\n" +
+                "                col_float_array numeric[],\n" +
+                "                col_long_array numeric[],\n" +
+                "                col_short_array numeric[],\n" +
+                "                col_integer_array numeric[],\n" +
+                "                col_boolean_array numeric[]\n" +
                 "            );";
 
         Statement statement = connection.createStatement();

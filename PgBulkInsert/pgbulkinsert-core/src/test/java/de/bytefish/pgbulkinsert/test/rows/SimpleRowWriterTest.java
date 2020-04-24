@@ -1,5 +1,6 @@
-package de.bytefish.pgbulkinsert.rows;
+package de.bytefish.pgbulkinsert.test.rows;
 
+import de.bytefish.pgbulkinsert.pgsql.model.range.Range;
 import de.bytefish.pgbulkinsert.row.SimpleRowWriter;
 import de.bytefish.pgbulkinsert.util.PostgreSqlUtils;
 import de.bytefish.pgbulkinsert.utils.TransactionalTestBase;
@@ -10,8 +11,10 @@ import org.postgresql.PGConnection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 
-public class SimpleRowWriterWithQuotesTest extends TransactionalTestBase {
+public class SimpleRowWriterTest extends TransactionalTestBase {
 
     private static final String tableName = "row_writer_test";
 
@@ -28,15 +31,16 @@ public class SimpleRowWriterWithQuotesTest extends TransactionalTestBase {
 
         // Define the Columns to be inserted:
         String[] columnNames = new String[] {
-                "Value_int",
-                "value_text"
+                "value_int",
+                "value_text",
+                "value_range"
         };
 
         // Create the Table Definition:
         SimpleRowWriter.Table table = new SimpleRowWriter.Table(schema, tableName, columnNames);
 
         // Create the Writer:
-        SimpleRowWriter writer = new SimpleRowWriter(table, true);
+        SimpleRowWriter writer = new SimpleRowWriter(table);
 
         // ... open it:
         writer.open(pgConnection);
@@ -47,9 +51,11 @@ public class SimpleRowWriterWithQuotesTest extends TransactionalTestBase {
             // ... using startRow and work with the row, see how the order doesn't matter:
             writer.startRow((row) -> {
                 row.setText("value_text", "Hi");
-                row.setInteger("Value_int", 1);
+                row.setInteger("value_int", 1);
+                row.setTsTzRange("value_range", new Range<>(
+                        ZonedDateTime.of(2020, 3, 1, 0, 0, 0, 0, ZoneId.of("GMT")),
+                        ZonedDateTime.of(2020, 3, 1, 0, 0, 0, 0, ZoneId.of("GMT"))));
             });
-
         }
 
         // ... and make sure to close it:
@@ -64,8 +70,9 @@ public class SimpleRowWriterWithQuotesTest extends TransactionalTestBase {
 
         String sqlStatement = String.format("CREATE TABLE %s.%s\n", schema, tableName) +
                 "            (\n" +
-                "                \"Value_int\" int,\n"+
-                "                value_text text\n" +
+                "                value_int int\n"+
+                ",                value_text text\n" +
+                ",                value_range tstzrange\n" +
                 "            );";
 
         Statement statement = connection.createStatement();

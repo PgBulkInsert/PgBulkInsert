@@ -1,5 +1,6 @@
-package de.bytefish.pgbulkinsert.util;
+package de.bytefish.pgbulkinsert.test.util;
 
+import de.bytefish.pgbulkinsert.util.PostgreSqlUtils;
 import org.junit.Assert;
 import org.junit.Test;
 

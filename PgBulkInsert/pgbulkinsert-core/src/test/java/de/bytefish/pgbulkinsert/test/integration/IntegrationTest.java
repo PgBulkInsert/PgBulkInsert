@@ -1,11 +1,11 @@
 // Copyright (c) Philipp Wagner. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-package de.bytefish.pgbulkinsert.integration;
+package de.bytefish.pgbulkinsert.test.integration;
 
 import de.bytefish.pgbulkinsert.PgBulkInsert;
-import de.bytefish.pgbulkinsert.mapping.PersonMapping;
-import de.bytefish.pgbulkinsert.model.Person;
+import de.bytefish.pgbulkinsert.test.mapping.PersonMapping;
+import de.bytefish.pgbulkinsert.test.model.Person;
 import de.bytefish.pgbulkinsert.util.PostgreSqlUtils;
 import de.bytefish.pgbulkinsert.utils.TransactionalTestBase;
 import org.junit.Assert;
