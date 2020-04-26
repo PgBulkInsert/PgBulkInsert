@@ -26,8 +26,12 @@ public class JpaMapping<TEntity> extends AbstractMapping<TEntity> {
     }
 
     public JpaMapping(Class<TEntity> entityClass, Map<String, DataType> postgresColumnType) {
+        this(entityClass, postgresColumnType, true);
+    }
 
-        super(getSchemaName(entityClass), getTableName(entityClass));
+    public JpaMapping(Class<TEntity> entityClass, Map<String, DataType> postgresColumnType, boolean usePostgresQuoting) {
+
+        super(getSchemaName(entityClass), getTableName(entityClass), usePostgresQuoting);
 
         if(entityClass == null) {
             throw new IllegalArgumentException("entityClass");
@@ -130,7 +134,7 @@ public class JpaMapping<TEntity> extends AbstractMapping<TEntity> {
 
     private void mapField(String columnName, Map<String, DataType> postgresColumnMapping, Type fieldType, Method fieldGetter) {
 
-        // If we know which Type to map to, let's use it:
+        // If we know which Postgres DataType to map to, let's use it:
         if(postgresColumnMapping.containsKey(columnName)) {
             final DataType dataType = postgresColumnMapping.get(columnName);
 
@@ -206,18 +210,6 @@ public class JpaMapping<TEntity> extends AbstractMapping<TEntity> {
         }
     }
 
-    private JpaMapping(String schemaName, String tableName) {
-        super(schemaName, tableName);
-    }
-
-    private JpaMapping(String schemaName, String tableName, boolean usePostgresQuoting) {
-        super(schemaName, tableName, usePostgresQuoting);
-    }
-
-    private JpaMapping(IValueHandlerProvider provider, String schemaName, String tableName, boolean usePostgresQuoting) {
-        super(provider, schemaName, tableName, usePostgresQuoting);
-    }
-
     public static <T> String getTableName(Class<T> entityClass) {
         Table table = entityClass.getAnnotation(Table.class);
 
@@ -230,5 +222,4 @@ public class JpaMapping<TEntity> extends AbstractMapping<TEntity> {
 
         return (table == null) ? "" : table.schema();
     }
-
 }

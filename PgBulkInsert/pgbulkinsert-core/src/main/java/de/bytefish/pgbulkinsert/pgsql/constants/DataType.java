@@ -59,5 +59,4 @@ public enum DataType {
     Int8Range,
     NumRange,
     DateRange
-
 }
