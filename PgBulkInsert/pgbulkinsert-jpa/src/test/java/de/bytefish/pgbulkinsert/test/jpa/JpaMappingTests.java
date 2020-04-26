@@ -48,6 +48,10 @@ public class JpaMappingTests extends TransactionalTestBase {
         @Column(name = "enum_smallint_field")
         private SampleEntityTypeEnum typeOrdinalField;
 
+        @Enumerated(value = EnumType.ORDINAL)
+        @Column(name = "enum_smallint_field_as_integer")
+        private SampleEntityTypeEnum typeOrdinalFieldAsInteger;
+
         public Long getId() {
             return id;
         }
@@ -86,6 +90,14 @@ public class JpaMappingTests extends TransactionalTestBase {
 
         public void setTypeOrdinalField(SampleEntityTypeEnum typeOrdinalField) {
             this.typeOrdinalField = typeOrdinalField;
+        }
+
+        public SampleEntityTypeEnum getTypeOrdinalFieldAsInteger() {
+            return typeOrdinalFieldAsInteger;
+        }
+
+        public void setTypeOrdinalFieldAsInteger(SampleEntityTypeEnum typeOrdinalFieldAsInteger) {
+            this.typeOrdinalFieldAsInteger = typeOrdinalFieldAsInteger;
         }
     }
 
@@ -152,6 +164,37 @@ public class JpaMappingTests extends TransactionalTestBase {
         Assert.assertEquals(true, didThrow);
     }
 
+
+    @Test
+    public void customEnumTypeMappingTest() throws SQLException {
+
+        SampleEntity s = new SampleEntity();
+
+        s.setTypeOrdinalFieldAsInteger(SampleEntityTypeEnum.INTEGER);
+
+        Map<String, DataType> postgresColumnMapping = new HashMap<>();
+
+        postgresColumnMapping.put("enum_smallint_field_as_integer", DataType.Int4);
+
+        // Create the JpaMapping:
+        JpaMapping<SampleEntity> mapping = new JpaMapping<>(SampleEntity.class, postgresColumnMapping);
+
+        // Create the Bulk Inserter:
+        PgBulkInsert<SampleEntity> bulkInsert = new PgBulkInsert<>(mapping);
+
+        PGConnection conn = PostgreSqlUtils.getPGConnection(connection);
+
+        bulkInsert.saveAll(conn, Arrays.asList(s));
+
+        ResultSet rs = getAll();
+
+        while (rs.next()) {
+            Integer v1 = rs.getInt("enum_smallint_field_as_integer");
+
+            Assert.assertEquals(1, v1.intValue());
+        }
+    }
+
     @Test
     public void bulkImportSampleEntities() throws SQLException {
         // Create a large list of People:
@@ -192,7 +235,8 @@ public class JpaMappingTests extends TransactionalTestBase {
                 "                int_field int4,\n" +
                 "                text_field text,\n" +
                 "                enum_string_field text,\n" +
-                "                enum_smallint_field smallint\n" +
+                "                enum_smallint_field smallint,\n" +
+                "                enum_smallint_field_as_integer int4\n" +
                 "            );";
 
         Statement statement = connection.createStatement();
