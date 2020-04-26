@@ -21,6 +21,9 @@ import java.util.function.Function;
 
 public class JpaMapping<TEntity> extends AbstractMapping<TEntity> {
 
+    private final Class<TEntity> entityClass;
+    private final Map<String, DataType> postgresColumnMapping;
+
     public JpaMapping(Class<TEntity> entityClass) {
         this(entityClass, new HashMap<>());
     }
@@ -41,7 +44,18 @@ public class JpaMapping<TEntity> extends AbstractMapping<TEntity> {
             throw new IllegalArgumentException("postgresColumnType");
         }
 
+        this.entityClass = entityClass;
+        this.postgresColumnMapping = postgresColumnType;
+
         mapFields(entityClass, postgresColumnType);
+    }
+
+    public Class<TEntity> getEntityClass() {
+        return entityClass;
+    }
+
+    public Map<String, DataType> getPostgresColumnMapping() {
+        return postgresColumnMapping;
     }
 
     private void mapFields(Class<TEntity> entityClass, Map<String, DataType> postgresColumnMapping) {
