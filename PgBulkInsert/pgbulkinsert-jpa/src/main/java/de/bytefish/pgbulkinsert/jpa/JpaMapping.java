@@ -5,7 +5,6 @@ package de.bytefish.pgbulkinsert.jpa;
 
 import de.bytefish.pgbulkinsert.mapping.AbstractMapping;
 import de.bytefish.pgbulkinsert.pgsql.constants.DataType;
-import de.bytefish.pgbulkinsert.pgsql.handlers.IValueHandlerProvider;
 
 import javax.persistence.Column;
 import javax.persistence.EnumType;
