@@ -4,6 +4,7 @@
 package de.bytefish.pgbulkinsert.jpa;
 
 import de.bytefish.pgbulkinsert.mapping.AbstractMapping;
+import de.bytefish.pgbulkinsert.pgsql.constants.DataType;
 import de.bytefish.pgbulkinsert.pgsql.handlers.IValueHandlerProvider;
 
 import javax.persistence.Column;
@@ -14,27 +15,43 @@ import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Function;
 
 public class JpaMapping<TEntity> extends AbstractMapping<TEntity> {
 
     public JpaMapping(Class<TEntity> entityClass) {
-        super(getSchemaName(entityClass), getTableName(entityClass));
-
-        mapFields(entityClass);
+        this(entityClass, new HashMap<>());
     }
 
-    private void mapFields(Class<TEntity> entityClass) {
+    public JpaMapping(Class<TEntity> entityClass, Map<String, DataType> postgresColumnType) {
+
+        super(getSchemaName(entityClass), getTableName(entityClass));
+
+        if(entityClass == null) {
+            throw new IllegalArgumentException("entityClass");
+        }
+
+        if(postgresColumnType == null) {
+            throw new IllegalArgumentException("postgresColumnType");
+        }
+
+        mapFields(entityClass, postgresColumnType);
+    }
+
+    private void mapFields(Class<TEntity> entityClass, Map<String, DataType> postgresColumnMapping) {
         try {
-            internalMapFields(entityClass);
+            internalMapFields(entityClass, postgresColumnMapping);
         } catch(Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    private void internalMapFields(Class<TEntity> entityClass) throws Exception {
+    private void internalMapFields(Class<TEntity> entityClass, Map<String, DataType> postgresColumnMapping) throws Exception {
 
         for (Field f : entityClass.getDeclaredFields()) {
+
             // Is this Field an Enum?
             Enumerated enumerated = f.getAnnotation(Enumerated.class);
 
@@ -50,29 +67,60 @@ public class JpaMapping<TEntity> extends AbstractMapping<TEntity> {
                 Method fieldGetter = pd.getReadMethod();
 
                 if(enumerated != null) {
-                    mapEnum(columnName, enumerated, fieldGetter);
+                    mapEnum(columnName, postgresColumnMapping, enumerated, fieldGetter);
                 } else {
-                    mapField(columnName, fieldType, fieldGetter);
+                    mapField(columnName, postgresColumnMapping, fieldType, fieldGetter);
                 }
             }
         }
     }
 
-    private void mapEnum(String columnName, Enumerated enumerated, Method fieldGetter) {
+    private void mapEnum(String columnName, Map<String, DataType> postgresColumnMapping, Enumerated enumerated, Method fieldGetter) {
         if(enumerated.value() == EnumType.ORDINAL) {
-            mapShort(columnName, new Function<TEntity, Number>() {
-                @Override
-                public Short apply(TEntity tEntity) {
-                    Enum<?> enumeration =  (Enum<?>) internalInvoke(fieldGetter, tEntity);
+            // If we know which type to map this ordinal to, let's use it:
+            if(postgresColumnMapping.containsKey(columnName)) {
+                final DataType dataType = postgresColumnMapping.get(columnName);
 
-                    return (short) enumeration.ordinal();
-                }
-            });
-        } else if(enumerated.value() == EnumType.STRING) {
+                map(columnName, dataType,  tEntity -> {
+                    Enum<?> enumeration = (Enum<?>) internalInvoke(fieldGetter, tEntity);
+
+                    if(enumeration == null) {
+                        return null;
+                    }
+
+                    return enumeration.ordinal();
+                });
+            }
+            // ... or we make a best guess and use a short:
+            else {
+                // Use the Default Short:
+                mapShort(columnName, new Function<TEntity, Number>() {
+                    @Override
+                    public Short apply(TEntity tEntity) {
+                        Enum<?> enumeration = (Enum<?>) internalInvoke(fieldGetter, tEntity);
+
+                        // Do we need to use a Default-value, if null?
+                        if(enumeration == null) {
+                            return null;
+                        }
+
+                        return (short) enumeration.ordinal();
+                    }
+                });
+            }
+        }
+        // The Enumerated defined to store the Enum as a String:
+        else if(enumerated.value() == EnumType.STRING) {
             mapText(columnName, new Function<TEntity, String>() {
                 @Override
                 public String apply(TEntity tEntity) {
+
+                    // Do we need to use a Default-value, if null?
                     Enum<?> enumeration =  (Enum<?>) internalInvoke(fieldGetter, tEntity);
+
+                    if(enumeration == null) {
+                        return null;
+                    }
 
                     return enumeration.name();
                 }
@@ -80,11 +128,17 @@ public class JpaMapping<TEntity> extends AbstractMapping<TEntity> {
         }
     }
 
-    private void mapField(String columnName, Type fieldType, Method fieldGetter) {
+    private void mapField(String columnName, Map<String, DataType> postgresColumnMapping, Type fieldType, Method fieldGetter) {
 
-        if(fieldType.equals(String.class)) {
+        // If we know which Type to map to, let's use it:
+        if(postgresColumnMapping.containsKey(columnName)) {
+            final DataType dataType = postgresColumnMapping.get(columnName);
+
+            map(columnName, dataType,  tEntity -> internalInvoke(fieldGetter, tEntity));
+        }
+        // ... or we make a best guess based on the reflected type:
+        else if(fieldType.equals(String.class)) {
             mapText(columnName, tEntity -> (String) internalInvoke(fieldGetter, tEntity));
-
         } else  if(fieldType.equals(boolean.class) || fieldType.equals(Boolean.class)) {
             mapBoolean(columnName, new Function<TEntity, Boolean>() {
                 @Override

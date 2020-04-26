@@ -5,6 +5,7 @@ package de.bytefish.pgbulkinsert.test.jpa;
 
 import de.bytefish.pgbulkinsert.PgBulkInsert;
 import de.bytefish.pgbulkinsert.jpa.JpaMapping;
+import de.bytefish.pgbulkinsert.pgsql.constants.DataType;
 import de.bytefish.pgbulkinsert.util.PostgreSqlUtils;
 import de.bytefish.pgbulkinsert.utils.TransactionalTestBase;
 import org.junit.Assert;
@@ -16,9 +17,7 @@ import javax.persistence.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class JpaMappingTests extends TransactionalTestBase {
 
@@ -122,6 +121,35 @@ public class JpaMappingTests extends TransactionalTestBase {
             Assert.assertEquals("STRING", v0);
             Assert.assertEquals(1, v1.intValue());
         }
+    }
+
+    @Test
+    public void writeFailsWithWrongTypeMappingTest() throws SQLException {
+
+        SampleEntity s = new SampleEntity();
+
+        s.setTypeOrdinalField(SampleEntityTypeEnum.INTEGER);
+
+        Map<String, DataType> postgresColumnMapping = new HashMap<String, DataType>();
+
+        postgresColumnMapping.put("enum_smallint_field", DataType.Text);
+
+        // Create the JpaMapping:
+        JpaMapping<SampleEntity> mapping = new JpaMapping<>(SampleEntity.class, postgresColumnMapping);
+
+        // Create the Bulk Inserter:
+        PgBulkInsert<SampleEntity> bulkInsert = new PgBulkInsert<>(mapping);
+
+        PGConnection conn = PostgreSqlUtils.getPGConnection(connection);
+
+        boolean didThrow = false;
+        try {
+            bulkInsert.saveAll(conn, Arrays.asList(s));
+        } catch(Exception e) {
+            didThrow = true;
+        }
+
+        Assert.assertEquals(true, didThrow);
     }
 
     @Test

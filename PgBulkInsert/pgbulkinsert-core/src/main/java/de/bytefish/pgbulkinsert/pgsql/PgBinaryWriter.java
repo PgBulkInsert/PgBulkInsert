@@ -216,7 +216,7 @@ public class PgBinaryWriter implements AutoCloseable {
 
             buffer.flush();
             buffer.close();
-		} catch (IOException e) {
+		} catch (Exception e) {
 			Throwable t = e.getCause();
 			if (null != t) {
 				throw new BinaryWriteFailedException(t);

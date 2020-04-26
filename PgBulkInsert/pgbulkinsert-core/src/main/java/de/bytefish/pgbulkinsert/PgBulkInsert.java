@@ -14,6 +14,7 @@ import org.postgresql.copy.PGCopyOutputStream;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Objects;
+import java.util.function.BiConsumer;
 import java.util.stream.Stream;
 
 public class PgBulkInsert<TEntity> implements IPgBulkInsert<TEntity> {
