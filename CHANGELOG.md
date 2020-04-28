@@ -2,7 +2,7 @@
 
 ## 5.0.0 ##
 
-A lot of thanks to the great efforts of user [@cheffe](https://github.com/cheffe) in this release.
+A lot of thanks to the great efforts of user [@cheffe](https://github.com/cheffe) in this release!
 
 This release sees some major and breaking changes:
 
@@ -12,8 +12,27 @@ This release sees some major and breaking changes:
     * Moving the ``BulkProcessor`` to module ``pgbulkinsert-bulkprocessor``
     * Creating a new module ``pgbulkinsert-jpa`` to better integrate with existing JPA mappings.
 * Added a new mapping ``JpaMapping`` to module ``pgbulkinsert-jpa``, which provides a better JPA integration:
-* Documentation
+* Made it easier to run the tests for the projects by introducing a properties file.
 
+From now on the ``groupId`` is ``de.bytefish.pgbulkinsert`` and all dependencies can be installed from Central Maven Repositories as:
+
+```xml
+<dependency>
+	<groupId>de.bytefish.pgbulkinsert</groupId>
+	<artifactId>pgbulkinsert-core</artifactId>
+	<version>5.0.0</version>
+</dependency>
+<dependency>
+	<groupId>de.bytefish.pgbulkinsert</groupId>
+	<artifactId>pgbulkinsert-rowwriter</artifactId>
+	<version>5.0.0</version>
+</dependency>
+<dependency>
+	<groupId>de.bytefish.pgbulkinsert</groupId>
+	<artifactId>pgbulkinsert-jpa</artifactId>
+	<version>5.0.0</version>
+</dependency>
+```
 
 ## 4.1 ##
 
