@@ -1,8 +1,8 @@
 package de.bytefish.pgbulkinsert.test.row;
 
 import de.bytefish.pgbulkinsert.row.SimpleRowWriter;
+import de.bytefish.pgbulkinsert.test.utils.TransactionalTestBase;
 import de.bytefish.pgbulkinsert.util.PostgreSqlUtils;
-import de.bytefish.pgbulkinsert.utils.TransactionalTestBase;
 import org.junit.Assert;
 import org.junit.Test;
 import org.postgresql.PGConnection;

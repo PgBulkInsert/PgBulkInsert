@@ -5,12 +5,24 @@ package de.bytefish.pgbulkinsert.test.pgsql.handlers;
 
 import de.bytefish.pgbulkinsert.PgBulkInsert;
 import de.bytefish.pgbulkinsert.mapping.AbstractMapping;
-import de.bytefish.pgbulkinsert.pgsql.model.geometric.*;
+import de.bytefish.pgbulkinsert.pgsql.model.geometric.Box;
+import de.bytefish.pgbulkinsert.pgsql.model.geometric.Circle;
+import de.bytefish.pgbulkinsert.pgsql.model.geometric.Line;
+import de.bytefish.pgbulkinsert.pgsql.model.geometric.LineSegment;
+import de.bytefish.pgbulkinsert.pgsql.model.geometric.Path;
+import de.bytefish.pgbulkinsert.pgsql.model.geometric.Point;
+import de.bytefish.pgbulkinsert.pgsql.model.geometric.Polygon;
+import de.bytefish.pgbulkinsert.test.utils.TransactionalTestBase;
 import de.bytefish.pgbulkinsert.util.PostgreSqlUtils;
-import de.bytefish.pgbulkinsert.utils.TransactionalTestBase;
 import org.junit.Assert;
 import org.junit.Test;
-import org.postgresql.geometric.*;
+import org.postgresql.geometric.PGbox;
+import org.postgresql.geometric.PGcircle;
+import org.postgresql.geometric.PGline;
+import org.postgresql.geometric.PGlseg;
+import org.postgresql.geometric.PGpath;
+import org.postgresql.geometric.PGpoint;
+import org.postgresql.geometric.PGpolygon;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

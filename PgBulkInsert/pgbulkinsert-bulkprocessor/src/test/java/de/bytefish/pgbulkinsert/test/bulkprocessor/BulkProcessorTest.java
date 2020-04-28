@@ -6,11 +6,11 @@ package de.bytefish.pgbulkinsert.test.bulkprocessor;
 import de.bytefish.pgbulkinsert.IPgBulkInsert;
 import de.bytefish.pgbulkinsert.PgBulkInsert;
 import de.bytefish.pgbulkinsert.bulkprocessor.BulkProcessor;
+import de.bytefish.pgbulkinsert.bulkprocessor.handler.IBulkWriteHandler;
 import de.bytefish.pgbulkinsert.test.mapping.PersonMapping;
 import de.bytefish.pgbulkinsert.test.model.Person;
-import de.bytefish.pgbulkinsert.bulkprocessor.handler.IBulkWriteHandler;
+import de.bytefish.pgbulkinsert.test.utils.TransactionalTestBase;
 import de.bytefish.pgbulkinsert.util.PostgreSqlUtils;
-import de.bytefish.pgbulkinsert.utils.TransactionalTestBase;
 import org.junit.Assert;
 import org.junit.Test;
 
