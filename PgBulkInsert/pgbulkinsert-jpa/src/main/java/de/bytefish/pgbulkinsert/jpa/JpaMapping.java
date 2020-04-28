@@ -10,13 +10,21 @@ import javax.persistence.Column;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Table;
-import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
+
+import static org.reflections.ReflectionUtils.getAllFields;
+import static org.reflections.ReflectionUtils.getAllMethods;
+import static org.reflections.ReflectionUtils.withAnnotation;
+import static org.reflections.ReflectionUtils.withModifier;
+import static org.reflections.ReflectionUtils.withParametersCount;
+import static org.reflections.ReflectionUtils.withPrefix;
 
 public class JpaMapping<TEntity> extends AbstractMapping<TEntity> {
 
@@ -67,29 +75,39 @@ public class JpaMapping<TEntity> extends AbstractMapping<TEntity> {
 
     private void internalMapFields(Class<TEntity> entityClass, Map<String, DataType> postgresColumnMapping) throws Exception {
 
-        for (Field f : entityClass.getDeclaredFields()) {
+        Set<Method> getters = getAllMethods(entityClass,
+            withModifier(Modifier.PUBLIC), withPrefix("get"), withParametersCount(0));
+        getters.addAll(
+            getAllMethods(entityClass,
+                withModifier(Modifier.PUBLIC), withPrefix("is"), withParametersCount(0)));
 
-            // Is this Field an Enum?
-            Enumerated enumerated = f.getAnnotation(Enumerated.class);
+        for (Field f : getAllFields(entityClass, withAnnotation(Column.class))) {
 
             // Get the Column to match in Postgres:
             Column column = f.getAnnotation(Column.class);
+            // resolve Type and Name:
+            String columnName = column.name();
+            Type fieldType = f.getType();
 
-            if(column != null) {
-                // Access the Property to resolve Type and Name:
-                PropertyDescriptor pd =  new PropertyDescriptor(f.getName(), entityClass);
+            Method fieldGetter = findGetter(getters, f.getName());
 
-                String columnName = column.name();
-                Type fieldType = f.getType();
-                Method fieldGetter = pd.getReadMethod();
-
-                if(enumerated != null) {
-                    mapEnum(columnName, postgresColumnMapping, enumerated, fieldGetter);
-                } else {
-                    mapField(columnName, postgresColumnMapping, fieldType, fieldGetter);
-                }
+            // Is this Field an Enum?
+            Enumerated enumerated = f.getAnnotation(Enumerated.class);
+            if(enumerated != null) {
+                mapEnum(columnName, postgresColumnMapping, enumerated, fieldGetter);
+            } else {
+                mapField(columnName, postgresColumnMapping, fieldType, fieldGetter);
             }
         }
+    }
+
+    private Method findGetter(Set<Method> getters, String name) {
+        for (Method fieldGetter : getters) {
+            if (fieldGetter.getName().toUpperCase().endsWith(name.toUpperCase())) {
+                return fieldGetter;
+            }
+        }
+        return null;
     }
 
     private void mapEnum(String columnName, Map<String, DataType> postgresColumnMapping, Enumerated enumerated, Method fieldGetter) {

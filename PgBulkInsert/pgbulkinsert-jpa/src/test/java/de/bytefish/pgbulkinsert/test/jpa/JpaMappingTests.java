@@ -6,18 +6,26 @@ package de.bytefish.pgbulkinsert.test.jpa;
 import de.bytefish.pgbulkinsert.PgBulkInsert;
 import de.bytefish.pgbulkinsert.jpa.JpaMapping;
 import de.bytefish.pgbulkinsert.pgsql.constants.DataType;
+import de.bytefish.pgbulkinsert.test.utils.TransactionalTestBase;
 import de.bytefish.pgbulkinsert.util.PostgreSqlUtils;
-import de.bytefish.pgbulkinsert.utils.TransactionalTestBase;
 import org.junit.Assert;
 import org.junit.Test;
 import org.postgresql.PGConnection;
-import org.postgresql.util.PGobject;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class JpaMappingTests extends TransactionalTestBase {
 
@@ -39,6 +47,9 @@ public class JpaMappingTests extends TransactionalTestBase {
 
         @Column(name = "text_field")
         private String textField;
+
+        @Column(name = "read_only_text_field")
+        private String readOnlyTextField;
 
         @Enumerated(value = EnumType.STRING)
         @Column(name = "enum_string_field")
@@ -74,6 +85,10 @@ public class JpaMappingTests extends TransactionalTestBase {
 
         public void setTextField(String textField) {
             this.textField = textField;
+        }
+
+        public String getReadOnlyTextField() {
+            return readOnlyTextField;
         }
 
         public SampleEntityTypeEnum getTypeStringField() {
@@ -234,6 +249,7 @@ public class JpaMappingTests extends TransactionalTestBase {
                 "                id int8,\n" +
                 "                int_field int4,\n" +
                 "                text_field text,\n" +
+                "                read_only_text_field text,\n" +
                 "                enum_string_field text,\n" +
                 "                enum_smallint_field smallint,\n" +
                 "                enum_smallint_field_as_integer int4\n" +
