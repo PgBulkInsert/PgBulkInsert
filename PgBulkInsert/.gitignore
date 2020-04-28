@@ -1,0 +1,6 @@
+.idea/
+target
+*.iml
+*.asc
+stderr.log
+stdout.log

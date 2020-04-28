@@ -1,5 +1,39 @@
 # CHANGELOG #
 
+## 5.0.0 ##
+
+A lot of thanks to the great efforts of user [@cheffe](https://github.com/cheffe) in this release!
+
+This release sees some major and breaking changes:
+
+* Introducing Semantic Versioning with ``major.minor.bugfix`` starting with 5.0.0.
+* Split the project into multiple modules to provide a stable core and build modules around it:
+    * Moving the ``SimpleRowWriter`` to module ``pgbulkinsert-rowwriter``
+    * Moving the ``BulkProcessor`` to module ``pgbulkinsert-bulkprocessor``
+    * Creating a new module ``pgbulkinsert-jpa`` to better integrate with existing JPA mappings.
+* Added a new mapping ``JpaMapping`` to module ``pgbulkinsert-jpa``, which provides a better JPA integration:
+* Made it easier to run the tests for the projects by introducing a properties file.
+
+From now on the ``groupId`` is ``de.bytefish.pgbulkinsert`` and all dependencies can be installed from Central Maven Repositories as:
+
+```xml
+<dependency>
+	<groupId>de.bytefish.pgbulkinsert</groupId>
+	<artifactId>pgbulkinsert-core</artifactId>
+	<version>5.0.0</version>
+</dependency>
+<dependency>
+	<groupId>de.bytefish.pgbulkinsert</groupId>
+	<artifactId>pgbulkinsert-rowwriter</artifactId>
+	<version>5.0.0</version>
+</dependency>
+<dependency>
+	<groupId>de.bytefish.pgbulkinsert</groupId>
+	<artifactId>pgbulkinsert-jpa</artifactId>
+	<version>5.0.0</version>
+</dependency>
+```
+
 ## 4.1 ##
 
 * Simplified Quoting identifiers for the ``SimpleRowWriter``
