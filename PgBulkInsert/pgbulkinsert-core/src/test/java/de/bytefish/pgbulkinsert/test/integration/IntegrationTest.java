@@ -6,8 +6,8 @@ package de.bytefish.pgbulkinsert.test.integration;
 import de.bytefish.pgbulkinsert.PgBulkInsert;
 import de.bytefish.pgbulkinsert.test.mapping.PersonMapping;
 import de.bytefish.pgbulkinsert.test.model.Person;
+import de.bytefish.pgbulkinsert.test.utils.TransactionalTestBase;
 import de.bytefish.pgbulkinsert.util.PostgreSqlUtils;
-import de.bytefish.pgbulkinsert.utils.TransactionalTestBase;
 import org.junit.Assert;
 import org.junit.Test;
 

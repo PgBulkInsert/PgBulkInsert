@@ -3,6 +3,13 @@
 
 package de.bytefish.pgbulkinsert.test.pgsql.handlers;
 
+import de.bytefish.pgbulkinsert.PgBulkInsert;
+import de.bytefish.pgbulkinsert.mapping.AbstractMapping;
+import de.bytefish.pgbulkinsert.test.utils.TransactionalTestBase;
+import de.bytefish.pgbulkinsert.util.PostgreSqlUtils;
+import org.junit.Assert;
+import org.junit.Test;
+
 import java.math.BigDecimal;
 import java.net.UnknownHostException;
 import java.sql.Array;
@@ -13,14 +20,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
-
-import org.junit.Assert;
-import org.junit.Test;
-
-import de.bytefish.pgbulkinsert.PgBulkInsert;
-import de.bytefish.pgbulkinsert.mapping.AbstractMapping;
-import de.bytefish.pgbulkinsert.util.PostgreSqlUtils;
-import de.bytefish.pgbulkinsert.utils.TransactionalTestBase;
 
 public class NumericArrayTypesTest extends TransactionalTestBase {
 
