@@ -83,9 +83,11 @@ You can add the following dependencies to your pom.xml to include [PgBulkInsert]
 
 ## Usage ##
 
-You can use [PgBulkInsert] API in two different ways. The first one is to use the ``SimpleRowWriter``, when you don't have 
-an explicit Java POJO, that matches a Table. The second way is to use an ``AbstractMapping<TEntityType>`` to define a mapping 
-between your Java POJO and a PostgreSQL table.
+You can use [PgBulkInsert] API in various ways.
+
+The first one is to use the ``SimpleRowWriter`` when you don't have an explicit Java POJO, that matches a Table. The second way is to use an 
+``AbstractMapping<TEntityType>`` to define a mapping between a Java POJO and a PostgreSQL table. The third way is to use the ``JpaMapping`` 
+module, that allows you to reuse existing JPA mappings.
 
 ## Using the SimpleRowWriter ##
 
@@ -485,6 +487,48 @@ public class JpaMappingTests extends TransactionalTestBase {
     }
 }
 ```
+
+### Define the Postgres Types ###
+
+The ``JpaMapping`` makes a guess, what Postgres type you are going to use. But it could be wrong of course! Imagine you want 
+to map an ``Enumerated`` to a database, but your table uses an ``int4`` (Integer) instead of a ``int2`` (Short). This problem 
+is hard to solve with Reflection or additional JPA annotations. 
+
+So the ``JpaMapping`` allows you to pass a map between column name and Postgres type into it:
+
+```java
+@Test
+public void customEnumTypeMappingTest() throws SQLException {
+
+    // Create the Map:        
+    Map<String, DataType> postgresColumnMapping = new HashMap<>();
+
+    postgresColumnMapping.put("enum_smallint_field_as_integer", DataType.Int4);
+
+    // Create the JpaMapping and pass the map:
+    JpaMapping<SampleEntity> mapping = new JpaMapping<>(SampleEntity.class, postgresColumnMapping);
+    
+    // ...
+    
+}
+```
+
+## Running the Tests ##
+
+Running the Tests requires a PostgreSQL database. 
+
+You have to configure the test database connection in the module ``pgbulkinsert-core`` and file ``db.properties``:
+
+```ini
+db.url=jdbc:postgresql://127.0.0.1:5432/sampledb
+db.user=philipp
+db.password=test_pwd
+db.schema=public
+```
+
+The tests are transactional, that means any test data will be rolled back once a test finishes. But it probably makes 
+sense to set up a separate ``db.schema`` for your tests, if you want to avoid polluting the ``public`` schema or have 
+different permissions.
 
 ## License ##
 

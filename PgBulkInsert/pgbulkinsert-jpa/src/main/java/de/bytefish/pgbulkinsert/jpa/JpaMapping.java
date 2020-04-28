@@ -75,21 +75,23 @@ public class JpaMapping<TEntity> extends AbstractMapping<TEntity> {
 
     private void internalMapFields(Class<TEntity> entityClass, Map<String, DataType> postgresColumnMapping) throws Exception {
 
-        Set<Method> getters = getAllMethods(entityClass,
-            withModifier(Modifier.PUBLIC), withPrefix("get"), withParametersCount(0));
-        getters.addAll(
-            getAllMethods(entityClass,
-                withModifier(Modifier.PUBLIC), withPrefix("is"), withParametersCount(0)));
+        Set<Method> getters = getAllMethods(entityClass, withModifier(Modifier.PUBLIC), withPrefix("get"), withParametersCount(0));
+
+        getters.addAll(getAllMethods(entityClass, withModifier(Modifier.PUBLIC), withPrefix("is"), withParametersCount(0)));
 
         for (Field f : getAllFields(entityClass, withAnnotation(Column.class))) {
 
             // Get the Column to match in Postgres:
             Column column = f.getAnnotation(Column.class);
-            // resolve Type and Name:
+
             String columnName = column.name();
             Type fieldType = f.getType();
-
             Method fieldGetter = findGetter(getters, f.getName());
+
+            // TODO What should we do, if the Getter is null? Let it crash or just go to the next one?
+            if(fieldGetter == null) {
+                continue;
+            }
 
             // Is this Field an Enum?
             Enumerated enumerated = f.getAnnotation(Enumerated.class);

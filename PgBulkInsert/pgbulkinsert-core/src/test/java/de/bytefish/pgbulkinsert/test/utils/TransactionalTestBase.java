@@ -16,7 +16,7 @@ public abstract class TransactionalTestBase {
 
     protected Connection connection;
 
-    protected final String schema = "sample";
+    protected String schema;
 
     @Before
     public void setUp() throws Exception {
@@ -26,6 +26,8 @@ public abstract class TransactionalTestBase {
                 properties.getProperty("db.url"),
                 properties.getProperty("db.user"),
                 properties.getProperty("db.password"));
+
+        schema = properties.getProperty("db.schema");
 
         onSetUpBeforeTransaction();
         connection.setAutoCommit(false); // Start the Transaction:

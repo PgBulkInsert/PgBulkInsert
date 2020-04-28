@@ -1,5 +1,20 @@
 # CHANGELOG #
 
+## 5.0.0 ##
+
+A lot of thanks to the great efforts of user [@cheffe](https://github.com/cheffe) in this release.
+
+This release sees some major and breaking changes:
+
+* Introducing Semantic Versioning with ``major.minor.bugfix`` starting with 5.0.0.
+* Split the project into multiple modules to provide a stable core and build modules around it:
+    * Moving the ``SimpleRowWriter`` to module ``pgbulkinsert-rowwriter``
+    * Moving the ``BulkProcessor`` to module ``pgbulkinsert-bulkprocessor``
+    * Creating a new module ``pgbulkinsert-jpa`` to better integrate with existing JPA mappings.
+* Added a new mapping ``JpaMapping`` to module ``pgbulkinsert-jpa``, which provides a better JPA integration:
+* Documentation
+
+
 ## 4.1 ##
 
 * Simplified Quoting identifiers for the ``SimpleRowWriter``
