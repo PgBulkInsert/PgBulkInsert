@@ -83,7 +83,7 @@ You can add the following dependencies to your pom.xml to include [PgBulkInsert]
 
 ## Usage ##
 
-You can use [PgBulkInsert] API in various ways.
+You can use the [PgBulkInsert] API in various ways.
 
 The first one is to use the ``SimpleRowWriter`` when you don't have an explicit Java POJO, that matches a Table. The second way is to use an 
 ``AbstractMapping<TEntityType>`` to define a mapping between a Java POJO and a PostgreSQL table. The third way is to use the ``JpaMapping`` 
