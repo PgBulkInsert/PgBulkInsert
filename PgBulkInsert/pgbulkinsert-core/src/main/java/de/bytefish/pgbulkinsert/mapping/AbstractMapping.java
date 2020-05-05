@@ -31,13 +31,13 @@ import java.util.stream.Collectors;
 
 public abstract class AbstractMapping<TEntity> {
 
-    private boolean usePostgresQuoting;
+    protected boolean usePostgresQuoting;
 
-    private final IValueHandlerProvider provider;
+    protected final IValueHandlerProvider provider;
 
-    private final TableDefinition table;
+    protected final TableDefinition table;
 
-    private final List<ColumnDefinition<TEntity>> columns;
+    protected final List<ColumnDefinition<TEntity>> columns;
 
     protected AbstractMapping(String schemaName, String tableName) {
         this(new ValueHandlerProvider(), schemaName, tableName, false);

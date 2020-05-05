@@ -35,7 +35,7 @@ public class JpaMappingTests extends TransactionalTestBase {
     }
 
     @Entity
-    @Table(name = "unit_test", schema = "public")
+    @Table(name = "unit_test", schema = "sample")
     public class SampleEntity {
 
         @Id
@@ -116,7 +116,6 @@ public class JpaMappingTests extends TransactionalTestBase {
         }
     }
 
-
     @Override
     protected void onSetUpInTransaction() throws Exception {
         createTable();
@@ -157,7 +156,7 @@ public class JpaMappingTests extends TransactionalTestBase {
 
         s.setTypeOrdinalField(SampleEntityTypeEnum.INTEGER);
 
-        Map<String, DataType> postgresColumnMapping = new HashMap<String, DataType>();
+        Map<String, DataType> postgresColumnMapping = new HashMap<>();
 
         postgresColumnMapping.put("enum_smallint_field", DataType.Text);
 
@@ -244,7 +243,7 @@ public class JpaMappingTests extends TransactionalTestBase {
 
     private boolean createTable() throws SQLException {
 
-        String sqlStatement = String.format("CREATE TABLE %s.unit_test\n", schema) +
+        String sqlStatement = "CREATE TABLE sample.unit_test" +
                 "            (\n" +
                 "                id int8,\n" +
                 "                int_field int4,\n" +
@@ -272,7 +271,7 @@ public class JpaMappingTests extends TransactionalTestBase {
 
         Statement s = connection.createStatement();
 
-        ResultSet r = s.executeQuery(String.format("SELECT COUNT(*) AS rowcount FROM %s.unit_test", schema));
+        ResultSet r = s.executeQuery(String.format("SELECT COUNT(*) AS rowcount FROM sample.unit_test"));
         r.next();
         int count = r.getInt("rowcount");
         r.close();
