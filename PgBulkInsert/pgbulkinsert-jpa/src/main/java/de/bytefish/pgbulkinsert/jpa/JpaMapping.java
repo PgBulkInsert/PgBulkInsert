@@ -3,21 +3,22 @@
 
 package de.bytefish.pgbulkinsert.jpa;
 
+import de.bytefish.pgbulkinsert.jpa.annotations.PostgresDataType;
 import de.bytefish.pgbulkinsert.jpa.mappings.IPostgresTypeMapping;
 import de.bytefish.pgbulkinsert.jpa.mappings.PostgresTypeMapping;
 import de.bytefish.pgbulkinsert.mapping.AbstractMapping;
 import de.bytefish.pgbulkinsert.pgsql.constants.DataType;
+import org.reflections.ReflectionUtils;
 
 import javax.persistence.Column;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Table;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -65,6 +66,7 @@ public class JpaMapping<TEntity> extends AbstractMapping<TEntity> {
         this.typeMapping = typeMapping;
         this.columnMapping = columnMapping;
 
+        processDataTypeAnnotations(columnMapping);
         mapFields(entityClass, typeMapping, columnMapping);
     }
 
@@ -74,6 +76,29 @@ public class JpaMapping<TEntity> extends AbstractMapping<TEntity> {
 
     public IPostgresTypeMapping getTypeMapping() {
         return typeMapping;
+    }
+
+    private void processDataTypeAnnotations(Map<String, DataType> columnMapping) {
+        Set<Field> fields = getAllFields(entityClass);
+
+        for(Field field : fields) {
+
+            Set<Annotation> annotations = ReflectionUtils.getAnnotations(field);
+
+            if (annotations == null) {
+                return;
+            }
+
+            for (Annotation annotation : annotations) {
+
+                if (annotation instanceof PostgresDataType) {
+                    PostgresDataType postgresDataType = (PostgresDataType) annotation;
+
+                    columnMapping.put(postgresDataType.columnName(), postgresDataType.dataType());
+                }
+
+            }
+        }
     }
 
     private void mapFields(Class<TEntity> entityClass, IPostgresTypeMapping typeMapping, Map<String, DataType> columnMapping) {
