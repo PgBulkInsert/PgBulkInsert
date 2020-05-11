@@ -3,7 +3,10 @@
 
 package de.bytefish.pgbulkinsert.pgsql.utils;
 
-import java.time.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 import java.util.concurrent.TimeUnit;
 
@@ -69,14 +72,6 @@ public class TimeStampUtils {
         long milliseconds = zdt.toInstant().toEpochMilli();
         // Turn into Seconds:
         return TimeUnit.MILLISECONDS.toSeconds(milliseconds);
-    }
-
-    public static long toMicroseconds(LocalTime localTime) {
-        // Extract the Time of the Day in Nanoseconds:
-        long timeInNanoseconds = localTime.toNanoOfDay();
-
-        // Convert the Nanoseconds to Microseconds:
-        return (timeInNanoseconds / 1000);
     }
 
     /**
