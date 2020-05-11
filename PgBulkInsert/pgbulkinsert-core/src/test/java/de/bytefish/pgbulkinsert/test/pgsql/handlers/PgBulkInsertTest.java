@@ -14,13 +14,10 @@ import java.math.BigDecimal;
 import java.net.Inet4Address;
 import java.net.Inet6Address;
 import java.net.UnknownHostException;
-import java.sql.Array;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.Timestamp;
+import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -32,6 +29,7 @@ public class PgBulkInsertTest extends TransactionalTestBase {
 
         public Integer col_integer;
         public LocalDate col_date;
+        public LocalTime col_time;
         public LocalDateTime col_datetime;
         public Float col_float;
         public Double col_double;
@@ -83,6 +81,10 @@ public class PgBulkInsertTest extends TransactionalTestBase {
 
         public LocalDate getCol_date() {
             return col_date;
+        }
+
+        public LocalTime getCol_time() {
+            return col_time;
         }
 
         public Inet4Address getCol_inet4Address() {
@@ -140,6 +142,7 @@ public class PgBulkInsertTest extends TransactionalTestBase {
             mapTimeStamp("col_timestamp", SampleEntity::get_col_datetime);
             mapLong("col_bigint", SampleEntity::get_col_long);
             mapDate("col_date", SampleEntity::getCol_date);
+            mapTime("col_time", SampleEntity::getCol_time);
             mapInet4Addr("col_inet4", SampleEntity::getCol_inet4Address);
             mapInet6Addr("col_inet6", SampleEntity::getCol_inet6Address);
             mapUUID("col_uuid", SampleEntity::get_col_uuid);
@@ -377,6 +380,31 @@ public class PgBulkInsertTest extends TransactionalTestBase {
             Timestamp v = rs.getTimestamp("col_date");
 
             Assert.assertEquals(LocalDateTime.of(2010, 1, 1, 0, 0, 0), v.toLocalDateTime());
+        }
+    }
+
+    @Test
+    public void saveAll_LocalTime_Test() throws SQLException {
+
+        // This list will be inserted.
+        List<SampleEntity> entities = new ArrayList<>();
+
+        // Create the Entity to insert:
+        SampleEntity entity = new SampleEntity();
+        entity.col_time = LocalTime.of(10, 10);
+
+        entities.add(entity);
+
+        PgBulkInsert<SampleEntity> pgBulkInsert = new PgBulkInsert<>(new SampleEntityMapping());
+
+        pgBulkInsert.saveAll(PostgreSqlUtils.getPGConnection(connection), entities.stream());
+
+        ResultSet rs = getAll();
+
+        while (rs.next()) {
+            Time v = rs.getTime("col_time");
+
+            Assert.assertEquals(LocalTime.of(10, 10), v.toLocalTime());
         }
     }
 
@@ -683,6 +711,7 @@ public class PgBulkInsertTest extends TransactionalTestBase {
                 "                col_inet6 inet,\n" +
                 "                col_macaddr macaddr,\n" +
                 "                col_date date,\n" +
+                "                col_time time,\n" +
                 "                col_interval interval,\n" +
                 "                col_boolean boolean,\n" +
                 "                col_text text,\n" +
