@@ -20,6 +20,7 @@ import java.net.Inet4Address;
 import java.net.Inet6Address;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.function.BiConsumer;
@@ -175,6 +176,10 @@ public abstract class AbstractMapping<TEntity> {
 
     protected void mapDate(String columnName, Function<TEntity, LocalDate> propertyGetter) {
         map(columnName, DataType.Date, propertyGetter);
+    }
+
+    protected void mapTime(String columnName, Function<TEntity, LocalTime> propertyGetter) {
+        map(columnName, DataType.Time, propertyGetter);
     }
 
     protected void mapTimeStamp(String columnName, Function<TEntity, LocalDateTime> propertyGetter) {
