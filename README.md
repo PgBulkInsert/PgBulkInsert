@@ -25,13 +25,13 @@ You can add the following dependencies to your pom.xml to include [PgBulkInsert]
 <dependency>
 	<groupId>de.bytefish.pgbulkinsert</groupId>
 	<artifactId>pgbulkinsert-core</artifactId>
-	<version>5.0.0</version>
+	<version>5.1.0</version>
 </dependency>
 
 <dependency>
 	<groupId>de.bytefish.pgbulkinsert</groupId>
 	<artifactId>pgbulkinsert-rowwriter</artifactId>
-	<version>5.0.0</version>
+	<version>5.1.0</version>
 </dependency>
 ```
 
@@ -350,7 +350,7 @@ add it as a dependency to your application:
 <dependency>
 	<groupId>de.bytefish.pgbulkinsert</groupId>
 	<artifactId>pgbulkinsert-jpa</artifactId>
-	<version>5.0.0</version>
+	<version>5.1.0</version>
 </dependency>
 ```
 
