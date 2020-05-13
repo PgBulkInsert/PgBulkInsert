@@ -280,7 +280,7 @@ public class RangeTypesTest extends TransactionalTestBase {
         while (rs.next()) {
             PGobject v0 = (PGobject) rs.getObject("col_tstzrange");
 
-            Assert.assertEquals("[\"2020-01-01 00:00:00+01\",\"2020-03-01 00:00:00+01\"]", v0.getValue());
+            Assert.assertEquals("[\"2020-01-01 00:00:00+00\",\"2020-03-01 00:00:00+00\"]", v0.getValue());
         }
     }
 
@@ -311,7 +311,7 @@ public class RangeTypesTest extends TransactionalTestBase {
         while (rs.next()) {
             PGobject v0 = (PGobject) rs.getObject("col_tstzrange");
 
-            Assert.assertEquals("[\"2020-01-01 00:00:00+01\",)", v0.getValue());
+            Assert.assertEquals("[\"2020-01-01 00:00:00+00\",)", v0.getValue());
         }
     }
 
@@ -342,7 +342,7 @@ public class RangeTypesTest extends TransactionalTestBase {
         while (rs.next()) {
             PGobject v0 = (PGobject) rs.getObject("col_tstzrange");
 
-            Assert.assertEquals("(,\"2020-01-01 00:00:00+01\"]", v0.getValue());
+            Assert.assertEquals("(,\"2020-01-01 00:00:00+00\"]", v0.getValue());
         }
     }
 
