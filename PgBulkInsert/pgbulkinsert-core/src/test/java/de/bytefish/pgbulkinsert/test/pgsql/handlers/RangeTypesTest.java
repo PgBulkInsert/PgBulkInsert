@@ -14,10 +14,7 @@ import org.postgresql.util.PGobject;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+import java.time.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -265,8 +262,8 @@ public class RangeTypesTest extends TransactionalTestBase {
         // Range to insert:
         RangeEntity entity0 = new RangeEntity();
 
-        ZonedDateTime lower = ZonedDateTime.of(2020, 1, 1, 0, 0, 0 ,0,  ZoneId.of("GMT"));
-        ZonedDateTime upper = ZonedDateTime.of(2020, 3, 1, 0, 0, 0 ,0,  ZoneId.of("GMT"));
+        ZonedDateTime lower = ZonedDateTime.of(2020, 1, 1, 0, 0, 0 ,0, ZoneOffset.UTC);
+        ZonedDateTime upper = ZonedDateTime.of(2020, 3, 1, 0, 0, 0 ,0, ZoneOffset.UTC);
 
         entity0.timeTzRange = new Range<>(lower, upper);
 
@@ -283,7 +280,7 @@ public class RangeTypesTest extends TransactionalTestBase {
         while (rs.next()) {
             PGobject v0 = (PGobject) rs.getObject("col_tstzrange");
 
-            Assert.assertEquals("[\"2020-01-01 01:00:00+01\",\"2020-03-01 01:00:00+01\"]", v0.getValue());
+            Assert.assertEquals("[\"2020-01-01 00:00:00+01\",\"2020-03-01 00:00:00+01\"]", v0.getValue());
         }
     }
 
@@ -296,7 +293,7 @@ public class RangeTypesTest extends TransactionalTestBase {
         // Range to insert:
         RangeEntity entity0 = new RangeEntity();
 
-        ZonedDateTime lower = ZonedDateTime.of(2020, 1, 1, 0, 0, 0 ,0,  ZoneId.of("GMT"));
+        ZonedDateTime lower = ZonedDateTime.of(2020, 1, 1, 0, 0, 0 ,0, ZoneOffset.UTC);
         ZonedDateTime upper = null;
 
         entity0.timeTzRange = new Range<>(lower, upper);
@@ -314,7 +311,7 @@ public class RangeTypesTest extends TransactionalTestBase {
         while (rs.next()) {
             PGobject v0 = (PGobject) rs.getObject("col_tstzrange");
 
-            Assert.assertEquals("[\"2020-01-01 01:00:00+01\",)", v0.getValue());
+            Assert.assertEquals("[\"2020-01-01 00:00:00+01\",)", v0.getValue());
         }
     }
 
@@ -328,7 +325,7 @@ public class RangeTypesTest extends TransactionalTestBase {
         RangeEntity entity0 = new RangeEntity();
 
         ZonedDateTime lower = null;
-        ZonedDateTime upper = ZonedDateTime.of(2020, 1, 1, 0, 0, 0 ,0,  ZoneId.of("GMT"));
+        ZonedDateTime upper = ZonedDateTime.of(2020, 1, 1, 0, 0, 0 ,0, ZoneOffset.UTC);
 
         entity0.timeTzRange = new Range<>(lower, upper);
 
@@ -345,7 +342,7 @@ public class RangeTypesTest extends TransactionalTestBase {
         while (rs.next()) {
             PGobject v0 = (PGobject) rs.getObject("col_tstzrange");
 
-            Assert.assertEquals("(,\"2020-01-01 01:00:00+01\"]", v0.getValue());
+            Assert.assertEquals("(,\"2020-01-01 00:00:00+01\"]", v0.getValue());
         }
     }
 
