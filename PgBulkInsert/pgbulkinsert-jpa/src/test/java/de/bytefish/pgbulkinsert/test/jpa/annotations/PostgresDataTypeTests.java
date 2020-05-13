@@ -19,7 +19,7 @@ import java.util.*;
 public class PostgresDataTypeTests extends TransactionalTestBase {
 
     @Entity
-    @Table(name = "unit_test", schema = "sample")
+    @Table(name = "unit_test", schema = "public")
     public class SampleEntity {
 
         @Id
@@ -82,7 +82,7 @@ public class PostgresDataTypeTests extends TransactionalTestBase {
 
     private boolean createTable() throws SQLException {
 
-        String sqlStatement = "CREATE TABLE sample.unit_test" +
+        String sqlStatement = "CREATE TABLE public.unit_test" +
                 "            (\n" +
                 "                id int8,\n" +
                 "                int_field int4\n" +
@@ -94,7 +94,7 @@ public class PostgresDataTypeTests extends TransactionalTestBase {
     }
 
     private ResultSet getAll() throws SQLException {
-        String sqlStatement = "SELECT * FROM sample.unit_test";
+        String sqlStatement = "SELECT * FROM public.unit_test";
 
         Statement statement = connection.createStatement();
 
@@ -105,7 +105,7 @@ public class PostgresDataTypeTests extends TransactionalTestBase {
 
         Statement s = connection.createStatement();
 
-        ResultSet r = s.executeQuery(String.format("SELECT COUNT(*) AS rowcount FROM sample.unit_test"));
+        ResultSet r = s.executeQuery(String.format("SELECT COUNT(*) AS rowcount FROM public.unit_test"));
         r.next();
         int count = r.getInt("rowcount");
         r.close();
