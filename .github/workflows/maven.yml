@@ -13,9 +13,6 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-    
-    env:
-      working-directory: ./PgBulkInsert 
 
     steps:
     - uses: actions/checkout@v2
@@ -25,3 +22,4 @@ jobs:
         java-version: 1.8
     - name: Build with Maven
       run: mvn -B package --file pom.xml
+      working-directory: ./PgBulkInsert
