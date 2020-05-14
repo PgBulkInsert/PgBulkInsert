@@ -5,6 +5,9 @@
 [PgBulkInsert]: https://github.com/bytefish/PgBulkInsert
 [Npgsql]: https://github.com/npgsql/npgsql
 
+![](https://github.com/PgBulkInsert/PgBulkInsert/workflows/Java%20CI%20with%20Maven/badge.svg)
+![](https://maven-badges.herokuapp.com/maven-central/de.bytefish.pgbulkinsert/pgbulkinsert-core/badge.svg)
+
 PgBulkInsert is a Java library for Bulk Inserts to PostgreSQL using the Binary COPY Protocol. 
 
 It provides a wrapper around the PostgreSQL [COPY command]:
