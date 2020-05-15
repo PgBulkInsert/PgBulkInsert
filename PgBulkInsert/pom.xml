@@ -64,6 +64,7 @@
                     <target>1.8</target>
                     <showWarnings>true</showWarnings>
                     <compilerArgs>
+                        <arg>-Xlint:unchecked</arg>
                         <arg>-XDcompilePolicy=simple</arg>
                         <arg>-Xplugin:ErrorProne -Xep:NullAway:ERROR -XepOpt:NullAway:AnnotatedPackages=de.bytefish.pgbulkinsert</arg>
                     </compilerArgs>
