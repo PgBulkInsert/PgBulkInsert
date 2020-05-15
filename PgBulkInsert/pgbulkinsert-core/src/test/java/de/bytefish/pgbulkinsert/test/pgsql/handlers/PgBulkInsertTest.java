@@ -24,7 +24,7 @@ import java.util.UUID;
 
 public class PgBulkInsertTest extends TransactionalTestBase {
 
-    private class SampleEntity {
+    private static class SampleEntity {
 
         public Integer col_integer;
         public LocalDate col_date;

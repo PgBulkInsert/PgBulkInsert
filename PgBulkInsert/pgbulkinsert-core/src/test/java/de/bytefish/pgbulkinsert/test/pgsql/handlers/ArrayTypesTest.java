@@ -21,7 +21,7 @@ import java.util.List;
 
 public class ArrayTypesTest  extends TransactionalTestBase {
 
-    private class ArrayEntity {
+    private static class ArrayEntity {
 
         public List<String> stringArray;
         public List<BigDecimal> bigDecimalArray;

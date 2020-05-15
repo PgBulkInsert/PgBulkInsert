@@ -7,7 +7,6 @@ import de.bytefish.pgbulkinsert.util.BigDecimalUtils;
 import java.io.DataOutputStream;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.math.MathContext;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,14 +54,14 @@ public class BigDecimalValueHandler<T extends Number> extends BaseValueHandler<T
 
             int digit = result[1].intValue() * (int) Math.pow(10, DECIMAL_DIGITS - scaleRemainder);
 
-            digits.add(new Integer(digit));
+            digits.add(digit);
 
             unscaledValue = result[0];
         }
 
         while (!unscaledValue.equals(BigInteger.ZERO)) {
             BigInteger[] result = unscaledValue.divideAndRemainder(TEN_THOUSAND);
-            digits.add(new Integer(result[1].intValue()));
+            digits.add(result[1].intValue());
             unscaledValue = result[0];
         }
 
@@ -74,7 +73,7 @@ public class BigDecimalValueHandler<T extends Number> extends BaseValueHandler<T
 
         // Now write each digit:
         for (int pos = digits.size() - 1; pos >= 0; pos--) {
-            int valueToWrite = digits.get(pos).intValue();
+            int valueToWrite = digits.get(pos);
             buffer.writeShort(valueToWrite);
         }
     }
@@ -115,14 +114,14 @@ public class BigDecimalValueHandler<T extends Number> extends BaseValueHandler<T
 
             int digit = result[1].intValue() * (int) Math.pow(10, DECIMAL_DIGITS - scaleRemainder);
 
-            digits.add(new Integer(digit));
+            digits.add(digit);
 
             unscaledValue = result[0];
         }
 
         while (!unscaledValue.equals(BigInteger.ZERO)) {
             BigInteger[] result = unscaledValue.divideAndRemainder(TEN_THOUSAND);
-            digits.add(new Integer(result[1].intValue()));
+            digits.add(result[1].intValue());
             unscaledValue = result[0];
         }
 

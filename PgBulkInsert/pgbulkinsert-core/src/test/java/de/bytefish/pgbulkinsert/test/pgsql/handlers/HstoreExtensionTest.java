@@ -20,7 +20,7 @@ import java.util.Map;
 
 public class HstoreExtensionTest extends TransactionalTestBase {
 
-    private class HStoreEntity {
+    private static class HStoreEntity {
 
         private Map<String, String> col_hstore;
 

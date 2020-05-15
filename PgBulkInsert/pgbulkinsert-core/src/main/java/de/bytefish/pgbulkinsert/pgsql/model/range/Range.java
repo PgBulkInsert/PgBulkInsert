@@ -2,6 +2,8 @@
 
 package de.bytefish.pgbulkinsert.pgsql.model.range;
 
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 import java.util.Objects;
 
 // https://github.com/npgsql/npgsql/blob/d4132d0d546594629bcef658bcb1418b4a8624cc/src/Npgsql/NpgsqlTypes/NpgsqlRange.cs
@@ -9,8 +11,10 @@ public class Range<TElementType> {
 
     private int flags;
 
+    @Nullable
     private TElementType lowerBound;
 
+    @Nullable
     private TElementType upperBound;
 
     public Range(TElementType lowerBound, TElementType upperBound) {
@@ -33,11 +37,11 @@ public class Range<TElementType> {
         this.flags = flags;
 
         // TODO Check this!
-        if(lowerBound == null) {
+        if (lowerBound == null) {
             this.flags |= RangeFlags.LowerBoundInfinite;
         }
 
-        if(upperBound == null) {
+        if (upperBound == null) {
             this.flags |= RangeFlags.UpperBoundInfinite;
         }
 
@@ -117,6 +121,7 @@ public class Range<TElementType> {
         return (flags & RangeFlags.UpperBoundInfinite) != 0;
     }
 
+    @Nullable
     public TElementType getLowerBound() {
         return lowerBound;
     }
@@ -125,6 +130,7 @@ public class Range<TElementType> {
         this.lowerBound = lowerBound;
     }
 
+    @Nullable
     public TElementType getUpperBound() {
         return upperBound;
     }

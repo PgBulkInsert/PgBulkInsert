@@ -19,7 +19,7 @@ import java.util.List;
 
 public class NetworkTypesTest extends TransactionalTestBase {
 
-    private class NetworkEntity {
+    private static class NetworkEntity {
 
         private MacAddress col_mac_addr;
 

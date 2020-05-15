@@ -15,7 +15,7 @@ import java.util.List;
 
 public class PgBulkInsertPrimitivesTest extends TransactionalTestBase {
 
-	private class SampleEntity {
+	private static class SampleEntity {
 
 		public int col_integer;
 		public float col_float;
@@ -24,8 +24,8 @@ public class PgBulkInsertPrimitivesTest extends TransactionalTestBase {
 		public short col_short;
 		public byte[] col_bytearray;
 		public boolean col_boolean;
-		
-		
+
+
 		public int getCol_integer() {
 			return col_integer;
 		}
@@ -49,7 +49,7 @@ public class PgBulkInsertPrimitivesTest extends TransactionalTestBase {
 		}
 
 	}
-	
+
     @Override
     protected void onSetUpInTransaction() throws Exception {
         createTable();
@@ -59,7 +59,7 @@ public class PgBulkInsertPrimitivesTest extends TransactionalTestBase {
     protected void onSetUpBeforeTransaction() throws Exception {
 
     }
-    
+
     private class SampleEntityMapping extends AbstractMapping<SampleEntity> {
 
         public SampleEntityMapping() {
@@ -74,7 +74,7 @@ public class PgBulkInsertPrimitivesTest extends TransactionalTestBase {
             mapDouble("col_double", SampleEntity::getCol_double);
         }
     }
-    
+
     @Test
     public void saveAll_boolean_Test() throws SQLException {
 
@@ -99,7 +99,7 @@ public class PgBulkInsertPrimitivesTest extends TransactionalTestBase {
             Assert.assertEquals(true, v);
         }
     }
-    
+
     @Test
     public void saveAll_Short_Test() throws SQLException {
 
@@ -124,7 +124,7 @@ public class PgBulkInsertPrimitivesTest extends TransactionalTestBase {
             Assert.assertEquals(1, v);
         }
     }
-    
+
     @Test
     public void saveAll_Integer_Test() throws SQLException {
 
@@ -149,7 +149,7 @@ public class PgBulkInsertPrimitivesTest extends TransactionalTestBase {
             Assert.assertEquals(1, v);
         }
     }
-    
+
     @Test
     public void saveAll_Single_Precision_Test() throws SQLException {
 
@@ -174,7 +174,7 @@ public class PgBulkInsertPrimitivesTest extends TransactionalTestBase {
             Assert.assertEquals(2.0001, v, 1e-6);
         }
     }
-    
+
     @Test
     public void saveAll_Double_Precision_Test() throws SQLException {
 
@@ -199,7 +199,7 @@ public class PgBulkInsertPrimitivesTest extends TransactionalTestBase {
             Assert.assertEquals(2.0001, v, 1e-10);
         }
     }
-    
+
     private boolean createTable() throws SQLException {
         String sqlStatement = String.format("CREATE TABLE %s.unit_test\n", schema) +
                 "            (\n" +
@@ -216,7 +216,7 @@ public class PgBulkInsertPrimitivesTest extends TransactionalTestBase {
 
         return statement.execute(sqlStatement);
     }
-    
+
     private ResultSet getAll() throws SQLException {
         String sqlStatement = String.format("SELECT * FROM %s.unit_test", schema);
 

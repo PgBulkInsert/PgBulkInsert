@@ -27,7 +27,7 @@ public class CustomValueHandlerIntegrationTest extends TransactionalTestBase {
         createTable();
     }
 
-    private class DoubleNumericValueHandler extends BaseValueHandler<Double> {
+    private static class DoubleNumericValueHandler extends BaseValueHandler<Double> {
 
         private IValueHandler<BigDecimal> bigDecimalIValueHandler;
 
@@ -48,7 +48,7 @@ public class CustomValueHandlerIntegrationTest extends TransactionalTestBase {
         }
     }
 
-    private class SampleEntity {
+    private static class SampleEntity {
 
         private Double doubleValue;
 

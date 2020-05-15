@@ -13,7 +13,6 @@ import org.postgresql.copy.PGCopyOutputStream;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Objects;
-import java.util.function.BiConsumer;
 import java.util.stream.Stream;
 
 public class PgBulkInsert<TEntity> implements IPgBulkInsert<TEntity> {
@@ -34,6 +33,7 @@ public class PgBulkInsert<TEntity> implements IPgBulkInsert<TEntity> {
         this.mapping = mapping;
     }
 
+    @Override
     public void saveAll(PGConnection connection, Stream<TEntity> entities) throws SQLException {
 
         try (PgBinaryWriter bw = new PgBinaryWriter(configuration.getBufferSize())) {
@@ -71,7 +71,7 @@ public class PgBulkInsert<TEntity> implements IPgBulkInsert<TEntity> {
             throw new SaveEntityFailedException(e);
         }
     }
-    
+
     private void saveEntitySynchonized(PgBinaryWriter bw, TEntity entity) throws SaveEntityFailedException {
         synchronized (bw) {
         	saveEntity(bw, entity);

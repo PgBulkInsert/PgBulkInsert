@@ -18,7 +18,7 @@ import java.util.List;
 // https://github.com/bytefish/PgBulkInsert/issues/23
 public class Issue23DuplicatesTest extends TransactionalTestBase {
 
-    private class MyObject {
+    private static class MyObject {
         private final int pos;
         private final String name;
         private final String descr;

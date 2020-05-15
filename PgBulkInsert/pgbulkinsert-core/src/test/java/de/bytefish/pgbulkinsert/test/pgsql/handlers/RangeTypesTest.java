@@ -14,13 +14,16 @@ import org.postgresql.util.PGobject;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.time.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 public class RangeTypesTest extends TransactionalTestBase {
 
-    private class RangeEntity {
+    private static class RangeEntity {
         public Range<ZonedDateTime> timeTzRange;
         public Range<LocalDateTime> timeRange;
         public Range<Integer> int4Range;
