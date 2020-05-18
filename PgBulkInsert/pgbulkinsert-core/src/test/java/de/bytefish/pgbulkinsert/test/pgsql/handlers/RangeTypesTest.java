@@ -7,6 +7,7 @@ import de.bytefish.pgbulkinsert.mapping.AbstractMapping;
 import de.bytefish.pgbulkinsert.pgsql.model.range.Range;
 import de.bytefish.pgbulkinsert.test.utils.TransactionalTestBase;
 import de.bytefish.pgbulkinsert.util.PostgreSqlUtils;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.junit.Assert;
 import org.junit.Test;
 import org.postgresql.util.PGobject;
@@ -24,11 +25,17 @@ import java.util.List;
 public class RangeTypesTest extends TransactionalTestBase {
 
     private static class RangeEntity {
+        @Nullable
         public Range<ZonedDateTime> timeTzRange;
+        @Nullable
         public Range<LocalDateTime> timeRange;
+        @Nullable
         public Range<Integer> int4Range;
+        @Nullable
         public Range<Long> int8Range;
+        @Nullable
         public Range<Number> numericRange;
+        @Nullable
         public Range<LocalDate> dateRange;
     }
 

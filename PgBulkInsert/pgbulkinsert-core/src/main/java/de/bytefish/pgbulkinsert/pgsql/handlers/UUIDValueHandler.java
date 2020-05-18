@@ -13,20 +13,15 @@ public class UUIDValueHandler extends BaseValueHandler<UUID> {
     protected void internalHandle(DataOutputStream buffer, final UUID value) throws Exception {
         buffer.writeInt(16);
 
-        ByteBuffer bb = toByteBuffer(value);
+        ByteBuffer bb = ByteBuffer.wrap(new byte[16]);
+        bb.putLong(value.getMostSignificantBits());
+        bb.putLong(value.getLeastSignificantBits());
 
         buffer.writeInt(bb.getInt(0));
         buffer.writeShort(bb.getShort(4));
         buffer.writeShort(bb.getShort(6));
 
         buffer.write(Arrays.copyOfRange(bb.array(), 8, 16));
-    }
-
-    private static ByteBuffer toByteBuffer(UUID uuid) {
-        ByteBuffer bb = ByteBuffer.wrap(new byte[16]);
-        bb.putLong(uuid.getMostSignificantBits());
-        bb.putLong(uuid.getLeastSignificantBits());
-        return bb;
     }
 
     @Override

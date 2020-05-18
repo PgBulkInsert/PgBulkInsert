@@ -7,24 +7,16 @@ import de.bytefish.pgbulkinsert.jpa.JpaMapping;
 import de.bytefish.pgbulkinsert.pgsql.constants.DataType;
 import de.bytefish.pgbulkinsert.test.utils.TransactionalTestBase;
 import de.bytefish.pgbulkinsert.util.PostgreSqlUtils;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.junit.Assert;
 import org.junit.Test;
 import org.postgresql.PGConnection;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class JpaMappingTests extends TransactionalTestBase {
 
@@ -37,31 +29,39 @@ public class JpaMappingTests extends TransactionalTestBase {
     @Table(name = "unit_test", schema = "public")
     public class SampleEntity {
 
+        @Nullable
         @Id
         @Column(name = "id")
         private Long id;
 
+        @Nullable
         @Column(name = "int_field")
         private Integer intField;
 
+        @Nullable
         @Column(name = "text_field")
         private String textField;
 
+        @Nullable
         @Column(name = "read_only_text_field")
         private String readOnlyTextField;
 
+        @Nullable
         @Enumerated(value = EnumType.STRING)
         @Column(name = "enum_string_field")
         private SampleEntityTypeEnum typeStringField;
 
+        @Nullable
         @Enumerated(value = EnumType.ORDINAL)
         @Column(name = "enum_smallint_field")
         private SampleEntityTypeEnum typeOrdinalField;
 
+        @Nullable
         @Enumerated(value = EnumType.ORDINAL)
         @Column(name = "enum_smallint_field_as_integer")
         private SampleEntityTypeEnum typeOrdinalFieldAsInteger;
 
+        @Nullable
         public Long getId() {
             return id;
         }
@@ -70,6 +70,7 @@ public class JpaMappingTests extends TransactionalTestBase {
             this.id = id;
         }
 
+        @Nullable
         public Integer getIntField() {
             return intField;
         }
@@ -78,6 +79,7 @@ public class JpaMappingTests extends TransactionalTestBase {
             this.intField = intField;
         }
 
+        @Nullable
         public String getTextField() {
             return textField;
         }
@@ -86,10 +88,12 @@ public class JpaMappingTests extends TransactionalTestBase {
             this.textField = textField;
         }
 
+        @Nullable
         public String getReadOnlyTextField() {
             return readOnlyTextField;
         }
 
+        @Nullable
         public SampleEntityTypeEnum getTypeStringField() {
             return typeStringField;
         }
@@ -98,6 +102,7 @@ public class JpaMappingTests extends TransactionalTestBase {
             this.typeStringField = typeStringField;
         }
 
+        @Nullable
         public SampleEntityTypeEnum getTypeOrdinalField() {
             return typeOrdinalField;
         }
@@ -106,6 +111,7 @@ public class JpaMappingTests extends TransactionalTestBase {
             this.typeOrdinalField = typeOrdinalField;
         }
 
+        @Nullable
         public SampleEntityTypeEnum getTypeOrdinalFieldAsInteger() {
             return typeOrdinalFieldAsInteger;
         }
@@ -149,7 +155,7 @@ public class JpaMappingTests extends TransactionalTestBase {
     }
 
     @Test
-    public void writeFailsWithWrongTypeMappingTest() throws SQLException {
+    public void writeFailsWithWrongTypeMappingTest() {
 
         SampleEntity s = new SampleEntity();
 

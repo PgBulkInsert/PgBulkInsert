@@ -6,6 +6,7 @@ import de.bytefish.pgbulkinsert.PgBulkInsert;
 import de.bytefish.pgbulkinsert.mapping.AbstractMapping;
 import de.bytefish.pgbulkinsert.test.utils.TransactionalTestBase;
 import de.bytefish.pgbulkinsert.util.PostgreSqlUtils;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -26,94 +27,129 @@ public class PgBulkInsertTest extends TransactionalTestBase {
 
     private static class SampleEntity {
 
+        @Nullable
         public Integer col_integer;
+        @Nullable
         public LocalDate col_date;
+        @Nullable
         public LocalTime col_time;
+        @Nullable
         public LocalDateTime col_datetime;
+        @Nullable
         public Float col_float;
+        @Nullable
         public Double col_double;
+        @Nullable
         public String col_text;
+        @Nullable
         public Long col_long;
+        @Nullable
         public Short col_short;
+        @Nullable
         public UUID col_uuid;
+        @Nullable
         public Inet4Address col_inet4Address;
+        @Nullable
         public Inet6Address col_inet6Address;
+        @Nullable
         public byte[] col_bytearray;
+        @Nullable
         public Boolean col_boolean;
+        @Nullable
         public List<Integer> col_int_array;
+        @Nullable
         public List<Double> col_double_array;
+        @Nullable
         public String col_jsonb;
-
+        @Nullable
         public BigDecimal col_numeric;
 
+        @Nullable
         public Integer get_col_integer() {
             return col_integer;
         }
 
+        @Nullable
         public LocalDateTime get_col_datetime() {
             return col_datetime;
         }
 
+        @Nullable
         public Float get_col_float() {
             return col_float;
         }
 
+        @Nullable
         public Double get_col_double() {
             return col_double;
         }
 
+        @Nullable
         public String get_col_text() {
             return col_text;
         }
 
+        @Nullable
         public Long get_col_long() {
             return col_long;
         }
 
+        @Nullable
         public Short get_col_short() {
             return col_short;
         }
 
+        @Nullable
         public UUID get_col_uuid() {
             return col_uuid;
         }
 
+        @Nullable
         public LocalDate getCol_date() {
             return col_date;
         }
 
+        @Nullable
         public LocalTime getCol_time() {
             return col_time;
         }
 
+        @Nullable
         public Inet4Address getCol_inet4Address() {
             return col_inet4Address;
         }
 
+        @Nullable
         public Inet6Address getCol_inet6Address() {
             return col_inet6Address;
         }
 
+        @Nullable
         public byte[] getCol_bytearray() {
             return col_bytearray;
         }
 
+        @Nullable
         public Boolean getCol_boolean() {
             return col_boolean;
         }
 
+        @Nullable
         public List<Integer> getCol_int_array() {
             return col_int_array;
         }
 
+        @Nullable
         public List<Double> getCol_double_array() {
             return col_double_array;
         }
 
+        @Nullable
         public String getCol_jsonb() {
             return col_jsonb;
         }
 
+        @Nullable
         public BigDecimal getCol_numeric() {
             return col_numeric;
         }
@@ -515,7 +551,7 @@ public class PgBulkInsertTest extends TransactionalTestBase {
     }
 
     @Test
-    public void saveAll_UUID_Test() throws SQLException, UnknownHostException {
+    public void saveAll_UUID_Test() throws SQLException {
 
         // This list will be inserted.
         List<SampleEntity> entities = new ArrayList<>();
@@ -565,7 +601,7 @@ public class PgBulkInsertTest extends TransactionalTestBase {
     }
 
     @Test
-    public void saveAll_ByteArray_Test() throws SQLException, UnknownHostException {
+    public void saveAll_ByteArray_Test() throws SQLException {
 
         // This list will be inserted.
         List<SampleEntity> entities = new ArrayList<>();
@@ -595,14 +631,14 @@ public class PgBulkInsertTest extends TransactionalTestBase {
     }
 
     @Test
-    public void saveAll_CustomIntegerArray_Test() throws SQLException, UnknownHostException {
+    public void saveAll_CustomIntegerArray_Test() throws SQLException {
 
         // This list will be inserted.
         List<SampleEntity> entities = new ArrayList<>();
 
         // Create the Entity to insert:
         SampleEntity entity = new SampleEntity();
-        entity.col_int_array = Arrays.asList(new Integer(1), new Integer(2));
+        entity.col_int_array = Arrays.asList(1, 2);
 
         entities.add(entity);
 
@@ -623,14 +659,14 @@ public class PgBulkInsertTest extends TransactionalTestBase {
     }
 
     @Test
-    public void saveAll_CustomDoubleArray_Test() throws SQLException, UnknownHostException {
+    public void saveAll_CustomDoubleArray_Test() throws SQLException {
 
         // This list will be inserted.
         List<SampleEntity> entities = new ArrayList<>();
 
         // Create the Entity to insert:
         SampleEntity entity = new SampleEntity();
-        entity.col_double_array = Arrays.asList(new Double(1.131), new Double(2.412));
+        entity.col_double_array = Arrays.asList(1.131, 2.412);
 
         entities.add(entity);
 
@@ -645,8 +681,8 @@ public class PgBulkInsertTest extends TransactionalTestBase {
 
             Double[] v = (Double[]) z.getArray();
 
-            Assert.assertEquals(new Double(1.131), v[0]);
-            Assert.assertEquals(new Double(2.412), v[1]);
+            Assert.assertEquals(1.131, v[0], 1e-12);
+            Assert.assertEquals(2.412, v[1], 1e-12);
         }
     }
 

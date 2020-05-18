@@ -17,21 +17,21 @@ public class Range<TElementType> {
     @Nullable
     private TElementType upperBound;
 
-    public Range(TElementType lowerBound, TElementType upperBound) {
+    public Range(@Nullable TElementType lowerBound, @Nullable TElementType upperBound) {
         this(lowerBound, true, false, upperBound, true, false);
     }
 
-    public Range(TElementType lowerBound, boolean lowerBoundIsInclusive, TElementType upperBound, boolean upperBoundIsInclusive) {
+    public Range(@Nullable TElementType lowerBound, boolean lowerBoundIsInclusive, @Nullable TElementType upperBound, boolean upperBoundIsInclusive) {
         this(lowerBound, lowerBoundIsInclusive, false, upperBound, upperBoundIsInclusive, false);
     }
 
-    public Range(TElementType lowerBound, boolean lowerBoundIsInclusive, boolean lowerBoundInfinite,
-                 TElementType upperBound, boolean upperBoundIsInclusive, boolean upperBoundInfinite) {
+    public Range(@Nullable TElementType lowerBound, boolean lowerBoundIsInclusive, boolean lowerBoundInfinite,
+                 @Nullable TElementType upperBound, boolean upperBoundIsInclusive, boolean upperBoundInfinite) {
         this(lowerBound, upperBound, evaluateBoundaryFlags(lowerBoundIsInclusive, upperBoundIsInclusive, lowerBoundInfinite, upperBoundInfinite));
     }
 
 
-    private Range(TElementType lowerBound, TElementType upperBound, int flags) {
+    private Range(@Nullable TElementType lowerBound, @Nullable TElementType upperBound, int flags) {
         this.lowerBound = (flags & RangeFlags.LowerBoundInfinite) != 0 ? null : lowerBound;
         this.upperBound = (flags & RangeFlags.UpperBoundInfinite) != 0 ? null : upperBound;
         this.flags = flags;
@@ -52,7 +52,7 @@ public class Range<TElementType> {
         }
     }
 
-    private boolean isEmptyRange(TElementType lowerBound, TElementType upperBound, int flags) {
+    private boolean isEmptyRange(@Nullable TElementType lowerBound, @Nullable TElementType upperBound, int flags) {
         // ---------------------------------------------------------------------------------
         // We only want to check for those conditions that are unambiguously erroneous:
         //   1. The bounds must not be default values (including null).

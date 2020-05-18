@@ -6,6 +6,7 @@ import de.bytefish.pgbulkinsert.PgBulkInsert;
 import de.bytefish.pgbulkinsert.mapping.AbstractMapping;
 import de.bytefish.pgbulkinsert.test.utils.TransactionalTestBase;
 import de.bytefish.pgbulkinsert.util.PostgreSqlUtils;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -16,6 +17,7 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public class TimestampConversionTest extends TransactionalTestBase {
 
@@ -26,8 +28,10 @@ public class TimestampConversionTest extends TransactionalTestBase {
 
     public static class EMail {
 
+        @Nullable
         private Timestamp emailCreateTime;
 
+        @Nullable
         public Timestamp getEmailCreateTime() {
             return emailCreateTime;
         }
@@ -42,7 +46,7 @@ public class TimestampConversionTest extends TransactionalTestBase {
         public EMailMapping(String schema) {
             super(schema, "unit_test");
 
-            mapTimeStamp("email_create_time", x -> x != null ? x.getEmailCreateTime().toLocalDateTime() : null);
+            mapTimeStamp("email_create_time", x -> x != null ? Objects.requireNonNull(x.getEmailCreateTime(), "email_create_time").toLocalDateTime() : null);
         }
     }
 
