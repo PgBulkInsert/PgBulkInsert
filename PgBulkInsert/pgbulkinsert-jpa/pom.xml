@@ -11,10 +11,10 @@
         <version>5.1.0</version>
         <relativePath>..</relativePath>
     </parent>
-    
+
     <artifactId>pgbulkinsert-jpa</artifactId>
     <name>pgbulkinsert-jpa</name>
-    
+
     <packaging>jar</packaging>
 
     <properties>
@@ -60,13 +60,6 @@
                     <threadCount>10</threadCount>
                 </configuration>
             </plugin>
-
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>${spring.version}</version>
-            </plugin>
-
         </plugins>
     </build>
 
