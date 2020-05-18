@@ -16,10 +16,7 @@ import java.net.Inet6Address;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -31,7 +28,6 @@ public class SimpleRow {
     private final Map<Integer, Consumer<PgBinaryWriter>> actions;
     private final Function<String, String> nullCharacterHandler;
 
-    @SuppressWarnings("unchecked")
     public SimpleRow(ValueHandlerProvider provider, Map<String, Integer> lookup, Function<String, String> nullCharacterHandler) {
         this.provider = provider;
         this.lookup = lookup;
@@ -40,20 +36,19 @@ public class SimpleRow {
     }
 
     public <TTargetType> void setValue(String columnName, DataType type, TTargetType value) {
-        final int ordinal = lookup.get(columnName);
+        final int ordinal = Objects.requireNonNull(lookup.get(columnName), columnName + " not found");
 
         setValue(ordinal, type, value);
     }
 
     public <TTargetType> void setValue(int ordinal, DataType type, TTargetType value) {
-
         final IValueHandler<TTargetType> handler = provider.resolve(type);
 
         actions.put(ordinal, (writer) -> writer.write(handler, value));
     }
 
     public <TTargetType> void setValue(String columnName, IValueHandler<TTargetType> handler, TTargetType value) {
-        final int ordinal = lookup.get(columnName);
+        final int ordinal = Objects.requireNonNull(lookup.get(columnName), columnName + " not found");
 
         setValue(ordinal, handler, value);
     }
@@ -63,8 +58,7 @@ public class SimpleRow {
     }
 
     public <TElementType, TCollectionType extends Collection<TElementType>> void setCollection(String columnName, DataType type, TCollectionType value) {
-
-        final int ordinal = lookup.get(columnName);
+        final int ordinal = Objects.requireNonNull(lookup.get(columnName), columnName + " not found");
 
         setCollection(ordinal, type, value);
     }
@@ -78,16 +72,15 @@ public class SimpleRow {
 
 
     public void writeRow(PgBinaryWriter writer) {
-        for(int ordinalIdx = 0; ordinalIdx < lookup.keySet().size(); ordinalIdx++) {
+        for (int ordinalIdx = 0; ordinalIdx < lookup.keySet().size(); ordinalIdx++) {
 
             // If this Ordinal wasn't set, we assume a NULL:
-            if(!actions.containsKey(ordinalIdx)) {
-                    writer.writeNull();
-
-                    continue;
+            final Consumer<PgBinaryWriter> action = actions.get(ordinalIdx);
+            if (action == null) {
+                writer.writeNull();
+            } else {
+                action.accept(writer);
             }
-
-            actions.get(ordinalIdx).accept(writer);
         }
     }
 
@@ -152,7 +145,7 @@ public class SimpleRow {
     public void setDouble(String columnName, Double value) {
         setValue(columnName, DataType.DoublePrecision, value);
     }
-    
+
 	public void setDouble(int ordinal, Double value) {
 		setValue(ordinal, DataType.DoublePrecision, value);
 	}

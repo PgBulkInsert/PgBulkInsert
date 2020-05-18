@@ -40,10 +40,7 @@ public class SimpleRowWriterTest extends TransactionalTestBase {
         SimpleRowWriter.Table table = new SimpleRowWriter.Table(schema, tableName, columnNames);
 
         // Create the Writer:
-        SimpleRowWriter writer = new SimpleRowWriter(table);
-
-        // ... open it:
-        writer.open(pgConnection);
+        SimpleRowWriter writer = new SimpleRowWriter(table, pgConnection);
 
         // ... write your data rows:
         for(int rowIdx = 0; rowIdx < 10000; rowIdx++) {

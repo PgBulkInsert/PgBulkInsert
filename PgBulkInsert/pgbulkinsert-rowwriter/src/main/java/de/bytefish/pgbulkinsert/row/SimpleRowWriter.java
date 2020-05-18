@@ -5,6 +5,7 @@ import de.bytefish.pgbulkinsert.pgsql.PgBinaryWriter;
 import de.bytefish.pgbulkinsert.pgsql.handlers.ValueHandlerProvider;
 import de.bytefish.pgbulkinsert.util.PostgreSqlUtils;
 import de.bytefish.pgbulkinsert.util.StringUtils;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.postgresql.PGConnection;
 import org.postgresql.copy.PGCopyOutputStream;
 
@@ -20,6 +21,7 @@ public class SimpleRowWriter {
 
     public static class Table {
 
+        @Nullable
         private final String schema;
         private final String table;
         private final String[] columns;
@@ -28,12 +30,13 @@ public class SimpleRowWriter {
             this(null, table, columns);
         }
 
-        public Table(String schema, String table, String... columns) {
+        public Table(@Nullable String schema, String table, String... columns) {
             this.schema = schema;
             this.table = table;
             this.columns = columns;
         }
 
+        @Nullable
         public String getSchema() {
             return schema;
         }
@@ -63,7 +66,6 @@ public class SimpleRowWriter {
     }
 
     private final Table table;
-    private final boolean usePostgresQuoting;
     private final PgBinaryWriter writer;
     private final ValueHandlerProvider provider;
     private final Map<String, Integer> lookup;
@@ -72,28 +74,24 @@ public class SimpleRowWriter {
     private boolean isOpened;
     private boolean isClosed;
 
-    public SimpleRowWriter(Table table) {
-        this(table, false);
+    public SimpleRowWriter(final Table table, final PGConnection connection) throws SQLException {
+        this(table, connection, false);
     }
 
-    public SimpleRowWriter(Table table, boolean usePostgresQuoting) {
+    public SimpleRowWriter(final Table table, final PGConnection connection, final boolean usePostgresQuoting) throws SQLException {
         this.table = table;
         this.isClosed = false;
         this.isOpened = false;
         this.nullCharacterHandler = (val) -> val;
-        this.usePostgresQuoting = usePostgresQuoting;
 
-        this.writer = new PgBinaryWriter();
         this.provider = new ValueHandlerProvider();
         this.lookup = new HashMap<>();
 
         for (int ordinal = 0; ordinal < table.columns.length; ordinal++) {
             lookup.put(table.columns[ordinal], ordinal);
         }
-    }
 
-    public void open(PGConnection connection) throws SQLException  {
-        writer.open(new PGCopyOutputStream(connection, table.getCopyCommand(usePostgresQuoting), 1));
+        this.writer = new PgBinaryWriter(new PGCopyOutputStream(connection, table.getCopyCommand(usePostgresQuoting), 1));
 
         isClosed = false;
         isOpened = true;

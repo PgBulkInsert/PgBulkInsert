@@ -2,14 +2,13 @@
 
 package de.bytefish.pgbulkinsert.bulkprocessor.handler;
 
+import de.bytefish.pgbulkinsert.IPgBulkInsert;
+import de.bytefish.pgbulkinsert.util.PostgreSqlUtils;
+import org.postgresql.PGConnection;
+
 import java.sql.Connection;
 import java.util.List;
 import java.util.function.Supplier;
-
-import org.postgresql.PGConnection;
-
-import de.bytefish.pgbulkinsert.IPgBulkInsert;
-import de.bytefish.pgbulkinsert.util.PostgreSqlUtils;
 
 public class BulkWriteHandler<TEntity> implements IBulkWriteHandler<TEntity> {
 
@@ -22,6 +21,7 @@ public class BulkWriteHandler<TEntity> implements IBulkWriteHandler<TEntity> {
         this.connectionFactory = connectionFactory;
     }
 
+    @Override
     public void write(List<TEntity> entities) throws Exception {
         // Obtain a new Connection and execute it in a try with resources block, so it gets closed properly:
         try(Connection connection = connectionFactory.get()) {

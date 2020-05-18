@@ -34,14 +34,11 @@ public class NullTerminatingStringTest extends TransactionalTestBase {
         // Create the Table Definition:
         SimpleRowWriter.Table table = new SimpleRowWriter.Table(schema, tableName, columnNames);
 
-        // Create the Writer:
-        SimpleRowWriter writer = new SimpleRowWriter(table);
-
         boolean exceptionHasBeenThrown = false;
 
         try {
-            // ... open it:
-            writer.open(pgConnection);
+            // Create the Writer:
+            SimpleRowWriter writer = new SimpleRowWriter(table, pgConnection);
 
             writer.startRow((row) -> {
                 row.setText("value_text", "Hi\0");
@@ -70,17 +67,14 @@ public class NullTerminatingStringTest extends TransactionalTestBase {
         // Create the Table Definition:
         SimpleRowWriter.Table table = new SimpleRowWriter.Table(schema, tableName, columnNames);
 
-        // Create the Writer:
-        SimpleRowWriter writer = new SimpleRowWriter(table);
-
-        // ENABLE the Null Character Handler:
-        writer.enableNullCharacterHandler();
-
         boolean exceptionHasBeenThrown = false;
-
         try {
-            // ... open it:
-            writer.open(pgConnection);
+            // Create the Writer:
+            SimpleRowWriter writer = new SimpleRowWriter(table, pgConnection);
+
+            // ENABLE the Null Character Handler:
+            writer.enableNullCharacterHandler();
+
 
             writer.startRow((row) -> {
                 row.setText("value_text", "Hi\0");

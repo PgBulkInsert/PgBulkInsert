@@ -7,6 +7,7 @@ import de.bytefish.pgbulkinsert.jpa.mappings.IPostgresTypeMapping;
 import de.bytefish.pgbulkinsert.jpa.mappings.PostgresTypeMapping;
 import de.bytefish.pgbulkinsert.mapping.AbstractMapping;
 import de.bytefish.pgbulkinsert.pgsql.constants.DataType;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.reflections.ReflectionUtils;
 
 import javax.persistence.Column;
@@ -23,19 +24,13 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 
-import static org.reflections.ReflectionUtils.getAllFields;
-import static org.reflections.ReflectionUtils.getAllMethods;
-import static org.reflections.ReflectionUtils.withAnnotation;
-import static org.reflections.ReflectionUtils.withModifier;
-import static org.reflections.ReflectionUtils.withParametersCount;
-import static org.reflections.ReflectionUtils.withPrefix;
+import static org.reflections.ReflectionUtils.*;
 
 public class JpaMapping<TEntity> extends AbstractMapping<TEntity> {
 
     private final Class<TEntity> entityClass;
 
     private final IPostgresTypeMapping typeMapping;
-    private final Map<String, DataType> columnMapping;
 
     public JpaMapping(Class<TEntity> entityClass) {
         this(entityClass, new PostgresTypeMapping());
@@ -63,7 +58,6 @@ public class JpaMapping<TEntity> extends AbstractMapping<TEntity> {
 
         this.entityClass = entityClass;
         this.typeMapping = typeMapping;
-        this.columnMapping = columnMapping;
 
         processDataTypeAnnotations(columnMapping);
         mapFields(entityClass, typeMapping, columnMapping);
@@ -131,13 +125,14 @@ public class JpaMapping<TEntity> extends AbstractMapping<TEntity> {
             // Is this Field an Enum?
             Enumerated enumerated = f.getAnnotation(Enumerated.class);
             if(enumerated != null) {
-                mapEnum(columnName, typeMapping, columnMapping, enumerated, fieldGetter);
+                mapEnum(columnName, columnMapping, enumerated, fieldGetter);
             } else {
                 mapField(columnName, typeMapping, columnMapping, fieldType, fieldGetter);
             }
         }
     }
 
+    @Nullable
     private Method findGetter(Set<Method> getters, String name) {
         for (Method fieldGetter : getters) {
             if (fieldGetter.getName().toUpperCase().endsWith(name.toUpperCase())) {
@@ -147,7 +142,7 @@ public class JpaMapping<TEntity> extends AbstractMapping<TEntity> {
         return null;
     }
 
-    private void mapEnum(String columnName, IPostgresTypeMapping typeMapping, Map<String, DataType> columnMapping, Enumerated enumerated, Method fieldGetter) {
+    private void mapEnum(String columnName, Map<String, DataType> columnMapping, Enumerated enumerated, Method fieldGetter) {
         if(enumerated.value() == EnumType.ORDINAL) {
             // If we know which type to map this ordinal to, let's use it:
             if(columnMapping.containsKey(columnName)) {
@@ -167,6 +162,7 @@ public class JpaMapping<TEntity> extends AbstractMapping<TEntity> {
             else {
                 // Use the Default Short:
                 mapShort(columnName, new Function<TEntity, Number>() {
+                    @Nullable
                     @Override
                     public Short apply(TEntity tEntity) {
                         Enum<?> enumeration = (Enum<?>) internalInvoke(fieldGetter, tEntity);
@@ -183,19 +179,15 @@ public class JpaMapping<TEntity> extends AbstractMapping<TEntity> {
         }
         // The Enumerated defined to store the Enum as a String:
         else if(enumerated.value() == EnumType.STRING) {
-            mapText(columnName, new Function<TEntity, String>() {
-                @Override
-                public String apply(TEntity tEntity) {
+            mapText(columnName, tEntity -> {
+                // Do we need to use a Default-value, if null?
+                Enum<?> enumeration =  (Enum<?>) internalInvoke(fieldGetter, tEntity);
 
-                    // Do we need to use a Default-value, if null?
-                    Enum<?> enumeration =  (Enum<?>) internalInvoke(fieldGetter, tEntity);
-
-                    if(enumeration == null) {
-                        return null;
-                    }
-
-                    return enumeration.name();
+                if(enumeration == null) {
+                    return null;
                 }
+
+                return enumeration.name();
             });
         }
     }

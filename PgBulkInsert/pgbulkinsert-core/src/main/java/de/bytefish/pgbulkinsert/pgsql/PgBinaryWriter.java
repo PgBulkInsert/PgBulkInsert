@@ -4,6 +4,7 @@ package de.bytefish.pgbulkinsert.pgsql;
 
 import de.bytefish.pgbulkinsert.exceptions.BinaryWriteFailedException;
 import de.bytefish.pgbulkinsert.pgsql.handlers.IValueHandler;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.io.BufferedOutputStream;
 import java.io.DataOutputStream;
@@ -12,22 +13,15 @@ import java.io.OutputStream;
 
 public class PgBinaryWriter implements AutoCloseable {
 
-    private transient DataOutputStream buffer;
+    private final transient DataOutputStream buffer;
 
-    private final int bufferSize;
-
-    public PgBinaryWriter() {
-        this(65536);
+    public PgBinaryWriter(final OutputStream out) {
+        this(out, 65536);
     }
 
-    public PgBinaryWriter(int bufferSize) {
-        this.bufferSize = bufferSize;
-    }
-
-    public void open(final OutputStream out) {
-        buffer = new DataOutputStream(new BufferedOutputStream(out, bufferSize));
-
-        writeHeader();
+    public PgBinaryWriter(final OutputStream out, final int bufferSize) {
+		buffer = new DataOutputStream(new BufferedOutputStream(out, bufferSize));
+		writeHeader();
     }
 
     public void startRow(int numColumns) {
@@ -43,15 +37,15 @@ public class PgBinaryWriter implements AutoCloseable {
 		}
     }
 
-    public <TTargetType> void write(final IValueHandler<TTargetType> handler, final TTargetType value) {
+    public <TTargetType> void write(final IValueHandler<TTargetType> handler, @Nullable final TTargetType value) {
         handler.handle(buffer, value);
     }
-    
+
     /**
      * Writes primitive boolean to the output stream
-     *  
+     *
      * @param value value to write
-     * 
+     *
      */
 	public void writeBoolean(boolean value) {
 		try {
@@ -71,12 +65,12 @@ public class PgBinaryWriter implements AutoCloseable {
 		}
 	}
 
-	
+
     /**
      * Writes primitive byte to the output stream
-     *  
+     *
      * @param value value to write
-     * 
+     *
      */
 	public void writeByte(int value) {
 		try {
@@ -94,9 +88,9 @@ public class PgBinaryWriter implements AutoCloseable {
 
     /**
      * Writes primitive short to the output stream
-     *  
+     *
      * @param value value to write
-     * 
+     *
      */
 	public void writeShort(int value) {
 		try {
@@ -114,9 +108,9 @@ public class PgBinaryWriter implements AutoCloseable {
 
     /**
      * Writes primitive integer to the output stream
-     *  
+     *
      * @param value value to write
-     * 
+     *
      */
 	public void writeInt(int value) {
 		try {
@@ -134,9 +128,9 @@ public class PgBinaryWriter implements AutoCloseable {
 
     /**
      * Writes primitive long to the output stream
-     *  
+     *
      * @param value value to write
-     * 
+     *
      */
 	public void writeLong(long value) {
 		try {
@@ -151,12 +145,12 @@ public class PgBinaryWriter implements AutoCloseable {
 			}
 		}
 	}
-	
+
     /**
      * Writes primitive float to the output stream
-     *  
+     *
      * @param value value to write
-     * 
+     *
      */
 	public void writeFloat(float value) {
 		try {
@@ -174,9 +168,9 @@ public class PgBinaryWriter implements AutoCloseable {
 
     /**
      * Writes primitive double to the output stream
-     *  
+     *
      * @param value value to write
-     * 
+     *
      */
 	public void writeDouble(double value) {
 		try {
@@ -224,7 +218,7 @@ public class PgBinaryWriter implements AutoCloseable {
 			}
 		}
     }
-    
+
     private void writeHeader() {
         try {
 
