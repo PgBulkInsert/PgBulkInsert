@@ -50,10 +50,6 @@ public class JpaMapping<TEntity> extends AbstractMapping<TEntity> {
 
         super(getSchemaName(entityClass), getTableName(entityClass), usePostgresQuoting);
 
-        if (entityClass == null) {
-            throw new IllegalArgumentException("entityClass");
-        }
-
         this.entityClass = entityClass;
         this.typeMapping = typeMapping;
 
@@ -69,6 +65,7 @@ public class JpaMapping<TEntity> extends AbstractMapping<TEntity> {
         return typeMapping;
     }
 
+    @SuppressWarnings("unchecked")
     private void processDataTypeAnnotations(Map<String, DataType> columnMapping) {
         Set<Field> fields = ReflectionUtils.getAllFields(entityClass);
 
@@ -100,6 +97,7 @@ public class JpaMapping<TEntity> extends AbstractMapping<TEntity> {
         }
     }
 
+    @SuppressWarnings("unchecked")
     private void internalMapFields(Class<TEntity> entityClass, IPostgresTypeMapping typeMapping, Map<String, DataType> columnMapping) throws Exception {
 
         Set<Method> getters = ReflectionUtils.getAllMethods(entityClass, ReflectionUtils.withModifier(Modifier.PUBLIC), ReflectionUtils.withPrefix("get"), ReflectionUtils.withParametersCount(0));
