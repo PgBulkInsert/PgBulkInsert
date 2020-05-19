@@ -24,7 +24,7 @@ public class PostgresDataTypeTests extends TransactionalTestBase {
 
     @Entity
     @Table(name = "unit_test", schema = "public")
-    public class SampleEntity {
+    public static class SampleEntity {
 
         @Nullable
         @Id
@@ -107,17 +107,5 @@ public class PostgresDataTypeTests extends TransactionalTestBase {
         Statement statement = connection.createStatement();
 
         return statement.executeQuery(sqlStatement);
-    }
-
-    private int getRowCount() throws SQLException {
-
-        Statement s = connection.createStatement();
-
-        ResultSet r = s.executeQuery(String.format("SELECT COUNT(*) AS rowcount FROM public.unit_test"));
-        r.next();
-        int count = r.getInt("rowcount");
-        r.close();
-
-        return count;
     }
 }

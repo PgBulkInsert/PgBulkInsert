@@ -27,7 +27,7 @@ public class JpaMappingTests extends TransactionalTestBase {
 
     @Entity
     @Table(name = "unit_test", schema = "public")
-    public class SampleEntity {
+    public static class SampleEntity {
 
         @Nullable
         @Id
