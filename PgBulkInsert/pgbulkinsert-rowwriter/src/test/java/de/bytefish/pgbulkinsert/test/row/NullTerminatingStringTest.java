@@ -38,14 +38,12 @@ public class NullTerminatingStringTest extends TransactionalTestBase {
 
         try {
             // Create the Writer:
-            SimpleRowWriter writer = new SimpleRowWriter(table, pgConnection);
+            try(SimpleRowWriter writer = new SimpleRowWriter(table, pgConnection)) {
 
-            writer.startRow((row) -> {
-                row.setText("value_text", "Hi\0");
-            });
-
-            // ... and make sure to close it:
-            writer.close();
+                writer.startRow((row) -> {
+                    row.setText("value_text", "Hi\0");
+                });
+            }
         } catch(Exception e) {
             exceptionHasBeenThrown = true;
         }

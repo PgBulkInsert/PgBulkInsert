@@ -36,24 +36,20 @@ public class SimpleRowWriterWithQuotesTest extends TransactionalTestBase {
         SimpleRowWriter.Table table = new SimpleRowWriter.Table(schema, tableName, columnNames);
 
         // Create the Writer:
-        SimpleRowWriter writer = new SimpleRowWriter(table, pgConnection, true);
+        try(SimpleRowWriter writer = new SimpleRowWriter(table, pgConnection, true)) {
 
-        // ... write your data rows:
-        for(int rowIdx = 0; rowIdx < 10000; rowIdx++) {
+            // ... write your data rows:
+            for (int rowIdx = 0; rowIdx < 10000; rowIdx++) {
 
-            // ... using startRow and work with the row, see how the order doesn't matter:
-            writer.startRow((row) -> {
-                row.setText("value_text", "Hi");
-                row.setInteger("Value_int", 1);
-            });
-
+                // ... using startRow and work with the row, see how the order doesn't matter:
+                writer.startRow((row) -> {
+                    row.setText("value_text", "Hi");
+                    row.setInteger("Value_int", 1);
+                });
+            }
         }
 
-        // ... and make sure to close it:
-        writer.close();
-
         // Now assert, that we have written 10000 entities:
-
         Assert.assertEquals(10000, getRowCount());
     }
 

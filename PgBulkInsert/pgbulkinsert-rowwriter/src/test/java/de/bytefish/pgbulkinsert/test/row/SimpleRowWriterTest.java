@@ -40,23 +40,21 @@ public class SimpleRowWriterTest extends TransactionalTestBase {
         SimpleRowWriter.Table table = new SimpleRowWriter.Table(schema, tableName, columnNames);
 
         // Create the Writer:
-        SimpleRowWriter writer = new SimpleRowWriter(table, pgConnection);
+        try(SimpleRowWriter writer = new SimpleRowWriter(table, pgConnection)) {
 
-        // ... write your data rows:
-        for(int rowIdx = 0; rowIdx < 10000; rowIdx++) {
+            // ... write your data rows:
+            for (int rowIdx = 0; rowIdx < 10000; rowIdx++) {
 
-            // ... using startRow and work with the row, see how the order doesn't matter:
-            writer.startRow((row) -> {
-                row.setText("value_text", "Hi");
-                row.setInteger("value_int", 1);
-                row.setTsTzRange("value_range", new Range<>(
-                        ZonedDateTime.of(2020, 3, 1, 0, 0, 0, 0, ZoneId.of("GMT")),
-                        ZonedDateTime.of(2020, 3, 1, 0, 0, 0, 0, ZoneId.of("GMT"))));
-            });
+                // ... using startRow and work with the row, see how the order doesn't matter:
+                writer.startRow((row) -> {
+                    row.setText("value_text", "Hi");
+                    row.setInteger("value_int", 1);
+                    row.setTsTzRange("value_range", new Range<>(
+                            ZonedDateTime.of(2020, 3, 1, 0, 0, 0, 0, ZoneId.of("GMT")),
+                            ZonedDateTime.of(2020, 3, 1, 0, 0, 0, 0, ZoneId.of("GMT"))));
+                });
+            }
         }
-
-        // ... and make sure to close it:
-        writer.close();
 
         // Now assert, that we have written 10000 entities:
 

@@ -112,40 +112,28 @@ String[] columnNames = new String[] {
 
 // Create the Table Definition:
 SimpleRowWriter.Table table = new SimpleRowWriter.Table(schemaName, tableName, columnNames);
+```
 
+Once created you create the ``SimpleRowWriter`` by using the ``Table`` and a ``PGConnection``.
+
+Now to write a row to PostgreSQL you call the ``startRow`` method. It expects you to pass a 
+``Consumer<SimpleRow>`` into it, which defines what data to write to the row. The call to 
+``startRow`` is synchronized, so it is safe to be called from multiple threads.
+
+```java
 // Create the Writer:
-SimpleRowWriter writer = new SimpleRowWriter(table);
-```
+try(SimpleRowWriter writer = new SimpleRowWriter(table, pgConnection)) {
 
-Once created you are required to open the ``SimpleRowWriter`` by yourself using a ``PGConnection``:
+    // ... write your data rows:
+    for(int rowIdx = 0; rowIdx < 10000; rowIdx++) {
 
-```java
-// ... open it:
-writer.open(pgConnection);
-```
-
-To write a row to PostgreSQL you call the ``startRow`` method. It expects you to pass a ``Consumer<SimpleRow>`` into it, 
-which defines what data to write to the row. The call to ``startRow`` is synchronized, so it is safe to be called from 
-multiple threads.
-
-```java
-// ... write your data rows:
-for(int rowIdx = 0; rowIdx < 10000; rowIdx++) {
-
-    // ... using startRow and work with the row, see how the order doesn't matter:
-    writer.startRow((row) -> {
-        row.setText("value_text", "Hi");
-        row.setInteger("value_int", 1);
-    });
-
+        // ... using startRow and work with the row, see how the order doesn't matter:
+        writer.startRow((row) -> {
+            row.setText("value_text", "Hi");
+            row.setInteger("value_int", 1);
+        });
+    }
 }
-```
-
-And to finish the COPY operation, you need to close the ``SimpleRowWriter``:
-
-```java
-// ... and make sure to close it:
-writer.close();
 ```
 
 So the complete example looks like this:
@@ -177,24 +165,19 @@ public class SimpleRowWriterTest extends TransactionalTestBase {
         SimpleRowWriter.Table table = new SimpleRowWriter.Table(schemaName, tableName, columnNames);
 
         // Create the Writer:
-        SimpleRowWriter writer = new SimpleRowWriter(table);
+        try(SimpleRowWriter writer = new SimpleRowWriter(table, pgConnection)) {
 
-        // ... open it:
-        writer.open(pgConnection);
+            // ... write your data rows:
+            for(int rowIdx = 0; rowIdx < 10000; rowIdx++) {
 
-        // ... write your data rows:
-        for(int rowIdx = 0; rowIdx < 10000; rowIdx++) {
+                // ... using startRow and work with the row, see how the order doesn't matter:
+                writer.startRow((row) -> {
+                    row.setText("value_text", "Hi");
+                    row.setInteger("value_int", 1);
+                });
 
-            // ... using startRow and work with the row, see how the order doesn't matter:
-            writer.startRow((row) -> {
-                row.setText("value_text", "Hi");
-                row.setInteger("value_int", 1);
-            });
-
+            }
         }
-
-        // ... and make sure to close it:
-        writer.close();
 
         // Now assert, that we have written 10000 entities:
 

@@ -17,7 +17,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class SimpleRowWriter {
+public class SimpleRowWriter implements  AutoCloseable {
 
     public static class Table {
 
