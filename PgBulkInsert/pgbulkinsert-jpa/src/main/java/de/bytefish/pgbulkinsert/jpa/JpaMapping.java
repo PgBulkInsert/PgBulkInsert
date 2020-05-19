@@ -113,7 +113,7 @@ public class JpaMapping<TEntity> extends AbstractMapping<TEntity> {
             Type fieldType = f.getType();
             Method fieldGetter = findGetter(getters, f.getName());
 
-            // TODO What should we do, if the Getter is null? Let it crash or just go to the next one?
+            // Silent continue. We could probably add a little logging at least...
             if (fieldGetter == null) {
                 continue;
             }
