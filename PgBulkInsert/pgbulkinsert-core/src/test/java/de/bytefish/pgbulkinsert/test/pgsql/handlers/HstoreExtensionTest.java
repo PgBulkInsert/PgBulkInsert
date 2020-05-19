@@ -8,7 +8,6 @@ import de.bytefish.pgbulkinsert.test.utils.TransactionalTestBase;
 import de.bytefish.pgbulkinsert.util.PostgreSqlUtils;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.sql.ResultSet;
@@ -38,6 +37,7 @@ public class HstoreExtensionTest extends TransactionalTestBase {
 
     @Override
     protected void onSetUpInTransaction() throws Exception {
+        installExtension();
         createTable();
     }
 
@@ -55,6 +55,14 @@ public class HstoreExtensionTest extends TransactionalTestBase {
         }
     }
 
+    private boolean installExtension() throws SQLException {
+        String sqlStatement = "CREATE EXTENSION IF NOT EXISTS hstore;";
+
+        Statement statement = connection.createStatement();
+
+        return statement.execute(sqlStatement);
+    }
+
     private boolean createTable() throws SQLException {
         String sqlStatement = String.format("CREATE TABLE %s.hstore_table(\n", schema) +
                 "                col_hstore hstore \n" +
@@ -66,7 +74,6 @@ public class HstoreExtensionTest extends TransactionalTestBase {
     }
 
     @Test
-    @Ignore("This Test Requires the hstore extension to be enabled.")
     @SuppressWarnings("unchecked")
     public void saveAll_Hstore_Test() throws SQLException {
 
@@ -96,7 +103,7 @@ public class HstoreExtensionTest extends TransactionalTestBase {
             Map<String, String> v = (Map<String,String>) rs.getObject("col_hstore");
 
             Assert.assertEquals(1, v.size());
-            Assert.assertEquals(true, v.containsKey("Philipp"));
+            Assert.assertTrue(v.containsKey("Philipp"));
             Assert.assertEquals("Cool Cool Cool!", v.get("Philipp"));
         }
     }
