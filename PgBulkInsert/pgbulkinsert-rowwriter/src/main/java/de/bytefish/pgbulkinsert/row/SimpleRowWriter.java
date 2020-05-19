@@ -133,6 +133,7 @@ public class SimpleRowWriter implements  AutoCloseable {
         }
     }
 
+    @Override
     public void close()  {
 
         // This stream shouldn't be reused, so let's store a flag here:
