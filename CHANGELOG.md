@@ -64,7 +64,7 @@ For Java11 you have to use the following dependencies:
 
 * ``PgBinaryWriter#open`` removed and now opened in constructor
 * ``SimpleRowWriter#open`` removed and now opened in constructor
-* ``SimpleRowWriter`` not implements the ``AutoClosable`` interface, so it can be used in try-with-resources blocks.
+* ``SimpleRowWriter`` now implements the ``AutoClosable`` interface, so it can be used in try-with-resources blocks.
 * ``PostgreSqlUtils#tryGetPGConnection`` now returns an ``Optional``
 * ``BulkProcessor#cancel`` static method removed
 
