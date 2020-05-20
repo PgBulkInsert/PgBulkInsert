@@ -39,6 +39,7 @@ jobs:
     - name: Build with Maven
       uses: paambaati/codeclimate-action@v2.6.0
       env:
+        CC_TEST_REPORTER_ID: ${{secrets.CC_TEST_REPORTER_ID}}
         JACOCO_SOURCE_PATH: "${{github.workspace}}/PgBulkInsert/pgbulkinsert-bulkprocessor/src/main/java ${{github.workspace}}/PgBulkInsert/pgbulkinsert-core/src/main/java ${{github.workspace}}/PgBulkInsert/pgbulkinsert-jpa/src/main/java ${{github.workspace}}/PgBulkInsert/pgbulkinsert-rowwriter/src/main/java"
       with:
         coverageCommand: mvn -B package --file ${{github.workspace}}/PgBulkInsert/pom.xml
