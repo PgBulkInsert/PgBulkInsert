@@ -4,10 +4,9 @@ package de.bytefish.pgbulkinsert.test.integration;
 
 import de.bytefish.pgbulkinsert.PgBulkInsert;
 import de.bytefish.pgbulkinsert.mapping.AbstractMapping;
-import de.bytefish.pgbulkinsert.test.mapping.PersonMapping;
-import de.bytefish.pgbulkinsert.test.model.Person;
 import de.bytefish.pgbulkinsert.test.utils.TransactionalTestBase;
 import de.bytefish.pgbulkinsert.util.PostgreSqlUtils;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -15,11 +14,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public class TimestampConversionTest extends TransactionalTestBase {
 
@@ -28,10 +26,12 @@ public class TimestampConversionTest extends TransactionalTestBase {
         createTable();
     }
 
-    public class EMail {
+    public static class EMail {
 
+        @Nullable
         private Timestamp emailCreateTime;
 
+        @Nullable
         public Timestamp getEmailCreateTime() {
             return emailCreateTime;
         }
@@ -41,12 +41,12 @@ public class TimestampConversionTest extends TransactionalTestBase {
         }
     }
 
-    public class EMailMapping extends AbstractMapping<EMail>
+    public static class EMailMapping extends AbstractMapping<EMail>
     {
         public EMailMapping(String schema) {
             super(schema, "unit_test");
 
-            mapTimeStamp("email_create_time", x -> x != null ? x.getEmailCreateTime().toLocalDateTime() : null);
+            mapTimeStamp("email_create_time", x -> x != null ? Objects.requireNonNull(x.getEmailCreateTime(), "email_create_time").toLocalDateTime() : null);
         }
     }
 
@@ -70,7 +70,7 @@ public class TimestampConversionTest extends TransactionalTestBase {
 
         // Now save all entities of a given stream:
         bulkInsert.saveAll(PostgreSqlUtils.getPGConnection(connection), emails);
-        
+
         // And assert all have been written to the database:
         Assert.assertEquals(1, getRowCount());
     }

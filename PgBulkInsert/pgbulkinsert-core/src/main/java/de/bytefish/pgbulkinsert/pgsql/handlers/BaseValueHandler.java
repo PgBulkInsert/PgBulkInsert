@@ -3,13 +3,14 @@
 package de.bytefish.pgbulkinsert.pgsql.handlers;
 
 import de.bytefish.pgbulkinsert.exceptions.BinaryWriteFailedException;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.io.DataOutputStream;
 
 public abstract class BaseValueHandler<T> implements IValueHandler<T> {
 
     @Override
-    public void handle(DataOutputStream buffer, final T value) {
+    public void handle(DataOutputStream buffer, @Nullable final T value) {
         try {
             if (value == null) {
                 buffer.writeInt(-1);

@@ -4,26 +4,26 @@ package de.bytefish.pgbulkinsert.pgsql.model.geometric;
 
 public class Line {
 
-    private double A;
-    private double B;
-    private double C;
+    private double a;
+    private double b;
+    private double c;
 
     public Line(double a, double b, double c) {
-        A = a;
-        B = b;
-        C = c;
+        this.a = a;
+        this.b = b;
+        this.c = c;
     }
 
     public double getA() {
-        return A;
+        return a;
     }
 
     public double getB() {
-        return B;
+        return b;
     }
 
     public double getC() {
-        return C;
+        return c;
     }
 
 }

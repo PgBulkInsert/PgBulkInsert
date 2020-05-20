@@ -6,6 +6,7 @@ import de.bytefish.pgbulkinsert.PgBulkInsert;
 import de.bytefish.pgbulkinsert.mapping.AbstractMapping;
 import de.bytefish.pgbulkinsert.test.utils.TransactionalTestBase;
 import de.bytefish.pgbulkinsert.util.PostgreSqlUtils;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -19,10 +20,12 @@ import java.util.Map;
 
 public class HstoreExtensionTest extends TransactionalTestBase {
 
-    private class HStoreEntity {
+    private static class HStoreEntity {
 
+        @Nullable
         private Map<String, String> col_hstore;
 
+        @Nullable
         public Map<String, String> getCol_hstore() {
             return col_hstore;
         }

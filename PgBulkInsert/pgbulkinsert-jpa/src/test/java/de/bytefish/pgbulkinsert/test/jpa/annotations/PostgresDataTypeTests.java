@@ -6,30 +6,37 @@ import de.bytefish.pgbulkinsert.jpa.annotations.PostgresDataType;
 import de.bytefish.pgbulkinsert.pgsql.constants.DataType;
 import de.bytefish.pgbulkinsert.test.utils.TransactionalTestBase;
 import de.bytefish.pgbulkinsert.util.PostgreSqlUtils;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.junit.Assert;
 import org.junit.Test;
 import org.postgresql.PGConnection;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.*;
+import java.util.Arrays;
 
 public class PostgresDataTypeTests extends TransactionalTestBase {
 
     @Entity
     @Table(name = "unit_test", schema = "public")
-    public class SampleEntity {
+    public static class SampleEntity {
 
+        @Nullable
         @Id
         @Column(name = "id")
         private Long id;
 
+        @Nullable
         @Column(name = "int_field")
         @PostgresDataType(columnName = "int_field", dataType = DataType.Int4)
         private Short shortField;
 
+        @Nullable
         public Long getId() {
             return id;
         }
@@ -38,6 +45,7 @@ public class PostgresDataTypeTests extends TransactionalTestBase {
             this.id = id;
         }
 
+        @Nullable
         public Short getShortField() {
             return shortField;
         }
@@ -99,17 +107,5 @@ public class PostgresDataTypeTests extends TransactionalTestBase {
         Statement statement = connection.createStatement();
 
         return statement.executeQuery(sqlStatement);
-    }
-
-    private int getRowCount() throws SQLException {
-
-        Statement s = connection.createStatement();
-
-        ResultSet r = s.executeQuery(String.format("SELECT COUNT(*) AS rowcount FROM public.unit_test"));
-        r.next();
-        int count = r.getInt("rowcount");
-        r.close();
-
-        return count;
     }
 }

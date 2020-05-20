@@ -2,18 +2,24 @@
 
 package de.bytefish.pgbulkinsert.test.model;
 
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 import java.time.LocalDate;
 
 public class Person {
 
+    @Nullable
     private String firstName;
 
+    @Nullable
     private String lastName;
 
+    @Nullable
     private LocalDate birthDate;
 
     public Person() {}
 
+    @Nullable
     public String getFirstName() {
         return firstName;
     }
@@ -22,6 +28,7 @@ public class Person {
         this.firstName = firstName;
     }
 
+    @Nullable
     public String getLastName() {
         return lastName;
     }
@@ -30,6 +37,7 @@ public class Person {
         this.lastName = lastName;
     }
 
+    @Nullable
     public LocalDate getBirthDate() {
         return birthDate;
     }

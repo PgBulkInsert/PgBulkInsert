@@ -31,7 +31,7 @@ public class BulkProcessorTest extends TransactionalTestBase {
     }
 
     // Define a Custom Handler for the Unit Test, which does not close the Connection:
-    class CustomBulkWriteHandler<TEntity> implements IBulkWriteHandler<TEntity> {
+    static class CustomBulkWriteHandler<TEntity> implements IBulkWriteHandler<TEntity> {
 
         private final IPgBulkInsert<TEntity> client;
         private final Supplier<Connection> connectionFactory;
@@ -41,6 +41,7 @@ public class BulkProcessorTest extends TransactionalTestBase {
             this.connectionFactory = connectionFactory;
         }
 
+        @Override
         public void write(List<TEntity> entities) throws Exception {
             Connection connection = connectionFactory.get();
 

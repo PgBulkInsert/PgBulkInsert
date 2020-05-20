@@ -4,24 +4,13 @@ package de.bytefish.pgbulkinsert.test.pgsql.handlers;
 
 import de.bytefish.pgbulkinsert.PgBulkInsert;
 import de.bytefish.pgbulkinsert.mapping.AbstractMapping;
-import de.bytefish.pgbulkinsert.pgsql.model.geometric.Box;
-import de.bytefish.pgbulkinsert.pgsql.model.geometric.Circle;
-import de.bytefish.pgbulkinsert.pgsql.model.geometric.Line;
-import de.bytefish.pgbulkinsert.pgsql.model.geometric.LineSegment;
-import de.bytefish.pgbulkinsert.pgsql.model.geometric.Path;
-import de.bytefish.pgbulkinsert.pgsql.model.geometric.Point;
-import de.bytefish.pgbulkinsert.pgsql.model.geometric.Polygon;
+import de.bytefish.pgbulkinsert.pgsql.model.geometric.*;
 import de.bytefish.pgbulkinsert.test.utils.TransactionalTestBase;
 import de.bytefish.pgbulkinsert.util.PostgreSqlUtils;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.junit.Assert;
 import org.junit.Test;
-import org.postgresql.geometric.PGbox;
-import org.postgresql.geometric.PGcircle;
-import org.postgresql.geometric.PGline;
-import org.postgresql.geometric.PGlseg;
-import org.postgresql.geometric.PGpath;
-import org.postgresql.geometric.PGpoint;
-import org.postgresql.geometric.PGpolygon;
+import org.postgresql.geometric.*;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -31,14 +20,21 @@ import java.util.List;
 
 public class GeometricTypesTest extends TransactionalTestBase {
 
-    private class GeometricEntity {
+    private static class GeometricEntity {
 
+        @Nullable
         private Point col_point;
+        @Nullable
         private Path col_path;
+        @Nullable
         private Polygon col_polygon;
+        @Nullable
         private Box col_box;
+        @Nullable
         private Line col_line;
+        @Nullable
         private Circle col_circle;
+        @Nullable
         private LineSegment col_line_segment;
 
         public void setCol_point(Point col_point) {
@@ -69,30 +65,37 @@ public class GeometricTypesTest extends TransactionalTestBase {
             this.col_line_segment = col_line_segment;
         }
 
+        @Nullable
         public Point getCol_point() {
             return col_point;
         }
 
+        @Nullable
         public Path getCol_path() {
             return col_path;
         }
 
+        @Nullable
         public Polygon getCol_polygon() {
             return col_polygon;
         }
 
+        @Nullable
         public Box getCol_box() {
             return col_box;
         }
 
+        @Nullable
         public Line getCol_line() {
             return col_line;
         }
 
+        @Nullable
         public Circle getCol_circle() {
             return col_circle;
         }
 
+        @Nullable
         public LineSegment getCol_line_segment() {
             return col_line_segment;
         }

@@ -13,7 +13,6 @@ import org.postgresql.copy.PGCopyOutputStream;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Objects;
-import java.util.function.BiConsumer;
 import java.util.stream.Stream;
 
 public class PgBulkInsert<TEntity> implements IPgBulkInsert<TEntity> {
@@ -34,28 +33,17 @@ public class PgBulkInsert<TEntity> implements IPgBulkInsert<TEntity> {
         this.mapping = mapping;
     }
 
+    @Override
     public void saveAll(PGConnection connection, Stream<TEntity> entities) throws SQLException {
-
-        try (PgBinaryWriter bw = new PgBinaryWriter(configuration.getBufferSize())) {
-
-            // Wrap the CopyOutputStream in our own Writer:
-            bw.open(new PGCopyOutputStream(connection, mapping.getCopyCommand(), 1));
-
+        // Wrap the CopyOutputStream in our own Writer:
+        try (PgBinaryWriter bw = new PgBinaryWriter(new PGCopyOutputStream(connection, mapping.getCopyCommand(), 1), configuration.getBufferSize())) {
             // Insert Each Column:
             entities.forEach(entity -> saveEntitySynchonized(bw, entity));
         }
     }
 
     public void saveAll(PGConnection connection, Collection<TEntity> entities) throws SQLException {
-
-        try (PgBinaryWriter bw = new PgBinaryWriter(configuration.getBufferSize())) {
-
-            // Wrap the CopyOutputStream in our own Writer:
-            bw.open(new PGCopyOutputStream(connection, mapping.getCopyCommand(), 1));
-
-            // Insert Each Column:
-            entities.forEach(entity -> saveEntity(bw, entity));
-        }
+        saveAll(connection, entities.stream());
     }
 
     private void saveEntity(PgBinaryWriter bw, TEntity entity) throws SaveEntityFailedException {
@@ -71,7 +59,7 @@ public class PgBulkInsert<TEntity> implements IPgBulkInsert<TEntity> {
             throw new SaveEntityFailedException(e);
         }
     }
-    
+
     private void saveEntitySynchonized(PgBinaryWriter bw, TEntity entity) throws SaveEntityFailedException {
         synchronized (bw) {
         	saveEntity(bw, entity);

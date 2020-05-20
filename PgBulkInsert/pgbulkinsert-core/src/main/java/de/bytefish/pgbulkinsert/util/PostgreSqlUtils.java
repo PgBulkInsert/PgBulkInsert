@@ -3,53 +3,45 @@
 package de.bytefish.pgbulkinsert.util;
 
 import de.bytefish.pgbulkinsert.exceptions.PgConnectionException;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.postgresql.PGConnection;
 
 import java.sql.Connection;
-import java.sql.SQLException;
+import java.util.Optional;
 
 public final class PostgreSqlUtils {
 
     private PostgreSqlUtils() {
     }
 
-    public static PGConnection getPGConnection(final Connection connection) throws SQLException {
-        OutParameter<PGConnection> result = new OutParameter<>();
-        if(!tryGetPGConnection(connection, result)) {
-            throw new PgConnectionException("Could not obtain a PGConnection");
-        }
-        return result.get();
+    public static PGConnection getPGConnection(final Connection connection) {
+        return tryGetPGConnection(connection).orElseThrow(() -> new PgConnectionException("Could not obtain a PGConnection"));
     }
 
-    public static boolean tryGetPGConnection(final Connection connection, OutParameter<PGConnection> result) throws SQLException {
-        if(tryCastConnection(connection, result)) {
-            return true;
+    public static Optional<PGConnection> tryGetPGConnection(final Connection connection) {
+        final Optional<PGConnection> fromCast = tryCastConnection(connection);
+        if (fromCast.isPresent()) {
+            return fromCast;
         }
-        if(tryUnwrapConnection(connection, result)) {
-            return true;
-        }
-        return false;
+        return tryUnwrapConnection(connection);
     }
 
-    private static boolean tryCastConnection(final Connection connection, OutParameter<PGConnection> result) {
+    private static Optional<PGConnection> tryCastConnection(final Connection connection) {
         if (connection instanceof PGConnection) {
-            result.set((PGConnection) connection);
-
-            return true;
+            return Optional.of((PGConnection) connection);
         }
-        return false;
+        return Optional.empty();
     }
 
-    private static boolean tryUnwrapConnection(final Connection connection, OutParameter<PGConnection> result) {
+    private static Optional<PGConnection> tryUnwrapConnection(final Connection connection) {
         try {
             if (connection.isWrapperFor(PGConnection.class)) {
-                result.set(connection.unwrap(PGConnection.class));
-                return true;
+                return Optional.of(connection.unwrap(PGConnection.class));
             }
-            return false;
-        } catch(Exception e) {
-            return false;
+        } catch (Exception e) {
+            // do nothing
         }
+        return Optional.empty();
     }
 
     public static final char QuoteChar = '"';
@@ -58,9 +50,9 @@ public final class PostgreSqlUtils {
         return requiresQuoting(identifier) ? (QuoteChar + identifier + QuoteChar) : identifier;
     }
 
-    public static String getFullyQualifiedTableName(String schemaName, String tableName, boolean usePostgresQuoting)
-    {
-        if(usePostgresQuoting) {
+    @SuppressWarnings("NullAway")
+    public static String getFullyQualifiedTableName(@Nullable String schemaName, String tableName, boolean usePostgresQuoting) {
+        if (usePostgresQuoting) {
             return StringUtils.isNullOrWhiteSpace(schemaName) ? quoteIdentifier(tableName)
                     : String.format("%s.%s", quoteIdentifier(schemaName), quoteIdentifier(tableName));
         }
@@ -77,8 +69,7 @@ public final class PostgreSqlUtils {
         char first = identifier.charAt(0);
         char last = identifier.charAt(identifier.length() - 1);
 
-        if (first == QuoteChar && last == QuoteChar)
-        {
+        if (first == QuoteChar && last == QuoteChar) {
             return false;
         }
 

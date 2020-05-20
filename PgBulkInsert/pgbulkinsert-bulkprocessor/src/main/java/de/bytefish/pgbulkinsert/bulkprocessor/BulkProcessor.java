@@ -3,15 +3,22 @@
 package de.bytefish.pgbulkinsert.bulkprocessor;
 
 import de.bytefish.pgbulkinsert.bulkprocessor.handler.IBulkWriteHandler;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.*;
+import java.util.Optional;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 public class BulkProcessor<TEntity> implements AutoCloseable {
 
+    @Nullable
     private final ScheduledThreadPoolExecutor scheduler;
+    @Nullable
     private final ScheduledFuture<?> scheduledFuture;
 
     private volatile boolean closed = false;
@@ -26,7 +33,7 @@ public class BulkProcessor<TEntity> implements AutoCloseable {
         this(handler, bulkSize, null);
     }
 
-    public BulkProcessor(IBulkWriteHandler<TEntity> handler, int bulkSize, Duration flushInterval) {
+    public BulkProcessor(IBulkWriteHandler<TEntity> handler, int bulkSize, @Nullable Duration flushInterval) {
 
         this.handler = handler;
         this.bulkSize = bulkSize;
@@ -61,10 +68,8 @@ public class BulkProcessor<TEntity> implements AutoCloseable {
         closed = true;
 
         // Quit the Scheduled FlushInterval Future:
-        if (this.scheduledFuture != null) {
-            cancel(this.scheduledFuture);
-            this.scheduler.shutdown();
-        }
+        Optional.ofNullable(this.scheduledFuture).ifPresent(future -> future.cancel(false));
+        Optional.ofNullable(this.scheduler).ifPresent(ScheduledThreadPoolExecutor::shutdown);
 
         // Are there any entities left to write?
         if (batchedEntities.size() > 0) {
@@ -94,13 +99,6 @@ public class BulkProcessor<TEntity> implements AutoCloseable {
         } catch(Exception e) {
             throw new RuntimeException(e);
         }
-    }
-
-    public static boolean cancel(Future<?> future) {
-        if (future != null) {
-            return future.cancel(false);
-        }
-        return false;
     }
 
     class Flush implements Runnable {
