@@ -38,9 +38,8 @@ jobs:
         java-version: 11
     - name: Build with Maven
       uses: paambaati/codeclimate-action@v2.6.0
-      working-directory: ./PgBulkInsert
       env:
         CC_TEST_REPORTER_ID: $${secrets.CC_TEST_REPORTER_ID}}
       with:
-        coverageCommand: mvn -B package
+        coverageCommand: mvn -B package --file ${{github.workspace}}/PgBulkInsert/pom.xml
         coverageLocations: ${{github.workspace}}/PgBulkInsert/*/target/site/jacoco/jacoco.xml:jacoco
