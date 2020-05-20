@@ -42,4 +42,8 @@ jobs:
         CC_TEST_REPORTER_ID: $${secrets.CC_TEST_REPORTER_ID}}
       with:
         coverageCommand: mvn -B package --file ${{github.workspace}}/PgBulkInsert/pom.xml
-        coverageLocations: ${{github.workspace}}/PgBulkInsert/*/target/site/jacoco/jacoco.xml:jacoco
+        coverageLocations:
+        - ${{github.workspace}}/PgBulkInsert/pgbulkinsert-bulkprocessor/target/site/jacoco/jacoco.xml:jacoco
+        - ${{github.workspace}}/PgBulkInsert/pgbulkinsert-core/target/site/jacoco/jacoco.xml:jacoco
+        - ${{github.workspace}}/PgBulkInsert/pgbulkinsert-jpa/target/site/jacoco/jacoco.xml:jacoco
+        - ${{github.workspace}}/PgBulkInsert/pgbulkinsert-rowwriter/target/site/jacoco/jacoco.xml:jacoco
