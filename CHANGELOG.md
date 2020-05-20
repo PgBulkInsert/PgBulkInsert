@@ -40,22 +40,22 @@ So for Java8 you have to use the following dependencies:
 </dependency>
 ``` 
 
-So for Java8 you have to use the following dependencies:
+For Java11 you have to use the following dependencies:
 
 ```java
 <dependency>
 	<groupId>de.bytefish.pgbulkinsert</groupId>
-	<artifactId>pgbulkinsert-core-jdk8</artifactId>
+	<artifactId>pgbulkinsert-core</artifactId>
 	<version>6.0.0</version>
 </dependency>
 <dependency>
 	<groupId>de.bytefish.pgbulkinsert</groupId>
-	<artifactId>pgbulkinsert-rowwriter-jdk8</artifactId>
+	<artifactId>pgbulkinsert-rowwriter</artifactId>
 	<version>6.0.0</version>
 </dependency>
 <dependency>
 	<groupId>de.bytefish.pgbulkinsert</groupId>
-	<artifactId>pgbulkinsert-jpa-jdk8</artifactId>
+	<artifactId>pgbulkinsert-jpa</artifactId>
 	<version>6.0.0</version>
 </dependency>
 ``` 
