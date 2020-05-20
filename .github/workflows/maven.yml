@@ -37,5 +37,14 @@ jobs:
       with:
         java-version: 11
     - name: Build with Maven
-      run: mvn -B package --file pom.xml
-      working-directory: ./PgBulkInsert
+      uses: paambaati/codeclimate-action@v2.6.0
+      env:
+        CC_TEST_REPORTER_ID: ${{secrets.CC_TEST_REPORTER_ID}}
+        JACOCO_SOURCE_PATH: "${{github.workspace}}/PgBulkInsert/pgbulkinsert-bulkprocessor/src/main/java ${{github.workspace}}/PgBulkInsert/pgbulkinsert-core/src/main/java ${{github.workspace}}/PgBulkInsert/pgbulkinsert-jpa/src/main/java ${{github.workspace}}/PgBulkInsert/pgbulkinsert-rowwriter/src/main/java"
+      with:
+        coverageCommand: mvn -B package --file ${{github.workspace}}/PgBulkInsert/pom.xml
+        coverageLocations: |
+          ${{github.workspace}}/PgBulkInsert/pgbulkinsert-bulkprocessor/target/site/jacoco/jacoco.xml:jacoco
+          ${{github.workspace}}/PgBulkInsert/pgbulkinsert-core/target/site/jacoco/jacoco.xml:jacoco
+          ${{github.workspace}}/PgBulkInsert/pgbulkinsert-jpa/target/site/jacoco/jacoco.xml:jacoco
+          ${{github.workspace}}/PgBulkInsert/pgbulkinsert-rowwriter/target/site/jacoco/jacoco.xml:jacoco
