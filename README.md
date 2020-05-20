@@ -53,6 +53,7 @@ You can add the following dependencies to your pom.xml to include [PgBulkInsert]
     * timestamp
     * timestamptz
     * date
+    * time
 * [Character Types](http://www.postgresql.org/docs/current/static/datatype-character.html)
     * text
 * [JSON Types](https://www.postgresql.org/docs/current/static/datatype-json.html)
