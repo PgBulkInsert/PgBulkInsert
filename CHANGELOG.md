@@ -1,5 +1,116 @@
 # CHANGELOG #
 
+## 6.0.0 ##
+
+This release saw major improvements and some breaking changes. The release is 
+a dramatic improvement of the library, because it adds:
+
+* Java11 support
+* Improved Type Safety
+* Internal Refactorings to improve maintainability
+* Build Pipelines
+* Code Coverage
+* Dependency updates
+
+All of this great work was done by [@jonfreedman](https://github.com/jonfreedman).
+
+### Packages ###
+
+There is a major change in how the library is released. The project now 
+targets both Java8 and Java11. You are able to use the JDK8 version by 
+appending "-jdk8" to the Maven Package name.
+
+So for Java8 you have to use the following dependencies:
+
+```java
+<dependency>
+	<groupId>de.bytefish.pgbulkinsert</groupId>
+	<artifactId>pgbulkinsert-core-jdk8</artifactId>
+	<version>6.0.0</version>
+</dependency>
+<dependency>
+	<groupId>de.bytefish.pgbulkinsert</groupId>
+	<artifactId>pgbulkinsert-rowwriter-jdk8</artifactId>
+	<version>6.0.0</version>
+</dependency>
+<dependency>
+	<groupId>de.bytefish.pgbulkinsert</groupId>
+	<artifactId>pgbulkinsert-jpa-jdk8</artifactId>
+	<version>6.0.0</version>
+</dependency>
+``` 
+
+For Java11 you have to use the following dependencies:
+
+```java
+<dependency>
+	<groupId>de.bytefish.pgbulkinsert</groupId>
+	<artifactId>pgbulkinsert-core</artifactId>
+	<version>6.0.0</version>
+</dependency>
+<dependency>
+	<groupId>de.bytefish.pgbulkinsert</groupId>
+	<artifactId>pgbulkinsert-rowwriter</artifactId>
+	<version>6.0.0</version>
+</dependency>
+<dependency>
+	<groupId>de.bytefish.pgbulkinsert</groupId>
+	<artifactId>pgbulkinsert-jpa</artifactId>
+	<version>6.0.0</version>
+</dependency>
+``` 
+
+### Breaking Changes ###
+
+* ``PgBinaryWriter#open`` removed and now opened in constructor
+* ``SimpleRowWriter#open`` removed and now opened in constructor
+* ``SimpleRowWriter`` now implements the ``AutoClosable`` interface, so it can be used in try-with-resources blocks.
+* ``PostgreSqlUtils#tryGetPGConnection`` now returns an ``Optional``
+* ``BulkProcessor#cancel`` static method removed
+
+### Additional Information ###
+
+* Static Analysis has been added to the project using [Error Prone](https://github.com/google/error-prone)
+* Integration Tests are now run on every commit using Github Pipelines and the Postgres image.
+* There have been a lot of refactorings internally, so the overall maintainability is improved.
+* The project now has a Code Coverage report, so you get a feeling about the test coverage.
+* The README now has badges, so it is easier to see the latest stable release.
+
+### Project development ###
+
+* The project has been moved to an organization structure, so it easier to assign rights and collaborate.
+
+## 5.1.0 ##
+
+This release saw additions and refactorings of the JPA module. It now supports a lot more 
+data types and is easier to configure by using annotations. If you want control over how 
+the data is written to the database, you can use the ``@PostgresDataType`` annotation, 
+which overrides the default values.
+
+Here is an example for mapping a ``short`` value to an ``int4`` Postgres data type.
+
+
+```java
+@Entity
+@Table(name = "unit_test", schema = "public")
+public static class SampleEntity {
+
+    // ...
+
+    @Column(name = "some_field_name")
+    @PostgresDataType(columnName = "some_field_name", dataType = DataType.Int4)
+    private Short shortField;
+
+    public Short getShortField() {
+        return shortField;
+    }
+
+    public void setShortField(Short shortField) {
+        this.shortField = shortField;
+    }
+}
+```
+
 ## 5.0.0 ##
 
 A lot of thanks to the great efforts of user [@cheffe](https://github.com/cheffe) in this release!
