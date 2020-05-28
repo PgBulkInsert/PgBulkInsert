@@ -7,7 +7,7 @@
     <groupId>de.bytefish.pgbulkinsert</groupId>
     <artifactId>pgbulkinsert-parent</artifactId>
     <packaging>pom</packaging>
-    <version>6.0.0</version>
+    <version>6.0.1</version>
     <name>pgbulkinsert</name>
     <description>PgBulkInsert is a Java library for Bulk Inserts with PostgreSQL.</description>
     <url>http://www.github.com/bytefish/PgBulkInsert</url>
