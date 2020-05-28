@@ -1,5 +1,9 @@
 # CHANGELOG #
 
+## 6.0.1 ##
+
+* Adding ``SimpleRow#setTime`` for mapping ``LocalTime``
+
 ## 6.0.0 ##
 
 This release saw major improvements and some breaking changes. The release is 
