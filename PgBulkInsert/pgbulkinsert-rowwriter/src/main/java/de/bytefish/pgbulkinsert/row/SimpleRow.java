@@ -15,6 +15,7 @@ import java.net.Inet4Address;
 import java.net.Inet6Address;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.function.Consumer;
@@ -153,6 +154,14 @@ public class SimpleRow {
     // endregion
 
     // region Temporal
+
+    protected void setTime(String columnName, LocalTime value) {
+        setValue(columnName, DataType.Time, value);
+    }
+
+    protected void setTime(int ordinal, LocalTime value) {
+        setValue(ordinal, DataType.Time, value);
+    }
 
     public void setDate(String columnName, LocalDate value) {
         setValue(columnName, DataType.Date, value);
