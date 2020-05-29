@@ -30,13 +30,13 @@ You can add the following dependencies to your pom.xml to include [PgBulkInsert]
 <dependency>
 	<groupId>de.bytefish.pgbulkinsert</groupId>
 	<artifactId>pgbulkinsert-core</artifactId>
-	<version>6.0.0</version>
+	<version>6.0.1</version>
 </dependency>
 
 <dependency>
 	<groupId>de.bytefish.pgbulkinsert</groupId>
 	<artifactId>pgbulkinsert-rowwriter</artifactId>
-	<version>6.0.0</version>
+	<version>6.0.1</version>
 </dependency>
 ```
 
@@ -47,13 +47,13 @@ If you are working with Java8 you have to add a ``-jdk8`` to the package names:
 <dependency>
 	<groupId>de.bytefish.pgbulkinsert</groupId>
 	<artifactId>pgbulkinsert-core-jdk8</artifactId>
-	<version>6.0.0</version>
+	<version>6.0.1</version>
 </dependency>
 
 <dependency>
 	<groupId>de.bytefish.pgbulkinsert</groupId>
 	<artifactId>pgbulkinsert-rowwriter-jdk8</artifactId>
-	<version>6.0.0</version>
+	<version>6.0.1</version>
 </dependency>
 ```
 
@@ -358,7 +358,7 @@ add it as a dependency to your application:
 <dependency>
 	<groupId>de.bytefish.pgbulkinsert</groupId>
 	<artifactId>pgbulkinsert-jpa</artifactId>
-	<version>6.0.0</version>
+	<version>6.0.1</version>
 </dependency>
 ```
 
