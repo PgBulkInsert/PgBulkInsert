@@ -40,20 +40,22 @@ You can add the following dependencies to your pom.xml to include [PgBulkInsert]
 </dependency>
 ```
 
-If you are working with Java8 you have to add a ``-jdk8`` to the package names:
+If you are working with Java8 you have to add a classifier ``jdk8`` to the dependencies:
 
 
 ```xml
 <dependency>
 	<groupId>de.bytefish.pgbulkinsert</groupId>
-	<artifactId>pgbulkinsert-core-jdk8</artifactId>
+	<artifactId>pgbulkinsert-core</artifactId>
 	<version>6.0.1</version>
+    <classifier>jdk8</classifier>
 </dependency>
 
 <dependency>
 	<groupId>de.bytefish.pgbulkinsert</groupId>
-	<artifactId>pgbulkinsert-rowwriter-jdk8</artifactId>
+	<artifactId>pgbulkinsert-rowwriter</artifactId>
 	<version>6.0.1</version>
+    <classifier>jdk8</classifier>
 </dependency>
 ```
 
