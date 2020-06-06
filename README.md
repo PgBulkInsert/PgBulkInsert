@@ -28,15 +28,15 @@ You can add the following dependencies to your pom.xml to include [PgBulkInsert]
 
 ```xml
 <dependency>
-	<groupId>de.bytefish.pgbulkinsert</groupId>
-	<artifactId>pgbulkinsert-core</artifactId>
-	<version>6.0.1</version>
+    <groupId>de.bytefish.pgbulkinsert</groupId>
+    <artifactId>pgbulkinsert-core</artifactId>
+    <version>6.0.1</version>
 </dependency>
 
 <dependency>
-	<groupId>de.bytefish.pgbulkinsert</groupId>
-	<artifactId>pgbulkinsert-rowwriter</artifactId>
-	<version>6.0.1</version>
+    <groupId>de.bytefish.pgbulkinsert</groupId>
+    <artifactId>pgbulkinsert-rowwriter</artifactId>
+    <version>6.0.1</version>
 </dependency>
 ```
 
@@ -45,16 +45,16 @@ If you are working with Java8 you have to add a classifier ``jdk8`` to the depen
 
 ```xml
 <dependency>
-	<groupId>de.bytefish.pgbulkinsert</groupId>
-	<artifactId>pgbulkinsert-core</artifactId>
-	<version>6.0.1</version>
+    <groupId>de.bytefish.pgbulkinsert</groupId>
+    <artifactId>pgbulkinsert-core</artifactId>
+    <version>6.0.1</version>
     <classifier>jdk8</classifier>
 </dependency>
 
 <dependency>
-	<groupId>de.bytefish.pgbulkinsert</groupId>
-	<artifactId>pgbulkinsert-rowwriter</artifactId>
-	<version>6.0.1</version>
+    <groupId>de.bytefish.pgbulkinsert</groupId>
+    <artifactId>pgbulkinsert-rowwriter</artifactId>
+    <version>6.0.1</version>
     <classifier>jdk8</classifier>
 </dependency>
 ```
