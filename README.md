@@ -336,9 +336,7 @@ private List<Person> getPersonList(int num) {
 
 ### How can I write a ``java.sql.Timestamp``? ###
 
-You probably have Java classes with a ``java.sql.Timestamp`` to represent timestamps in an application. Now if 
-you use the ``AbstractMapping`` or ``simpleRowWriter`` it expects a ``LocalDateTime``! Isn't it supported? How can 
-you write a ``Timestamp`` then?
+You probably have Java classes with a ``java.sql.Timestamp`` in your application. Now if you use the ``AbstractMapping`` or a ``SimpleRowWriter`` it expects a ``LocalDateTime``. Here is how to map a ``java.sql.Timestamp``.
 
 Imagine you have an ``EMail`` class with a property ``emailCreateTime``, that is using a ``java.sql.Timestamp`` to 
 represent the time. The column name in Postgres is ``email_create_time`` and you are using a ``timestamp`` data type.
@@ -373,8 +371,7 @@ public static class EMailMapping extends AbstractMapping<EMail>
 
 ### Handling Null Characters or... 'invalid byte sequence for encoding "UTF8": 0x00' ###
 
-If you see the error message ``invalid byte sequence for encoding "UTF8": 0x00`` your data contains Null Characters. Although ``0x00`` is 
-valid UTF-8 PostgreSQL does not support writing it, because it uses C-style string termination internally. 
+If you see the error message ``invalid byte sequence for encoding "UTF8": 0x00`` your data contains Null Characters. Although ``0x00`` is totally valid UTF-8... PostgreSQL does not support writing it, because it uses C-style string termination internally.
 
 PgBulkInsert allows you to enable a Null Value handling, that removes all ``0x00`` occurences and replaces them with an empty string:
     
