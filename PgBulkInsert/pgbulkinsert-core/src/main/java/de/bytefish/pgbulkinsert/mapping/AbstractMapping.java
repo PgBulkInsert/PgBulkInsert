@@ -2,8 +2,6 @@
 
 package de.bytefish.pgbulkinsert.mapping;
 
-import de.bytefish.pgbulkinsert.function.ToBooleanFunction;
-import de.bytefish.pgbulkinsert.function.ToFloatFunction;
 import de.bytefish.pgbulkinsert.model.ColumnDefinition;
 import de.bytefish.pgbulkinsert.model.TableDefinition;
 import de.bytefish.pgbulkinsert.pgsql.PgBinaryWriter;
@@ -26,7 +24,6 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.ToDoubleFunction;
 import java.util.function.ToIntFunction;
-import java.util.function.ToLongFunction;
 import java.util.stream.Collectors;
 
 public abstract class AbstractMapping<TEntity> {
@@ -84,12 +81,6 @@ public abstract class AbstractMapping<TEntity> {
         map(columnName, DataType.Boolean, propertyGetter);
     }
 
-    protected void mapBoolean(String columnName, ToBooleanFunction<TEntity> propertyGetter) {
-        addColumn(columnName, (binaryWriter, entity) -> {
-            binaryWriter.writeBoolean(propertyGetter.applyAsBoolean(entity));
-        });
-    }
-
     protected void mapByte(String columnName, Function<TEntity, Number> propertyGetter) {
         map(columnName, DataType.Char, propertyGetter);
     }
@@ -128,20 +119,8 @@ public abstract class AbstractMapping<TEntity> {
         map(columnName, DataType.Int8, propertyGetter);
     }
 
-    protected void mapLong(String columnName, ToLongFunction<TEntity> propertyGetter) {
-        addColumn(columnName, (binaryWriter, entity) -> {
-            binaryWriter.writeLong(propertyGetter.applyAsLong(entity));
-        });
-    }
-
     protected void mapFloat(String columnName, Function<TEntity, Number> propertyGetter) {
         map(columnName, DataType.SinglePrecision, propertyGetter);
-    }
-
-    protected void mapFloat(String columnName, ToFloatFunction<TEntity> propertyGetter) {
-        addColumn(columnName, (binaryWriter, entity) -> {
-            binaryWriter.writeFloat(propertyGetter.applyAsFloat(entity));
-        });
     }
 
     protected void mapDouble(String columnName, Function<TEntity, Number> propertyGetter) {

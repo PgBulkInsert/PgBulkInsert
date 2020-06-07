@@ -30,13 +30,13 @@ You can add the following dependencies to your pom.xml to include [PgBulkInsert]
 <dependency>
     <groupId>de.bytefish.pgbulkinsert</groupId>
     <artifactId>pgbulkinsert-core</artifactId>
-    <version>6.0.1</version>
+    <version>7.0.0</version>
 </dependency>
 
 <dependency>
     <groupId>de.bytefish.pgbulkinsert</groupId>
     <artifactId>pgbulkinsert-rowwriter</artifactId>
-    <version>6.0.1</version>
+    <version>7.0.0</version>
 </dependency>
 ```
 
@@ -47,14 +47,14 @@ If you are working with Java8 you have to add a classifier ``jdk8`` to the depen
 <dependency>
     <groupId>de.bytefish.pgbulkinsert</groupId>
     <artifactId>pgbulkinsert-core</artifactId>
-    <version>6.0.1</version>
+    <version>7.0.0</version>
     <classifier>jdk8</classifier>
 </dependency>
 
 <dependency>
     <groupId>de.bytefish.pgbulkinsert</groupId>
     <artifactId>pgbulkinsert-rowwriter</artifactId>
-    <version>6.0.1</version>
+    <version>7.0.0</version>
     <classifier>jdk8</classifier>
 </dependency>
 ```
@@ -108,13 +108,14 @@ If you are working with Java8 you have to add a classifier ``jdk8`` to the depen
     * polygon
     * circle
 
+   
 ## Usage ##
 
-You can use the [PgBulkInsert] API in various ways.
+You can use the [PgBulkInsert] API in various ways. The first one is to use the ``SimpleRowWriter`` when you don't have 
+an explicit Java POJO, that matches a Table. The second way is to use an ``AbstractMapping<TEntityType>`` to define a 
+mapping between a Java POJO and a PostgreSQL table.
 
-The first one is to use the ``SimpleRowWriter`` when you don't have an explicit Java POJO, that matches a Table. The second way is to use an 
-``AbstractMapping<TEntityType>`` to define a mapping between a Java POJO and a PostgreSQL table. The third way is to use the ``JpaMapping`` 
-module, that allows you to reuse existing JPA mappings.
+Please also read the FAQ, which may answer some of your questions.
 
 ## Using the SimpleRowWriter ##
 
@@ -208,24 +209,6 @@ public class SimpleRowWriterTest extends TransactionalTestBase {
         Assert.assertEquals(10000, getRowCount());
     }
 }
-```
-
-### Handling Null Characters or... 'invalid byte sequence for encoding "UTF8": 0x00' ###
-
-If you see the error message ``invalid byte sequence for encoding "UTF8": 0x00`` your data contains Null Characters. Although ``0x00`` is 
-valid UTF-8 PostgreSQL does not support writing it, because it uses C-style string termination internally. 
-
-PgBulkInsert allows you to enable a Null Value handling, that removes all ``0x00`` occurences and replaces them with an empty string:
-    
-```java
-// Create the Table Definition:
-SimpleRowWriter.Table table = new SimpleRowWriter.Table(schema, tableName, columnNames);
-
-// Create the Writer:
-SimpleRowWriter writer = new SimpleRowWriter(table);
-
-// Enable the Null Character Handler:
-writer.enableNullCharacterHandler();
 ```
 
 If you need to customize the Null Character Handling, then you can use the ``setNullCharacterHandler(Function<String, String> nullCharacterHandler)`` function.
@@ -349,178 +332,61 @@ private List<Person> getPersonList(int num) {
 }
 ```
 
-## Using JPA Mappings ##
+## FAQ ##
 
-### Adding a Dependency to JPA Module ###
+### How can I write a ``java.sql.Timestamp``? ###
 
-In order to map between PgBulkInsert and an existing JPA Mapping you need to use the ``pgbulkinsert-jpa`` module and 
-add it as a dependency to your application:
+You probably have Java classes with a ``java.sql.Timestamp`` to represent timestamps in an application. Now if 
+you use the ``AbstractMapping`` or ``simpleRowWriter`` it expects a ``LocalDateTime``! Isn't it supported? How can 
+you write a ``Timestamp`` then?
 
-```xml
-<dependency>
-	<groupId>de.bytefish.pgbulkinsert</groupId>
-	<artifactId>pgbulkinsert-jpa</artifactId>
-	<version>6.0.1</version>
-</dependency>
-```
+Imagine you have an ``EMail`` class with a property ``emailCreateTime``, that is using a ``java.sql.Timestamp`` to 
+represent the time. The column name in Postgres is ``email_create_time`` and you are using a ``timestamp`` data type.
 
-### Create the Mapping ###
-
-To create the Mapping you simply need to pass your class, like this: ``new JpaMapping<>(SampleEntity.class);``.
-
-Here is a complete example:
+To map the ``java.sql.Timestamp`` you would write the ``mapTimeStamp`` method like this:
 
 ```java
-// Copyright (c) Philipp Wagner. All rights reserved.
-// Licensed under the MIT license. See LICENSE file in the project root for full license information.
+mapTimeStamp("email_create_time", x -> x.getEmailCreateTime() != null ? x.getEmailCreateTime().toLocalDateTime() : null);
+```
 
-package de.bytefish.pgbulkinsert.test.jpa;
+And here is the complete example:
 
-import de.bytefish.pgbulkinsert.PgBulkInsert;
-import de.bytefish.pgbulkinsert.jpa.JpaMapping;
-import de.bytefish.pgbulkinsert.util.PostgreSqlUtils;
-import de.bytefish.pgbulkinsert.utils.TransactionalTestBase;
-import org.junit.Assert;
-import org.junit.Test;
+```java
+public class EMail {
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
+    private Timestamp emailCreateTime;
 
-public class JpaMappingTests extends TransactionalTestBase {
-
-    @Entity
-    @Table(name = "unit_test", schema = "sample")
-    public class SampleEntity {
-
-        @Id
-        @Column(name = "id")
-        private Long id;
-
-        @Column(name = "int_field")
-        private Integer intField;
-
-        @Column(name = "text_field")
-        private String textField;
-
-        public Long getId() {
-            return id;
-        }
-
-        public void setId(Long id) {
-            this.id = id;
-        }
-
-        public Integer getIntField() {
-            return intField;
-        }
-
-        public void setIntField(Integer intField) {
-            this.intField = intField;
-        }
-
-        public String getTextField() {
-            return textField;
-        }
-
-        public void setTextField(String textField) {
-            this.textField = textField;
-        }
+    public Timestamp getEmailCreateTime() {
+        return emailCreateTime;
     }
+}
 
+public static class EMailMapping extends AbstractMapping<EMail>
+{
+    public EMailMapping(String schema) {
+        super(schema, "unit_test");
 
-    @Override
-    protected void onSetUpInTransaction() throws Exception {
-        createTable();
-    }
-
-    @Test
-    public void bulkImportSampleEntities() throws SQLException {
-        // Create a large list of People:
-        List<SampleEntity> personList = getSampleEntityList(100000);
-        // Create the JpaMapping:
-        JpaMapping<SampleEntity> mapping = new JpaMapping<>(SampleEntity.class);
-        // Create the Bulk Inserter:
-        PgBulkInsert<SampleEntity> bulkInsert = new PgBulkInsert<>(mapping);
-        // Now save all entities of a given stream:
-        bulkInsert.saveAll(PostgreSqlUtils.getPGConnection(connection), personList.stream());
-        // And assert all have been written to the database:
-        Assert.assertEquals(100000, getRowCount());
-    }
-
-    private List<SampleEntity> getSampleEntityList(int num) {
-        List<SampleEntity> results = new ArrayList<>();
-
-        for (int pos = 0; pos < num; pos++) {
-            SampleEntity p = new SampleEntity();
-
-            p.setId(pos + 1L);
-            p.setIntField(pos);
-            p.setTextField(Integer.toString(pos));
-
-            results.add(p);
-        }
-
-        return results;
-    }
-
-    private boolean createTable() throws SQLException {
-
-        String sqlStatement = String.format("CREATE TABLE %s.unit_test\n", schema) +
-                "            (\n" +
-                "                id int8,\n" +
-                "                int_field int4,\n" +
-                "                text_field text\n" +
-                "            );";
-
-        Statement statement = connection.createStatement();
-
-        return statement.execute(sqlStatement);
-    }
-
-    private int getRowCount() throws SQLException {
-
-        Statement s = connection.createStatement();
-
-        ResultSet r = s.executeQuery(String.format("SELECT COUNT(*) AS rowcount FROM %s.unit_test", schema));
-        r.next();
-        int count = r.getInt("rowcount");
-        r.close();
-
-        return count;
+        mapTimeStamp("email_create_time", x -> x.getEmailCreateTime() != null ? x.getEmailCreateTime().toLocalDateTime() : null);
     }
 }
 ```
 
-### Define the Postgres Types ###
+### Handling Null Characters or... 'invalid byte sequence for encoding "UTF8": 0x00' ###
 
-The ``JpaMapping`` makes a guess, what Postgres type you are going to use. But it could be wrong of course! Imagine you want 
-to map an ``Enumerated`` to a database, but your table uses an ``int4`` (Integer) instead of a ``int2`` (Short). This problem 
-is hard to solve with Reflection or additional JPA annotations. 
+If you see the error message ``invalid byte sequence for encoding "UTF8": 0x00`` your data contains Null Characters. Although ``0x00`` is 
+valid UTF-8 PostgreSQL does not support writing it, because it uses C-style string termination internally. 
 
-So the ``JpaMapping`` allows you to pass a map between column name and Postgres type into it:
-
+PgBulkInsert allows you to enable a Null Value handling, that removes all ``0x00`` occurences and replaces them with an empty string:
+    
 ```java
-@Test
-public void customEnumTypeMappingTest() throws SQLException {
+// Create the Table Definition:
+SimpleRowWriter.Table table = new SimpleRowWriter.Table(schema, tableName, columnNames);
 
-    // Create the Map:        
-    Map<String, DataType> postgresColumnMapping = new HashMap<>();
+// Create the Writer:
+SimpleRowWriter writer = new SimpleRowWriter(table);
 
-    postgresColumnMapping.put("enum_smallint_field_as_integer", DataType.Int4);
-
-    // Create the JpaMapping and pass the map:
-    JpaMapping<SampleEntity> mapping = new JpaMapping<>(SampleEntity.class, postgresColumnMapping);
-    
-    // ...
-    
-}
+// Enable the Null Character Handler:
+writer.enableNullCharacterHandler();
 ```
 
 ## Running the Tests ##

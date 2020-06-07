@@ -46,7 +46,7 @@ public class TimestampConversionTest extends TransactionalTestBase {
         public EMailMapping(String schema) {
             super(schema, "unit_test");
 
-            mapTimeStamp("email_create_time", x -> x != null ? Objects.requireNonNull(x.getEmailCreateTime(), "email_create_time").toLocalDateTime() : null);
+            mapTimeStamp("email_create_time", x -> x.getEmailCreateTime() != null ? x.getEmailCreateTime().toLocalDateTime() : null);
         }
     }
 
