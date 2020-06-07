@@ -59,34 +59,34 @@ public class TimestampMappingIssueTest extends TransactionalTestBase {
         public String errorCode;
     }
 
-    private static class TicketMapping extends AbstractMapping<Ticket> {
-        public TicketMapping(String schema) {
-            super(schema, "unit_test");
+private static class TicketMapping extends AbstractMapping<Ticket> {
+public TicketMapping(String schema) {
+    super(schema, "unit_test");
 
-            mapText("job_id", x -> x.jobId);
-            mapText("entity_id", x -> x.entityId);
-            mapNumeric("step_no", x -> x.stepNo);
-            mapText("status", x -> x.status != null ? x.status.name() : null);
-            mapText("op_type", x -> x.opType);
-            mapText("created_by", x -> x.createdBy);
-            mapText("reset_by", x -> x.resetBy);
-            mapTimeStamp("scheduled_end_time", x -> x.scheduledEndTime != null ? x.scheduledEndTime.toLocalDateTime() : null);
-            mapTimeStamp("scheduled_start_time", x -> x.scheduledStartTime != null ? x.scheduledStartTime.toLocalDateTime() : null);
-            mapTimeStamp("start_time", x -> x.startTime != null ? x.startTime.toLocalDateTime() : null);
-            mapTimeStamp("end_time", x -> x.endTime != null ? x.endTime.toLocalDateTime() : null);
-            mapBoolean("retryable", x -> x != null ? x.retryable : null);
-            mapNumeric("retry_count", x -> x.retryCount);
-            mapNumeric("cleanup_step", x -> x.cleanupStep);
-            mapText("assigned_to", x -> x.assignedTo);
-            mapText("external_ref_id", x -> x.externalRefId);
-            mapText("ticket_detail", x -> x.ticketDetail);
-            mapTimeStamp("created_time",  x -> x.createdTime != null ? x.createdTime.toLocalDateTime() : null);
-            mapText("updated_by", x -> x.updatedBy);
-            mapBoolean("dry_run", x -> x != null ? x.dryRun : null);
-            mapBoolean("cancel_requested", x -> x != null ? x.cancelRequested : null);
-            mapText("abort_code", x -> x.abortCode);
-            mapText("error_code", x -> x.errorCode);
-        }
+    mapText("job_id", x -> x.jobId);
+    mapText("entity_id", x -> x.entityId);
+    mapNumeric("step_no", x -> x.stepNo);
+    mapText("status", x -> x.status != null ? x.status.name() : null);
+    mapText("op_type", x -> x.opType);
+    mapText("created_by", x -> x.createdBy);
+    mapText("reset_by", x -> x.resetBy);
+    mapTimeStamp("scheduled_end_time", x -> x.scheduledEndTime != null ? x.scheduledEndTime.toLocalDateTime() : null);
+    mapTimeStamp("scheduled_start_time", x -> x.scheduledStartTime != null ? x.scheduledStartTime.toLocalDateTime() : null);
+    mapTimeStamp("start_time", x -> x.startTime != null ? x.startTime.toLocalDateTime() : null);
+    mapTimeStamp("end_time", x -> x.endTime != null ? x.endTime.toLocalDateTime() : null);
+    mapBoolean("retryable", x -> x != null ? x.retryable : null);
+    mapNumeric("retry_count", x -> x.retryCount);
+    mapNumeric("cleanup_step", x -> x.cleanupStep);
+    mapText("assigned_to", x -> x.assignedTo);
+    mapText("external_ref_id", x -> x.externalRefId);
+    mapText("ticket_detail", x -> x.ticketDetail);
+    mapTimeStamp("created_time",  x -> x.createdTime != null ? x.createdTime.toLocalDateTime() : null);
+    mapText("updated_by", x -> x.updatedBy);
+    mapBoolean("dry_run", x -> x != null ? x.dryRun : null);
+    mapBoolean("cancel_requested", x -> x != null ? x.cancelRequested : null);
+    mapText("abort_code", x -> x.abortCode);
+    mapText("error_code", x -> x.errorCode);
+}
 
 
     }

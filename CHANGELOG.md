@@ -1,5 +1,9 @@
 # CHANGELOG #
 
+## 7.0.0 ##
+
+* The ``JpaMapping<>`` has been dropped from the library.
+
 ## 6.0.1 ##
 
 * Adding ``SimpleRow#setTime`` for mapping ``LocalTime``
