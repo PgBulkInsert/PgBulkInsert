@@ -36,25 +36,28 @@ All of this great work was done by [@jonfreedman](https://github.com/jonfreedman
 
 There is a major change in how the library is released. The project now 
 targets both Java8 and Java11. You are able to use the JDK8 version by 
-appending "-jdk8" to the Maven Package name.
+using the ``jdk8`` classifier.
 
 So for Java8 you have to use the following dependencies:
 
 ```java
 <dependency>
 	<groupId>de.bytefish.pgbulkinsert</groupId>
-	<artifactId>pgbulkinsert-core-jdk8</artifactId>
+	<artifactId>pgbulkinsert-core</artifactId>
 	<version>6.0.0</version>
+	<classifier>jdk8</classifier>
 </dependency>
 <dependency>
 	<groupId>de.bytefish.pgbulkinsert</groupId>
-	<artifactId>pgbulkinsert-rowwriter-jdk8</artifactId>
+	<artifactId>pgbulkinsert-rowwriter</artifactId>
 	<version>6.0.0</version>
+	<classifier>jdk8</classifier>
 </dependency>
 <dependency>
 	<groupId>de.bytefish.pgbulkinsert</groupId>
-	<artifactId>pgbulkinsert-jpa-jdk8</artifactId>
+	<artifactId>pgbulkinsert-jpa</artifactId>
 	<version>6.0.0</version>
+	<classifier>jdk8</classifier>
 </dependency>
 ``` 
 
