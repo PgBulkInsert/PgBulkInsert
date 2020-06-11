@@ -30,13 +30,13 @@ You can add the following dependencies to your pom.xml to include [PgBulkInsert]
 <dependency>
     <groupId>de.bytefish.pgbulkinsert</groupId>
     <artifactId>pgbulkinsert-core</artifactId>
-    <version>7.0.0</version>
+    <version>7.0.1</version>
 </dependency>
 
 <dependency>
     <groupId>de.bytefish.pgbulkinsert</groupId>
     <artifactId>pgbulkinsert-rowwriter</artifactId>
-    <version>7.0.0</version>
+    <version>7.0.1</version>
 </dependency>
 ```
 
@@ -47,14 +47,14 @@ If you are working with Java8 you have to add a classifier ``jdk8`` to the depen
 <dependency>
     <groupId>de.bytefish.pgbulkinsert</groupId>
     <artifactId>pgbulkinsert-core</artifactId>
-    <version>7.0.0</version>
+    <version>7.0.1</version>
     <classifier>jdk8</classifier>
 </dependency>
 
 <dependency>
     <groupId>de.bytefish.pgbulkinsert</groupId>
     <artifactId>pgbulkinsert-rowwriter</artifactId>
-    <version>7.0.0</version>
+    <version>7.0.1</version>
     <classifier>jdk8</classifier>
 </dependency>
 ```
@@ -333,6 +333,19 @@ private List<Person> getPersonList(int num) {
 ```
 
 ## FAQ ##
+
+### How can I write Primitive Types (``boolean``, ``float``, ``double``)? ###
+
+By default methods like ``mapBoolean`` map the boxed type ``Boolean``, ``Integer``, ``Long``. This might be problematic 
+if you need to squeeze out the last seconds when doing bulk inserts, see Issue:
+
+* [https://github.com/PgBulkInsert/PgBulkInsert/issues/93](https://github.com/PgBulkInsert/PgBulkInsert/issues/93)
+
+So for every data type that also has a primitive type, you can add a "Primitive" suffix to the method name like:
+
+* ```mapBooleanPrimitive``
+
+This will use the primitive type and prevent boxing and unboxing of values.
 
 ### How can I write a ``java.sql.Timestamp``? ###
 
