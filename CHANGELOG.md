@@ -1,5 +1,15 @@
 # CHANGELOG #
 
+## 7.0.1 ##
+
+* Re-added support for primtive data types, but used method names:
+    * ``AbstractMapping#mapBooleanPrimitive``
+    * ``AbstractMapping#mapBytePrimitive``
+    * ``AbstractMapping#mapShortPrimtive``
+    * ``AbstractMapping#mapIntegerPrimitive``
+    * ``AbstractMapping#mapFloatPrimitive``
+    * ``AbstractMapping#mapDoublePrimitive``
+
 ## 7.0.0 ##
 
 * The ``JpaMapping<>`` has been dropped from the library.
