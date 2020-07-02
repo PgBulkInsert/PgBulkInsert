@@ -273,7 +273,7 @@
             <scope>compile</scope>
             <groupId>org.checkerframework</groupId>
             <artifactId>checker-qual</artifactId>
-            <version>3.4.1</version>
+            <version>3.5.0</version>
         </dependency>
 
         <dependency>
