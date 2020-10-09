@@ -6,7 +6,7 @@
 [Npgsql]: https://github.com/npgsql/npgsql
 
 ![](https://github.com/PgBulkInsert/PgBulkInsert/workflows/Java%20CI%20with%20Maven/badge.svg)
-![](https://maven-badges.herokuapp.com/maven-central/de.bytefish.pgbulkinsert/pgbulkinsert-core/badge.svg)
+![](https://maven-badges.herokuapp.com/maven-central/de.bytefish/pgbulkinsert/badge.svg)
 [![Maintainability](https://api.codeclimate.com/v1/badges/311ce156ff026549ba7f/maintainability)](https://codeclimate.com/github/PgBulkInsert/PgBulkInsert/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/311ce156ff026549ba7f/test_coverage)](https://codeclimate.com/github/PgBulkInsert/PgBulkInsert/test_coverage)
 
@@ -28,38 +28,11 @@ You can add the following dependencies to your pom.xml to include [PgBulkInsert]
 
 ```xml
 <dependency>
-    <groupId>de.bytefish.pgbulkinsert</groupId>
-    <artifactId>pgbulkinsert-core</artifactId>
-    <version>7.0.1</version>
-</dependency>
-
-<dependency>
-    <groupId>de.bytefish.pgbulkinsert</groupId>
-    <artifactId>pgbulkinsert-rowwriter</artifactId>
-    <version>7.0.1</version>
+    <groupId>de.bytefish</groupId>
+    <artifactId>pgbulkinsert</artifactId>
+    <version>8.0.0</version>
 </dependency>
 ```
-
-If you are working with Java8 you have to add a classifier ``jdk8`` to the dependencies:
-
-
-```xml
-<dependency>
-    <groupId>de.bytefish.pgbulkinsert</groupId>
-    <artifactId>pgbulkinsert-core</artifactId>
-    <version>7.0.1</version>
-    <classifier>jdk8</classifier>
-</dependency>
-
-<dependency>
-    <groupId>de.bytefish.pgbulkinsert</groupId>
-    <artifactId>pgbulkinsert-rowwriter</artifactId>
-    <version>7.0.1</version>
-    <classifier>jdk8</classifier>
-</dependency>
-```
-
-
 
 ## Supported PostgreSQL Types ##
 

@@ -8,8 +8,8 @@ echo - Bundling Artifacts for OSSRH Repository Upload  -
 echo ---------------------------------------------------
 
 :: Define the Executables, so we don't have to rely on pathes:
-set MVN_EXECUTABLE="C:\Program Files (x86)\Maven\apache-maven-3.6.3\bin\mvn.cmd"
-set GPG_EXECUTABLE="C:\Program Files (x86)\GNU\GnuPG\pub\gpg.exe"
+set MVN_EXECUTABLE="G:\apache-maven-3.6.3-bin\apache-maven-3.6.3\bin\mvn.cmd"
+set GPG_EXECUTABLE="C:\Program Files (x86)\gnupg\bin\gpg.exe"
 
 :: GPG Key ID used for signing:
 set GPG_KEY_ID=E4B54CD3
