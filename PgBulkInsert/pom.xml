@@ -4,19 +4,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>de.bytefish.pgbulkinsert</groupId>
-    <artifactId>pgbulkinsert-parent</artifactId>
-    <packaging>pom</packaging>
-    <version>7.0.1</version>
+    <groupId>de.bytefish</groupId>
+    <artifactId>pgbulkinsert</artifactId>
+    <version>8.0.0</version>
     <name>pgbulkinsert</name>
     <description>PgBulkInsert is a Java library for Bulk Inserts with PostgreSQL.</description>
     <url>http://www.github.com/bytefish/PgBulkInsert</url>
-
-    <modules>
-        <module>pgbulkinsert-core</module>
-        <module>pgbulkinsert-rowwriter</module>
-        <module>pgbulkinsert-bulkprocessor</module>
-    </modules>
 
     <!-- Define the License -->
     <licenses>
@@ -59,20 +52,9 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
                     <version>3.8.1</version>
-                    <executions>
-                        <execution>
-                            <id>compile-jdk8</id>
-                            <goals>
-                                <goal>compile</goal>
-                            </goals>
-                            <configuration>
-                                <release>8</release>
-                                <outputDirectory>${project.build.outputDirectory}_jdk8</outputDirectory>
-                            </configuration>
-                        </execution>
-                    </executions>
                     <configuration>
-                        <release>11</release>
+                        <source>1.8</source>
+                        <target>1.8</target>
                         <fork>true</fork>
                         <showWarnings>true</showWarnings>
                         <compilerArgs>
@@ -178,7 +160,6 @@
             <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
         </repository>
     </distributionManagement>
-
 
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
