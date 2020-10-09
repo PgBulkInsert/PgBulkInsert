@@ -18,6 +18,7 @@ public class BulkProcessor<TEntity> implements AutoCloseable {
 
     @Nullable
     private final ScheduledThreadPoolExecutor scheduler;
+
     @Nullable
     private final ScheduledFuture<?> scheduledFuture;
 
