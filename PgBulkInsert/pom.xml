@@ -221,7 +221,7 @@
             <scope>compile</scope>
             <groupId>org.checkerframework</groupId>
             <artifactId>checker-qual</artifactId>
-            <version>3.7.0</version>
+            <version>3.7.1</version>
         </dependency>
 
         <dependency>
