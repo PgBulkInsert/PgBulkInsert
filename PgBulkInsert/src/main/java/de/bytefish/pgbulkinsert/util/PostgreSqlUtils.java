@@ -5,8 +5,10 @@ package de.bytefish.pgbulkinsert.util;
 import de.bytefish.pgbulkinsert.exceptions.PgConnectionException;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.postgresql.PGConnection;
+import org.postgresql.core.Utils;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Optional;
 
 public final class PostgreSqlUtils {
@@ -44,10 +46,12 @@ public final class PostgreSqlUtils {
         return Optional.empty();
     }
 
-    public static final char QuoteChar = '"';
-
     public static String quoteIdentifier(String identifier) {
-        return requiresQuoting(identifier) ? (QuoteChar + identifier + QuoteChar) : identifier;
+        try {
+            return Utils.escapeIdentifier(null, identifier).toString();
+        } catch (SQLException e) {
+            throw new IllegalArgumentException("Invalid identifier", e);
+        }
     }
 
     @SuppressWarnings("NullAway")
@@ -62,17 +66,5 @@ public final class PostgreSqlUtils {
         }
 
         return String.format("%1$s.%2$s", schemaName, tableName);
-    }
-
-    private static boolean requiresQuoting(String identifier) {
-
-        char first = identifier.charAt(0);
-        char last = identifier.charAt(identifier.length() - 1);
-
-        if (first == QuoteChar && last == QuoteChar) {
-            return false;
-        }
-
-        return true;
     }
 }
