@@ -14,6 +14,9 @@ import java.util.List;
  * The Algorithm for turning a BigDecimal into a Postgres Numeric is heavily inspired by the Intermine Implementation:
  * <p>
  * https://github.com/intermine/intermine/blob/master/intermine/objectstore/main/src/org/intermine/sql/writebatch/BatchWriterPostgresCopyImpl.java
+ * <p>
+ *  please see struct definition of @{link NumericVar} for numeric data type byte structure at:
+ *  https://github.com/postgres/postgres/blob/master/src/backend/utils/adt/numeric.c
  */
 public class BigDecimalValueHandler<T extends Number> extends BaseValueHandler<T> {
 
@@ -28,7 +31,7 @@ public class BigDecimalValueHandler<T extends Number> extends BaseValueHandler<T
         final int fractionDigits = tmpValue.scale();
 
         // Number of Fraction Groups:
-        final int fractionGroups = (fractionDigits + 3) / 4;
+        final int fractionGroups = fractionDigits > 0 ? (fractionDigits + 3) / 4 : 0;
 
         final List<Integer> digits = digits(tmpValue);
 
@@ -36,7 +39,7 @@ public class BigDecimalValueHandler<T extends Number> extends BaseValueHandler<T
         buffer.writeShort(digits.size());
         buffer.writeShort(digits.size() - fractionGroups - 1);
         buffer.writeShort(tmpValue.signum() == 1 ? 0x0000 : 0x4000);
-        buffer.writeShort(fractionDigits);
+        buffer.writeShort(fractionDigits > 0 ? fractionDigits : 0);
 
         // Now write each digit:
         for (int pos = digits.size() - 1; pos >= 0; pos--) {
@@ -68,21 +71,30 @@ public class BigDecimalValueHandler<T extends Number> extends BaseValueHandler<T
 
         final List<Integer> digits = new ArrayList<>();
 
-        // The scale needs to be a multiple of 4:
-        int scaleRemainder = value.scale() % 4;
+        if (value.scale() > 0) {
+            // The scale needs to be a multiple of 4:
+            int scaleRemainder = value.scale() % 4;
 
-        // Scale the first value:
-        if (scaleRemainder != 0) {
-            final BigInteger[] result = unscaledValue.divideAndRemainder(BigInteger.TEN.pow(scaleRemainder));
-            final int digit = result[1].intValue() * (int) Math.pow(10, DECIMAL_DIGITS - scaleRemainder);
-            digits.add(digit);
-            unscaledValue = result[0];
-        }
+            // Scale the first value:
+            if (scaleRemainder != 0) {
+                final BigInteger[] result = unscaledValue.divideAndRemainder(BigInteger.TEN.pow(scaleRemainder));
+                final int digit = result[1].intValue() * (int) Math.pow(10, DECIMAL_DIGITS - scaleRemainder);
+                digits.add(digit);
+                unscaledValue = result[0];
+            }
 
-        while (!unscaledValue.equals(BigInteger.ZERO)) {
-            final BigInteger[] result = unscaledValue.divideAndRemainder(TEN_THOUSAND);
-            digits.add(result[1].intValue());
-            unscaledValue = result[0];
+            while (!unscaledValue.equals(BigInteger.ZERO)) {
+                final BigInteger[] result = unscaledValue.divideAndRemainder(TEN_THOUSAND);
+                digits.add(result[1].intValue());
+                unscaledValue = result[0];
+            }
+        } else {
+            BigInteger originalValue = unscaledValue.multiply(BigInteger.TEN.pow(Math.abs(value.scale())));
+            while (!originalValue.equals(BigInteger.ZERO)) {
+                final BigInteger[] result = originalValue.divideAndRemainder(TEN_THOUSAND);
+                digits.add(result[1].intValue());
+                originalValue = result[0];
+            }
         }
 
         return digits;
