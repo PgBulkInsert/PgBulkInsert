@@ -40,7 +40,7 @@ You can add the following dependencies to your pom.xml to include [PgBulkInsert]
     * bigint
     * real
     * double precision
-	* numeric
+    * numeric
 * [Date/Time Types](http://www.postgresql.org/docs/current/static/datatype-datetime.html)
     * timestamp
     * timestamptz
@@ -301,6 +301,58 @@ private List<Person> getPersonList(int num) {
 
     return personList;
 }
+```
+
+### Bulk Upsert ###
+
+You may need to upsert (insert new and update already existing) data instead of insert only. In this case, you can use `AbstractUpsertMapping` instead of `AbstractMapping`.
+
+```java
+public class PersonUpsertMapping extends AbstractUpsertMapping<Person>
+{
+    public PersonMergeMapping() {
+        super("sample", "unit_test", "id");
+
+        mapText("id", Person::getId);
+        mapText("first_name", Person::getFirstName);
+        mapText("last_name", Person::getLastName);
+        mapDate("birth_date", Person::getBirthDate);
+    }
+}
+```
+
+Then, you can use `PgBulkUpsert` exacty the same as `PgBulkInsert` :
+
+```java
+    @Test
+    public void bulkInsertPersonDataTest() throws SQLException {
+        // Create a large list of People:
+        List<PersonWithId> personList = getPersonList(100000, "Philipp");
+        List<PersonWithId> personListUpdate = getPersonList(50000, "Johann");
+        // Create the BulkInserter:
+        PgBulkMerge<PersonWithId> bulkmerge = new PgBulkMerge<PersonWithId>(new PersonWithIdUpsertMapping(schema));
+        // Now save all entities of a given stream:
+        bulkmerge.saveAll(PostgreSqlUtils.getPGConnection(connection), personList.stream());
+        bulkmerge.saveAll(PostgreSqlUtils.getPGConnection(connection), personListUpdate.stream());
+        Assert.assertEquals(50000, getRowCountByName("Philipp"));
+        Assert.assertEquals(50000, getRowCountByName("Johann"));
+    }
+
+    private List<PersonWithId> getPersonList(int num, String firstName) {
+        List<PersonWithId> personList = new ArrayList<>();
+
+        for (long pos = 0; pos < num; pos++) {
+            PersonWithId p = new PersonWithId();
+
+            p.setId(pos);
+            p.setFirstName(firstName);
+            p.setBirthDate(LocalDate.of(1989, 4, 12));
+
+            personList.add(p);
+        }
+
+        return personList;
+    }
 ```
 
 ## FAQ ##
