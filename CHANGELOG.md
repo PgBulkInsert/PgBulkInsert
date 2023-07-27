@@ -8,6 +8,10 @@
 
 * Fixed Quoting Issues raised in Issue #118. Thanks to @krisse7 for PR #120!
 
+## 8.0.0 ##
+
+* Moved entire code into a single project, remove multi modules.
+
 ## 7.0.1 ##
 
 * Re-added support for primtive data types, but used method names:
