@@ -141,7 +141,7 @@ public class ObjectIdentifier {
     public static int Date = 1082;
 
     // Time Of Day
-    public static int Time = 1082;
+    public static int Time = 1083;
 
     // endregion
 
