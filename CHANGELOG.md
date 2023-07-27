@@ -1,5 +1,13 @@
 # CHANGELOG #
 
+## 8.1.1 ##
+
+* Fix OID for Time ([Issue #125](https://github.com/PgBulkInsert/PgBulkInsert/issues/125))
+
+## 8.1.0 ##
+
+* Fixed Quoting Issues raised in Issue #118. Thanks to @krisse7 for PR #120!
+
 ## 7.0.1 ##
 
 * Re-added support for primtive data types, but used method names:
