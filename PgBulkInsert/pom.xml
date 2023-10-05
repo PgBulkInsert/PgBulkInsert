@@ -218,13 +218,6 @@
         </dependency>
 
         <dependency>
-            <scope>compile</scope>
-            <groupId>org.checkerframework</groupId>
-            <artifactId>checker-qual</artifactId>
-            <version>3.9.1</version>
-        </dependency>
-
-        <dependency>
             <scope>test</scope>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
