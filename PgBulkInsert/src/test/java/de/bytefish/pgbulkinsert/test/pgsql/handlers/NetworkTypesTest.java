@@ -7,7 +7,6 @@ import de.bytefish.pgbulkinsert.mapping.AbstractMapping;
 import de.bytefish.pgbulkinsert.pgsql.model.network.MacAddress;
 import de.bytefish.pgbulkinsert.test.utils.TransactionalTestBase;
 import de.bytefish.pgbulkinsert.util.PostgreSqlUtils;
-import org.checkerframework.checker.nullness.qual.Nullable;
 import org.junit.Assert;
 import org.junit.Test;
 import org.postgresql.util.PGobject;
@@ -21,10 +20,8 @@ import java.util.List;
 public class NetworkTypesTest extends TransactionalTestBase {
 
     private static class NetworkEntity {
-        @Nullable
         private MacAddress col_mac_addr;
 
-        @Nullable
         public MacAddress getCol_mac_addr() {
             return col_mac_addr;
         }

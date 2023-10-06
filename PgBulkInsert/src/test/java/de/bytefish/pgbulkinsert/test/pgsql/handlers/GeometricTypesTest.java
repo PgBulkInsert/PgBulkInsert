@@ -7,7 +7,6 @@ import de.bytefish.pgbulkinsert.mapping.AbstractMapping;
 import de.bytefish.pgbulkinsert.pgsql.model.geometric.*;
 import de.bytefish.pgbulkinsert.test.utils.TransactionalTestBase;
 import de.bytefish.pgbulkinsert.util.PostgreSqlUtils;
-import org.checkerframework.checker.nullness.qual.Nullable;
 import org.junit.Assert;
 import org.junit.Test;
 import org.postgresql.geometric.*;
@@ -22,19 +21,12 @@ public class GeometricTypesTest extends TransactionalTestBase {
 
     private static class GeometricEntity {
 
-        @Nullable
         private Point col_point;
-        @Nullable
         private Path col_path;
-        @Nullable
         private Polygon col_polygon;
-        @Nullable
         private Box col_box;
-        @Nullable
         private Line col_line;
-        @Nullable
         private Circle col_circle;
-        @Nullable
         private LineSegment col_line_segment;
 
         public void setCol_point(Point col_point) {
@@ -65,37 +57,30 @@ public class GeometricTypesTest extends TransactionalTestBase {
             this.col_line_segment = col_line_segment;
         }
 
-        @Nullable
         public Point getCol_point() {
             return col_point;
         }
 
-        @Nullable
         public Path getCol_path() {
             return col_path;
         }
 
-        @Nullable
         public Polygon getCol_polygon() {
             return col_polygon;
         }
 
-        @Nullable
         public Box getCol_box() {
             return col_box;
         }
 
-        @Nullable
         public Line getCol_line() {
             return col_line;
         }
 
-        @Nullable
         public Circle getCol_circle() {
             return col_circle;
         }
 
-        @Nullable
         public LineSegment getCol_line_segment() {
             return col_line_segment;
         }
@@ -421,7 +406,6 @@ public class GeometricTypesTest extends TransactionalTestBase {
         }
     }
 
-
     private ResultSet getAll() throws SQLException {
         String sqlStatement = String.format("SELECT * FROM %s.geometric_table", schema);
 
@@ -429,7 +413,4 @@ public class GeometricTypesTest extends TransactionalTestBase {
 
         return statement.executeQuery(sqlStatement);
     }
-
-
-
 }

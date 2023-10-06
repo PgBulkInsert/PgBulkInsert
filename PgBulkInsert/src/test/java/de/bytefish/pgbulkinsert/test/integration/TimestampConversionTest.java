@@ -6,7 +6,6 @@ import de.bytefish.pgbulkinsert.PgBulkInsert;
 import de.bytefish.pgbulkinsert.mapping.AbstractMapping;
 import de.bytefish.pgbulkinsert.test.utils.TransactionalTestBase;
 import de.bytefish.pgbulkinsert.util.PostgreSqlUtils;
-import org.checkerframework.checker.nullness.qual.Nullable;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -27,10 +26,8 @@ public class TimestampConversionTest extends TransactionalTestBase {
 
     public static class EMail {
 
-        @Nullable
         private Timestamp emailCreateTime;
 
-        @Nullable
         public Timestamp getEmailCreateTime() {
             return emailCreateTime;
         }

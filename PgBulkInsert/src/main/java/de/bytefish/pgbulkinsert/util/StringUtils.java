@@ -2,8 +2,6 @@
 
 package de.bytefish.pgbulkinsert.util;
 
-import org.checkerframework.checker.nullness.qual.Nullable;
-
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
@@ -13,7 +11,7 @@ public class StringUtils {
 
     private StringUtils() {}
 
-    public static boolean isNullOrWhiteSpace(@Nullable String input) {
+    public static boolean isNullOrWhiteSpace(String input) {
         return input == null || input.trim().length() == 0;
     }
 
@@ -21,10 +19,9 @@ public class StringUtils {
         return value.getBytes(utf8Charset);
     }
 
-    @Nullable
-    public static String removeNullCharacter(@Nullable String data) {
+    public static String removeNullCharacter(String data) {
 		if (data == null) {
-			return data;
+			return null;
 		}
 
 		return data.replaceAll("\u0000", "");

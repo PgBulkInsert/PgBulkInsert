@@ -2,14 +2,12 @@
 
 package de.bytefish.pgbulkinsert.util;
 
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class ExceptionUtils {
 
     private ExceptionUtils() {}
 
-    @Nullable
-    public static Throwable getRootCause(@Nullable Throwable t) {
+    public static Throwable getRootCause(Throwable t) {
         if (t == null) {
             return null;
         }

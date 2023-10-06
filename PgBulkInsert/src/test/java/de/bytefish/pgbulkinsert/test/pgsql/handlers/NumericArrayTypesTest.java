@@ -6,7 +6,6 @@ import de.bytefish.pgbulkinsert.PgBulkInsert;
 import de.bytefish.pgbulkinsert.mapping.AbstractMapping;
 import de.bytefish.pgbulkinsert.test.utils.TransactionalTestBase;
 import de.bytefish.pgbulkinsert.util.PostgreSqlUtils;
-import org.checkerframework.checker.nullness.qual.Nullable;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -26,30 +25,18 @@ public class NumericArrayTypesTest extends TransactionalTestBase {
 
     private static class ArrayEntity {
 
-        @Nullable
         public List<BigDecimal> bigDecimalArray;
-        @Nullable
         public List<Double> doubleArray;
-        @Nullable
         public List<Float> floatArray;
-        @Nullable
         public List<Long> longArray;
-        @Nullable
         public List<Short> shortArray;
-        @Nullable
         public List<Integer> integerArray;
 
-        @Nullable
         public List<BigDecimal> getBigDecimalArray() { return bigDecimalArray; }
-        @Nullable
         public List<Double> getDoubleArray() { return doubleArray; }
-        @Nullable
         public List<Float> getFloatArray() { return floatArray; }
-        @Nullable
         public List<Long> getLongArray() { return longArray; }
-        @Nullable
         public List<Short> getShortArray() { return shortArray; }
-        @Nullable
         public List<Integer> getIntegerArray() { return integerArray; }
     }
 
@@ -158,7 +145,7 @@ public class NumericArrayTypesTest extends TransactionalTestBase {
         testArrayInternal("col_integer_array", entity, entity.integerArray, BigDecimal::intValue);
     }
 
-    private <T> void testArrayInternal(String columnLabel, ArrayEntity entity, @Nullable List<T> samples, Function<BigDecimal, T> converter) throws SQLException {
+    private <T> void testArrayInternal(String columnLabel, ArrayEntity entity, List<T> samples, Function<BigDecimal, T> converter) throws SQLException {
         Objects.requireNonNull(samples, "samples");
 
         List<ArrayEntity> entities = Collections.singletonList(entity);

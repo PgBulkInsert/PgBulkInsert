@@ -9,7 +9,6 @@ import de.bytefish.pgbulkinsert.pgsql.handlers.BigDecimalValueHandler;
 import de.bytefish.pgbulkinsert.pgsql.handlers.IValueHandler;
 import de.bytefish.pgbulkinsert.test.utils.TransactionalTestBase;
 import de.bytefish.pgbulkinsert.util.PostgreSqlUtils;
-import org.checkerframework.checker.nullness.qual.Nullable;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -51,10 +50,8 @@ public class CustomValueHandlerIntegrationTest extends TransactionalTestBase {
 
     private static class SampleEntity {
 
-        @Nullable
         private Double doubleValue;
 
-        @Nullable
         public Double getDoubleValue() {
             return doubleValue;
         }

@@ -4,7 +4,6 @@ import de.bytefish.pgbulkinsert.PgBulkInsert;
 import de.bytefish.pgbulkinsert.mapping.AbstractMapping;
 import de.bytefish.pgbulkinsert.test.utils.TransactionalTestBase;
 import de.bytefish.pgbulkinsert.util.PostgreSqlUtils;
-import org.checkerframework.checker.nullness.qual.Nullable;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -23,7 +22,6 @@ public class PgBulkInsertPrimitivesTest extends TransactionalTestBase {
 		public double col_double;
 		public long col_long;
 		public short col_short;
-        @Nullable
 		public byte[] col_bytearray;
 		public boolean col_boolean;
 
@@ -43,7 +41,6 @@ public class PgBulkInsertPrimitivesTest extends TransactionalTestBase {
 		public short getCol_short() {
 			return col_short;
 		}
-        @Nullable
 		public byte[] getCol_bytearray() {
 			return col_bytearray;
 		}

@@ -2,8 +2,6 @@
 
 package de.bytefish.pgbulkinsert.pgsql.model.range;
 
-import org.checkerframework.checker.nullness.qual.Nullable;
-
 import java.util.Objects;
 
 // https://github.com/npgsql/npgsql/blob/d4132d0d546594629bcef658bcb1418b4a8624cc/src/Npgsql/NpgsqlTypes/NpgsqlRange.cs
@@ -11,27 +9,25 @@ public class Range<TElementType> {
 
     private int flags;
 
-    @Nullable
     private TElementType lowerBound;
 
-    @Nullable
     private TElementType upperBound;
 
-    public Range(@Nullable TElementType lowerBound, @Nullable TElementType upperBound) {
+    public Range(TElementType lowerBound, TElementType upperBound) {
         this(lowerBound, true, false, upperBound, true, false);
     }
 
-    public Range(@Nullable TElementType lowerBound, boolean lowerBoundIsInclusive, @Nullable TElementType upperBound, boolean upperBoundIsInclusive) {
+    public Range(TElementType lowerBound, boolean lowerBoundIsInclusive, TElementType upperBound, boolean upperBoundIsInclusive) {
         this(lowerBound, lowerBoundIsInclusive, false, upperBound, upperBoundIsInclusive, false);
     }
 
-    public Range(@Nullable TElementType lowerBound, boolean lowerBoundIsInclusive, boolean lowerBoundInfinite,
-                 @Nullable TElementType upperBound, boolean upperBoundIsInclusive, boolean upperBoundInfinite) {
+    public Range(TElementType lowerBound, boolean lowerBoundIsInclusive, boolean lowerBoundInfinite,
+                 TElementType upperBound, boolean upperBoundIsInclusive, boolean upperBoundInfinite) {
         this(lowerBound, upperBound, evaluateBoundaryFlags(lowerBoundIsInclusive, upperBoundIsInclusive, lowerBoundInfinite, upperBoundInfinite));
     }
 
 
-    private Range(@Nullable TElementType lowerBound, @Nullable TElementType upperBound, int flags) {
+    private Range(TElementType lowerBound, TElementType upperBound, int flags) {
         this.lowerBound = (flags & RangeFlags.LowerBoundInfinite) != 0 ? null : lowerBound;
         this.upperBound = (flags & RangeFlags.UpperBoundInfinite) != 0 ? null : upperBound;
         this.flags = flags;
@@ -52,7 +48,7 @@ public class Range<TElementType> {
         }
     }
 
-    private boolean isEmptyRange(@Nullable TElementType lowerBound, @Nullable TElementType upperBound, int flags) {
+    private boolean isEmptyRange(TElementType lowerBound, TElementType upperBound, int flags) {
         // ---------------------------------------------------------------------------------
         // We only want to check for those conditions that are unambiguously erroneous:
         //   1. The bounds must not be default values (including null).
@@ -121,7 +117,6 @@ public class Range<TElementType> {
         return (flags & RangeFlags.UpperBoundInfinite) != 0;
     }
 
-    @Nullable
     public TElementType getLowerBound() {
         return lowerBound;
     }
@@ -130,7 +125,6 @@ public class Range<TElementType> {
         this.lowerBound = lowerBound;
     }
 
-    @Nullable
     public TElementType getUpperBound() {
         return upperBound;
     }

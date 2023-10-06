@@ -3,7 +3,6 @@
 package de.bytefish.pgbulkinsert.util;
 
 import de.bytefish.pgbulkinsert.exceptions.PgConnectionException;
-import org.checkerframework.checker.nullness.qual.Nullable;
 import org.postgresql.PGConnection;
 import org.postgresql.core.Utils;
 
@@ -54,8 +53,7 @@ public final class PostgreSqlUtils {
         }
     }
 
-    @SuppressWarnings("NullAway")
-    public static String getFullyQualifiedTableName(@Nullable String schemaName, String tableName, boolean usePostgresQuoting) {
+    public static String getFullyQualifiedTableName(String schemaName, String tableName, boolean usePostgresQuoting) {
         if (usePostgresQuoting) {
             return StringUtils.isNullOrWhiteSpace(schemaName) ? quoteIdentifier(tableName)
                     : String.format("%s.%s", quoteIdentifier(schemaName), quoteIdentifier(tableName));

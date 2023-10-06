@@ -4,7 +4,6 @@ package de.bytefish.pgbulkinsert.pgsql;
 
 import de.bytefish.pgbulkinsert.exceptions.BinaryWriteFailedException;
 import de.bytefish.pgbulkinsert.pgsql.handlers.IValueHandler;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.io.BufferedOutputStream;
 import java.io.DataOutputStream;
@@ -37,7 +36,7 @@ public class PgBinaryWriter implements AutoCloseable {
 		}
     }
 
-    public <TTargetType> void write(final IValueHandler<TTargetType> handler, @Nullable final TTargetType value) {
+    public <TTargetType> void write(final IValueHandler<TTargetType> handler, final TTargetType value) {
         handler.handle(buffer, value);
     }
 

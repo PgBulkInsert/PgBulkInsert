@@ -3,7 +3,6 @@
 package de.bytefish.pgbulkinsert.bulkprocessor;
 
 import de.bytefish.pgbulkinsert.bulkprocessor.handler.IBulkWriteHandler;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.time.Duration;
 import java.util.ArrayList;
@@ -16,10 +15,8 @@ import java.util.concurrent.TimeUnit;
 
 public class BulkProcessor<TEntity> implements AutoCloseable {
 
-    @Nullable
-    private final ScheduledThreadPoolExecutor scheduler;
+   private final ScheduledThreadPoolExecutor scheduler;
 
-    @Nullable
     private final ScheduledFuture<?> scheduledFuture;
 
     private volatile boolean closed = false;
@@ -34,7 +31,7 @@ public class BulkProcessor<TEntity> implements AutoCloseable {
         this(handler, bulkSize, null);
     }
 
-    public BulkProcessor(IBulkWriteHandler<TEntity> handler, int bulkSize, @Nullable Duration flushInterval) {
+    public BulkProcessor(IBulkWriteHandler<TEntity> handler, int bulkSize, Duration flushInterval) {
 
         this.handler = handler;
         this.bulkSize = bulkSize;

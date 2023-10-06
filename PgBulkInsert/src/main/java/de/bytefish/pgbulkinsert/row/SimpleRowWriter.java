@@ -5,7 +5,6 @@ import de.bytefish.pgbulkinsert.pgsql.PgBinaryWriter;
 import de.bytefish.pgbulkinsert.pgsql.handlers.ValueHandlerProvider;
 import de.bytefish.pgbulkinsert.util.PostgreSqlUtils;
 import de.bytefish.pgbulkinsert.util.StringUtils;
-import org.checkerframework.checker.nullness.qual.Nullable;
 import org.postgresql.PGConnection;
 import org.postgresql.copy.PGCopyOutputStream;
 
@@ -21,7 +20,6 @@ public class SimpleRowWriter implements  AutoCloseable {
 
     public static class Table {
 
-        @Nullable
         private final String schema;
         private final String table;
         private final String[] columns;
@@ -30,13 +28,12 @@ public class SimpleRowWriter implements  AutoCloseable {
             this(null, table, columns);
         }
 
-        public Table(@Nullable String schema, String table, String... columns) {
+        public Table(String schema, String table, String... columns) {
             this.schema = schema;
             this.table = table;
             this.columns = columns;
         }
 
-        @Nullable
         public String getSchema() {
             return schema;
         }
