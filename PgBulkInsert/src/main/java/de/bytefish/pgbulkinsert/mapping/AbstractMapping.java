@@ -11,6 +11,7 @@ import de.bytefish.pgbulkinsert.pgsql.constants.DataType;
 import de.bytefish.pgbulkinsert.pgsql.constants.ObjectIdentifier;
 import de.bytefish.pgbulkinsert.pgsql.handlers.*;
 import de.bytefish.pgbulkinsert.pgsql.model.geometric.*;
+import de.bytefish.pgbulkinsert.pgsql.model.interval.Interval;
 import de.bytefish.pgbulkinsert.pgsql.model.network.MacAddress;
 import de.bytefish.pgbulkinsert.pgsql.model.range.Range;
 import de.bytefish.pgbulkinsert.util.PostgreSqlUtils;
@@ -168,6 +169,10 @@ public abstract class AbstractMapping<TEntity> {
     // endregion
 
     // region Temporal
+
+    protected void mapInterval(String columnName, Function<TEntity, Interval> propertyGetter) {
+        map(columnName, DataType.Interval, propertyGetter);
+    }
 
     protected void mapDate(String columnName, Function<TEntity, LocalDate> propertyGetter) {
         map(columnName, DataType.Date, propertyGetter);
