@@ -49,7 +49,7 @@ public class SimpleRowWriterTest extends TransactionalTestBase {
 
                 // ... using startRow and work with the row, see how the order doesn't matter:
                 writer.startRow((row) -> {
-                    row.setInterval("value_interval", new Interval(1,2,3,5,5,6));
+                    row.setInterval("value_interval",  new Interval(2, 15, 2, 3, 4, 5000)); // 2 mons 15 days 02:03:04.005
                     row.setText("value_text", "Hi");
                     row.setInteger("value_int", 1);
                     row.setTsTzRange("value_range", new Range<>(
