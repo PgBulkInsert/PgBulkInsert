@@ -158,6 +158,34 @@ public class PgBulkInsertTest extends TransactionalTestBase {
             mapDoubleArray("col_double_array", SampleEntity::getCol_double_array);
             mapJsonb("col_jsonb", SampleEntity::getCol_jsonb);
             mapNumeric("col_numeric", SampleEntity::getCol_numeric);
+            mapInterval("col_interval", SampleEntity::get_col_interval);
+        }
+    }
+
+    @Test
+    public void saveAll_interval_Test() throws SQLException {
+
+        // This list will be inserted.
+        List<SampleEntity> entities = new ArrayList<>();
+
+        // Create the Entity to insert:
+        SampleEntity entity = new SampleEntity();
+
+        // 2 mons 15 days 02:03:04.005
+        entity.col_interval = new Interval(2, 15, 7384005000L);
+
+        entities.add(entity);
+
+        PgBulkInsert<SampleEntity> pgBulkInsert = new PgBulkInsert<>(new SampleEntityMapping());
+
+        pgBulkInsert.saveAll(PostgreSqlUtils.getPGConnection(connection), entities.stream());
+
+        ResultSet rs = getAll();
+
+        while (rs.next()) {
+            Object v = rs.getObject("col_interval");
+
+            Assert.assertEquals("2 mons 15 days 02:03:04.005", v);
         }
     }
 

@@ -6,7 +6,6 @@ public class Interval {
     private final int days;
     private final long time;
 
-
     public Interval(int months, int days, long time) {
         this.months = months;
         this.days = days;
