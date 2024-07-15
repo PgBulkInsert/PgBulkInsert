@@ -193,6 +193,39 @@ public class PgBulkInsertTest extends TransactionalTestBase {
     }
 
     @Test
+    public void saveAll_interval_AlternateConstructor_Test() throws SQLException {
+
+        // This list will be inserted.
+        List<SampleEntity> entities = new ArrayList<>();
+
+        // Create the Entity to insert:
+        SampleEntity entity = new SampleEntity();
+
+        // 2 mons 15 days 02:03:04.005
+        entity.col_interval = new Interval(2, 15, 2, 3, 4, 5000);
+
+        entities.add(entity);
+
+        PgBulkInsert<SampleEntity> pgBulkInsert = new PgBulkInsert<>(new SampleEntityMapping());
+
+        pgBulkInsert.saveAll(PostgreSqlUtils.getPGConnection(connection), entities.stream());
+
+        ResultSet rs = getAll();
+
+        while (rs.next()) {
+            PGInterval v = (PGInterval) rs.getObject("col_interval");
+
+            Assert.assertEquals(entity.col_interval.getDays(), v.getDays());
+            Assert.assertEquals(entity.col_interval.getMonths(), v.getMonths());
+            Assert.assertEquals(2, v.getHours());
+            Assert.assertEquals(3, v.getMinutes());
+            Assert.assertEquals(4, v.getWholeSeconds());
+            Assert.assertEquals(5000, v.getMicroSeconds());
+        }
+    }
+
+
+    @Test
     public void saveAll_numeric_Test() throws SQLException {
 
         // This list will be inserted.

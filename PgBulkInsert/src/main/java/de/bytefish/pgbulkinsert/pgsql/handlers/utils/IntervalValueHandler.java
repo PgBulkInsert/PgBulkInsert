@@ -3,7 +3,6 @@
 package de.bytefish.pgbulkinsert.pgsql.handlers.utils;
 
 import de.bytefish.pgbulkinsert.pgsql.handlers.BaseValueHandler;
-import de.bytefish.pgbulkinsert.pgsql.model.geometric.Box;
 import de.bytefish.pgbulkinsert.pgsql.model.interval.Interval;
 
 import java.io.DataOutputStream;
@@ -14,7 +13,7 @@ public class IntervalValueHandler extends BaseValueHandler<Interval> {
     protected void internalHandle(DataOutputStream buffer, final Interval value) throws Exception {
         buffer.writeInt(16);
 
-        buffer.writeLong(value.getTime());
+        buffer.writeLong(value.getTimeOfDay());
         buffer.writeInt(value.getDays());
         buffer.writeInt(value.getMonths());
     }
