@@ -1,5 +1,6 @@
 package de.bytefish.pgbulkinsert.test.row;
 
+import de.bytefish.pgbulkinsert.pgsql.model.interval.Interval;
 import de.bytefish.pgbulkinsert.pgsql.model.range.Range;
 import de.bytefish.pgbulkinsert.row.SimpleRowWriter;
 import de.bytefish.pgbulkinsert.test.utils.TransactionalTestBase;
@@ -33,7 +34,8 @@ public class SimpleRowWriterTest extends TransactionalTestBase {
         String[] columnNames = new String[] {
                 "value_int",
                 "value_text",
-                "value_range"
+                "value_range",
+                "value_interval"
         };
 
         // Create the Table Definition:
@@ -47,6 +49,7 @@ public class SimpleRowWriterTest extends TransactionalTestBase {
 
                 // ... using startRow and work with the row, see how the order doesn't matter:
                 writer.startRow((row) -> {
+                    row.setInterval("value_interval", new Interval(1,2,3,5,5,6));
                     row.setText("value_text", "Hi");
                     row.setInteger("value_int", 1);
                     row.setTsTzRange("value_range", new Range<>(
@@ -65,7 +68,8 @@ public class SimpleRowWriterTest extends TransactionalTestBase {
 
         String sqlStatement = String.format("CREATE TABLE %s.%s\n", schema, tableName) +
                 "            (\n" +
-                "                value_int int\n"+
+                "                value_interval interval\n"+
+                ",                value_int int\n"+
                 ",                value_text text\n" +
                 ",                value_range tstzrange\n" +
                 "            );";
