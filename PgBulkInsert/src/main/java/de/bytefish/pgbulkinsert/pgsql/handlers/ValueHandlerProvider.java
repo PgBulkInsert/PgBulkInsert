@@ -5,6 +5,7 @@ package de.bytefish.pgbulkinsert.pgsql.handlers;
 import de.bytefish.pgbulkinsert.exceptions.ValueHandlerAlreadyRegisteredException;
 import de.bytefish.pgbulkinsert.exceptions.ValueHandlerNotRegisteredException;
 import de.bytefish.pgbulkinsert.pgsql.constants.DataType;
+import de.bytefish.pgbulkinsert.pgsql.handlers.utils.IntervalValueHandler;
 
 import java.util.EnumMap;
 import java.util.Map;
@@ -51,6 +52,7 @@ public class ValueHandlerProvider implements IValueHandlerProvider {
         add(DataType.Int8Range, new RangeValueHandler<>(new LongValueHandler<>()));
         add(DataType.NumRange, new RangeValueHandler<>(new BigDecimalValueHandler<>()));
         add(DataType.DateRange, new RangeValueHandler<>(new LocalDateValueHandler()));
+        add(DataType.Interval, new IntervalValueHandler());
     }
 
     public <TTargetType> ValueHandlerProvider add(DataType targetType, IValueHandler<TTargetType> valueHandler) {
