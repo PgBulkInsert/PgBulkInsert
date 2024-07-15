@@ -8,6 +8,7 @@ import de.bytefish.pgbulkinsert.pgsql.handlers.IValueHandler;
 import de.bytefish.pgbulkinsert.pgsql.handlers.RangeValueHandler;
 import de.bytefish.pgbulkinsert.pgsql.handlers.ValueHandlerProvider;
 import de.bytefish.pgbulkinsert.pgsql.model.geometric.*;
+import de.bytefish.pgbulkinsert.pgsql.model.interval.Interval;
 import de.bytefish.pgbulkinsert.pgsql.model.network.MacAddress;
 import de.bytefish.pgbulkinsert.pgsql.model.range.Range;
 
@@ -154,6 +155,10 @@ public class SimpleRow {
     // endregion
 
     // region Temporal
+
+    public void setInterval(String columnName, Interval value) {
+        setValue(columnName, DataType.Interval, value);
+    }
 
     protected void setTime(String columnName, LocalTime value) {
         setValue(columnName, DataType.Time, value);
