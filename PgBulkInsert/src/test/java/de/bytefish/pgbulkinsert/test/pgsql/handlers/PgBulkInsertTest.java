@@ -9,6 +9,7 @@ import de.bytefish.pgbulkinsert.test.utils.TransactionalTestBase;
 import de.bytefish.pgbulkinsert.util.PostgreSqlUtils;
 import org.junit.Assert;
 import org.junit.Test;
+import org.postgresql.util.PGInterval;
 
 import java.math.BigDecimal;
 import java.net.Inet4Address;
@@ -183,9 +184,11 @@ public class PgBulkInsertTest extends TransactionalTestBase {
         ResultSet rs = getAll();
 
         while (rs.next()) {
-            Object v = rs.getObject("col_interval");
+            PGInterval v = (PGInterval) rs.getObject("col_interval");
 
-            Assert.assertEquals("2 mons 15 days 02:03:04.005", v);
+            Assert.assertEquals(entity.col_interval.getDays(), v.getDays());
+            Assert.assertEquals(entity.col_interval.getMonths(), v.getMonths());
+            Assert.assertEquals(5000, v.getMicroSeconds());
         }
     }
 
