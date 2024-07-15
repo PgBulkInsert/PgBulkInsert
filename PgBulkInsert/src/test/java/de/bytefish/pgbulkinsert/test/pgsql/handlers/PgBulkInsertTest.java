@@ -4,6 +4,7 @@ package de.bytefish.pgbulkinsert.test.pgsql.handlers;
 
 import de.bytefish.pgbulkinsert.PgBulkInsert;
 import de.bytefish.pgbulkinsert.mapping.AbstractMapping;
+import de.bytefish.pgbulkinsert.pgsql.model.interval.Interval;
 import de.bytefish.pgbulkinsert.test.utils.TransactionalTestBase;
 import de.bytefish.pgbulkinsert.util.PostgreSqlUtils;
 import org.junit.Assert;
@@ -44,6 +45,11 @@ public class PgBulkInsertTest extends TransactionalTestBase {
         public List<Double> col_double_array;
         public String col_jsonb;
         public BigDecimal col_numeric;
+        public Interval col_interval;
+
+        public Interval get_col_interval() {
+            return col_interval;
+        }
 
         public Integer get_col_integer() {
             return col_integer;
