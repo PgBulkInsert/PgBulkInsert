@@ -27,7 +27,7 @@ You can add the following dependencies to your pom.xml to include [PgBulkInsert]
 <dependency>
     <groupId>de.bytefish</groupId>
     <artifactId>pgbulkinsert</artifactId>
-    <version>8.1.3</version>
+    <version>8.1.4</version>
 </dependency>
 ```
 
@@ -45,6 +45,7 @@ You can add the following dependencies to your pom.xml to include [PgBulkInsert]
     * timestamptz
     * date
     * time
+    * interval
 * [Character Types](http://www.postgresql.org/docs/current/static/datatype-character.html)
     * text
 * [JSON Types](https://www.postgresql.org/docs/current/static/datatype-json.html)
