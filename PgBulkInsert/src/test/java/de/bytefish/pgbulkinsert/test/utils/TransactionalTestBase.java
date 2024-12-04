@@ -29,6 +29,7 @@ public abstract class TransactionalTestBase {
         schema = properties.getProperty("db.schema");
 
         onSetUpBeforeTransaction();
+        connection.createStatement().execute("SET timezone='UTC'");
         connection.setAutoCommit(false); // Start the Transaction:
         onSetUpInTransaction();
     }
