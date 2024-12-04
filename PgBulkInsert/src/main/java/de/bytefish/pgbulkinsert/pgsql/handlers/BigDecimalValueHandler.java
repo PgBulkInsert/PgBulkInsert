@@ -55,11 +55,13 @@ public class BigDecimalValueHandler<T extends Number> extends BaseValueHandler<T
     }
 
     private static BigDecimal getNumericAsBigDecimal(final Number source) {
-        if (!(source instanceof BigDecimal)) {
-            return BigDecimalUtils.toBigDecimal(source.doubleValue());
+        if (source instanceof BigDecimal) {
+            return (BigDecimal) source;
         }
-
-        return (BigDecimal) source;
+        if (source instanceof BigInteger) {
+            return new BigDecimal((BigInteger) source);
+        }
+        return BigDecimalUtils.toBigDecimal(source.doubleValue());
     }
 
     private List<Integer> digits(final BigDecimal value) {

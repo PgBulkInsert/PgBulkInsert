@@ -12,6 +12,7 @@ import org.junit.Test;
 import org.postgresql.util.PGInterval;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.net.Inet4Address;
 import java.net.Inet6Address;
 import java.net.UnknownHostException;
@@ -46,6 +47,7 @@ public class PgBulkInsertTest extends TransactionalTestBase {
         public List<Double> col_double_array;
         public String col_jsonb;
         public BigDecimal col_numeric;
+        public BigInteger col_bignumeric;
         public Interval col_interval;
 
         public Interval get_col_interval() {
@@ -124,6 +126,10 @@ public class PgBulkInsertTest extends TransactionalTestBase {
             return col_numeric;
         }
 
+        public BigInteger getCol_bignumeric() {
+            return col_bignumeric;
+        }
+
     }
 
     @Override
@@ -159,6 +165,7 @@ public class PgBulkInsertTest extends TransactionalTestBase {
             mapDoubleArray("col_double_array", SampleEntity::getCol_double_array);
             mapJsonb("col_jsonb", SampleEntity::getCol_jsonb);
             mapNumeric("col_numeric", SampleEntity::getCol_numeric);
+            mapNumeric("col_bignumeric", SampleEntity::getCol_bignumeric);
             mapInterval("col_interval", SampleEntity::get_col_interval);
         }
     }
@@ -248,6 +255,32 @@ public class PgBulkInsertTest extends TransactionalTestBase {
 
 
             Assert.assertEquals(new BigDecimal("210000.00011234567"), v.stripTrailingZeros());
+        }
+    }
+
+
+    @Test
+    public void saveAll_BigNumeric_Test() throws SQLException {
+
+        // This list will be inserted.
+        List<SampleEntity> entities = new ArrayList<>();
+
+        // Create the Entity to insert:
+        SampleEntity entity = new SampleEntity();
+        entity.col_bignumeric = new BigInteger("999999999999999999999999999999999999");
+
+        entities.add(entity);
+
+        PgBulkInsert<SampleEntity> pgBulkInsert = new PgBulkInsert<>(new SampleEntityMapping());
+
+        pgBulkInsert.saveAll(PostgreSqlUtils.getPGConnection(connection), entities.stream());
+
+        ResultSet rs = getAll();
+
+        while (rs.next()) {
+            BigDecimal v = rs.getBigDecimal("col_bignumeric");
+
+            Assert.assertEquals(new BigInteger("999999999999999999999999999999999999"), v.toBigInteger());
         }
     }
 
@@ -645,7 +678,7 @@ public class PgBulkInsertTest extends TransactionalTestBase {
         byte byte1 = 1;
         byte byte2 = 2;
 
-        entity.col_bytearray = new byte[]{ byte1, byte2 };
+        entity.col_bytearray = new byte[]{byte1, byte2};
 
         entities.add(entity);
 
@@ -786,7 +819,8 @@ public class PgBulkInsertTest extends TransactionalTestBase {
                 "                col_int_array integer[], \n" +
                 "                col_double_array double precision[], \n" +
                 "                col_jsonb jsonb, \n" +
-                "                col_numeric numeric(50, 20) \n" +
+                "                col_numeric numeric(50, 20), \n" +
+                "                col_bignumeric numeric(38) \n" +
                 "            );";
 
         Statement statement = connection.createStatement();
