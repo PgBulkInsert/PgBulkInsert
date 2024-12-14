@@ -8,7 +8,7 @@ echo - Bundling Artifacts for OSSRH Repository Upload  -
 echo ---------------------------------------------------
 
 :: Define the Executables, so we don't have to rely on pathes:
-set MVN_EXECUTABLE="C:\Users\philipp\apps\apache-maven-3.9.6\bin\mvn.cmd"
+set MVN_EXECUTABLE="C:\Users\philipp\apps\apache-maven-3.8.6\bin\mvn.cmd"
 set GPG_EXECUTABLE="C:\Program Files (x86)\gnupg\bin\gpg.exe"
 
 :: GPG Key ID used for signing:
@@ -21,16 +21,12 @@ set STDERR=stderr.log
 :: POM File to use for building the project:
 set POM_FILE=..\pom.xml
 
-:: Prompt for Sonatype:
-set /p SONATYPE_USER="Sonatype User: "
-set /p SONATYPE_PASSWORD="Sonatype Password: "
-
 :: Prompt GPG Passphrase:
 set /p GPG_PASSPHRASE="GPG Signing Passphrase: "
 
 1>%STDOUT% 2>%STDERR% (
 
-    %MVN_EXECUTABLE% clean deploy -Prelease,docs-and-source --settings deploysettings.xml -DskipTests -Dgpg.keyname=%GPG_KEY_ID% -Dgpg.executable=%GPG_EXECUTABLE% -Dgpg.passphrase=%GPG_PASSPHRASE% -DretryFailedDeploymentCount=3 -f %POM_FILE%
+    %MVN_EXECUTABLE% clean deploy -Prelease,docs-and-source -DskipTests -Dgpg.keyname=%GPG_KEY_ID% -Dgpg.executable=%GPG_EXECUTABLE% -Dgpg.passphrase=%GPG_PASSPHRASE% -DretryFailedDeploymentCount=3 -f %POM_FILE%
   
 )
 
