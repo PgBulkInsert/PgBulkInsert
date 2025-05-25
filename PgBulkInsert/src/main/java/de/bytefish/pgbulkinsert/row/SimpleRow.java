@@ -160,11 +160,11 @@ public class SimpleRow {
         setValue(columnName, DataType.Interval, value);
     }
 
-    protected void setTime(String columnName, LocalTime value) {
+    public void setTime(String columnName, LocalTime value) {
         setValue(columnName, DataType.Time, value);
     }
 
-    protected void setTime(int ordinal, LocalTime value) {
+    public void setTime(int ordinal, LocalTime value) {
         setValue(ordinal, DataType.Time, value);
     }
 
