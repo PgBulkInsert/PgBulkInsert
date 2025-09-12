@@ -1,5 +1,8 @@
 # CHANGELOG #
 
+## 8.1.6 ##
+* SimpleRow supports 'null' as values in the Arrays
+
 ## 8.1.1 ##
 
 * Fix OID for Time ([Issue #125](https://github.com/PgBulkInsert/PgBulkInsert/issues/125))

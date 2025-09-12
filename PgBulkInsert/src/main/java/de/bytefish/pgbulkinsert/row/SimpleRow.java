@@ -383,19 +383,18 @@ public class SimpleRow {
     }
 
     public void setTextArray(String columnName, Collection<String> value) {
-        Collection<String> values = value.stream()
-                .map(x -> nullCharacterHandler.apply(x))
-                .collect(Collectors.toList());
-
-        setCollection(columnName, DataType.Text, values);
+        setCollection(columnName, DataType.Text,
+            value == null ? null : value.stream()
+                .map(nullCharacterHandler)
+                .collect(Collectors.toList()));
     }
 
     public void setTextArray(int ordinal, Collection<String> value) {
-        Collection<String> values = value.stream()
-                .map(x -> nullCharacterHandler.apply(x))
-                .collect(Collectors.toList());
-
-        setCollection(ordinal, DataType.Text, values);
+        setCollection(ordinal, DataType.Text,
+            value == null ? null : value.stream()
+            .map(nullCharacterHandler)
+            .collect(Collectors.toList())
+        );
     }
 
     public void setVarCharArray(String columnName, Collection<String> value) {
