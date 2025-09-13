@@ -22,4 +22,4 @@ jobs:
           gpg-passphrase: ${{ secrets.GPG_PASSPHRASE }}
 
       - name: Deploy to Maven Central
-        run: mvn -f PgBulkInsert/pom.xml -B deploy -DskipTests -Possrh
+        run: mvn -f PgBulkInsert/pom.xml -s .github/workflows/maven-settings.xml -B deploy -DskipTests -Possrh
