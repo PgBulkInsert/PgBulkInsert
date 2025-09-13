@@ -19,6 +19,8 @@ jobs:
           server-id: central
           server-username: MAVEN_USERNAME
           server-password: MAVEN_PASSWORD
+          gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
+          gpg-passphrase: MAVEN_GPG_PASSPHRASE
           
       - name: Build and publish with Maven
         run: mvn --batch-mode clean deploy -DskipTests=true --file PgBulkInsert/pom.xml
