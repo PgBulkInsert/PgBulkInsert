@@ -21,7 +21,7 @@ jobs:
           gpg-passphrase: GPG_PASSPHRASE
 
       - name: Deploy to Maven Central
-        run: mvn mvn release:prepare release:perform -Darguments=-DskipTests=true -f PgBulkInsert/pom.xml -s .github/workflows/maven-settings.xml
+        run: mvn release:prepare release:perform -Darguments=-DskipTests=true -f PgBulkInsert/pom.xml -s .github/workflows/maven-settings.xml
         env:
           GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
           MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
