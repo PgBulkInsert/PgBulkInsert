@@ -23,7 +23,7 @@ jobs:
           gpg-passphrase: MAVEN_GPG_PASSPHRASE
           
       - name: Build and publish with Maven
-        run: mvn --batch-mode clean deploy -DskipTests=true --file PgBulkInsert/pom.xml
+        run: mvn --batch-mode clean deploy -Prelease -DskipTests=true --file PgBulkInsert/pom.xml -s .github/workflows/maven-settings.xml
         env:
           MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
