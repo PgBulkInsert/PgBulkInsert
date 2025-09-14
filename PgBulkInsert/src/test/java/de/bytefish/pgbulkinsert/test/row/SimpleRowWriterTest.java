@@ -12,6 +12,7 @@ import org.postgresql.PGConnection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
@@ -35,7 +36,8 @@ public class SimpleRowWriterTest extends TransactionalTestBase {
                 "value_int",
                 "value_text",
                 "value_range",
-                "value_interval"
+                "value_interval",
+                "value_time"
         };
 
         // Create the Table Definition:
@@ -52,6 +54,7 @@ public class SimpleRowWriterTest extends TransactionalTestBase {
                     row.setInterval("value_interval",  new Interval(2, 15, 2, 3, 4, 5000)); // 2 mons 15 days 02:03:04.005
                     row.setText("value_text", "Hi");
                     row.setInteger("value_int", 1);
+                    row.setTime("value_time", LocalTime.of(22, 10));
                     row.setTsTzRange("value_range", new Range<>(
                             ZonedDateTime.of(2020, 3, 1, 0, 0, 0, 0, ZoneId.of("GMT")),
                             ZonedDateTime.of(2020, 3, 1, 0, 0, 0, 0, ZoneId.of("GMT"))));
@@ -59,8 +62,9 @@ public class SimpleRowWriterTest extends TransactionalTestBase {
             }
         }
 
-        // Now assert, that we have written 10000 entities:
 
+
+        // Now assert, that we have written 10000 entities:
         Assert.assertEquals(10000, getRowCount());
     }
 
@@ -72,6 +76,7 @@ public class SimpleRowWriterTest extends TransactionalTestBase {
                 ",                value_int int\n"+
                 ",                value_text text\n" +
                 ",                value_range tstzrange\n" +
+                ",                value_time time\n" +
                 "            );";
 
         Statement statement = connection.createStatement();
