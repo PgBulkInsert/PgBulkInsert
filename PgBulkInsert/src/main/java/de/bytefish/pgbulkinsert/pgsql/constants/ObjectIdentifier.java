@@ -53,7 +53,7 @@ public class ObjectIdentifier {
     // region OID 100 - 199
 
     // JSON
-    public static int Jsonb = 114;
+    public static int Json = 114;
 
     // XML content
     public static int Xml = 115;
@@ -191,7 +191,12 @@ public class ObjectIdentifier {
 
     public static int Record = 2249;
 
-    // endregion
+    // endregion JSONB
+
+    public static final int Jsonb = 3802;
+
+    // regio Jsonb
+
 
     private static Map<DataType, Integer> mapping = buildLookupTable();
 

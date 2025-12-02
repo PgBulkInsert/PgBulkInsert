@@ -32,6 +32,7 @@ public class ArrayTypesTest  extends TransactionalTestBase {
         public List<Short> shortArray;
         public List<Integer> integerArray;
         public List<Boolean> booleanArray;
+        public List<String> jsonbArray;
 
         public List<String> getStringArray() {
             return stringArray;
@@ -43,6 +44,7 @@ public class ArrayTypesTest  extends TransactionalTestBase {
         public List<Short> getShortArray() { return shortArray; }
         public List<Integer> getIntegerArray() { return integerArray; }
         public List<Boolean> getBooleanArray() { return booleanArray; }
+        public List<String> getJsonbArray() { return jsonbArray; }
     }
 
 
@@ -70,6 +72,7 @@ public class ArrayTypesTest  extends TransactionalTestBase {
             mapShortArray("col_short_array", ArrayEntity::getShortArray);
             mapIntegerArray("col_integer_array", ArrayEntity::getIntegerArray);
             mapBooleanArray("col_boolean_array", ArrayEntity::getBooleanArray);
+            mapJsonbArray("col_jsonb_array", ArrayEntity::getJsonbArray);
         }
     }
 
@@ -92,6 +95,8 @@ public class ArrayTypesTest  extends TransactionalTestBase {
 
         testStringArray("col_varchar_array");
     }
+
+
 
     @Test
     public void saveAll_TextArray_Test() throws SQLException, UnknownHostException {
@@ -187,6 +192,19 @@ public class ArrayTypesTest  extends TransactionalTestBase {
         testArrayInternal("col_boolean_array", entity, entity.booleanArray);
     }
 
+    @Test
+    public void saveAll_JsonbArray_Test() throws SQLException {
+
+        // Create the Entity to insert:
+        ArrayEntity entity = new ArrayEntity();
+        entity.jsonbArray = Arrays.asList(
+                "{\"bar\": \"baz\", \"balance\": 7.77}",
+                "{\"bar\": \"baz\", \"balance\": 8.88}"
+        );
+
+        testArrayInternal("col_jsonb_array", entity, entity.jsonbArray);
+    }
+
     @SuppressWarnings("unchecked")
     private <T> void testArrayInternal(String columnLabel, ArrayEntity entity, List<T> samples) throws SQLException {
         Objects.requireNonNull(samples, "samples");
@@ -229,7 +247,8 @@ public class ArrayTypesTest  extends TransactionalTestBase {
                 "                col_long_array int8[],\n" +
                 "                col_short_array int2[],\n" +
                 "                col_integer_array int4[],\n" +
-                "                col_boolean_array boolean[]\n" +
+                "                col_boolean_array boolean[],\n" +
+                "                col_jsonb_array jsonb[]\n" +
                 "            );";
 
         Statement statement = connection.createStatement();
