@@ -266,6 +266,14 @@ public class SimpleRow {
         setValue(ordinal, DataType.Jsonb, nullCharacterHandler.apply(value));
     }
 
+    public void setJsonbArray(String columnName, Collection<String> value) {
+        setCollection(columnName, DataType.Jsonb, value);
+    }
+
+    public void setJsonbArray(int ordinal, Collection<String> value) {
+        setCollection(ordinal, DataType.Jsonb, value);
+    }
+
     // endregion
 
     // region hstore

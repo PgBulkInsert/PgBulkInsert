@@ -218,6 +218,10 @@ public abstract class AbstractMapping<TEntity> {
         map(columnName, DataType.Jsonb, propertyGetter);
     }
 
+    protected void mapJsonbArray(String columnName, Function<TEntity, Collection<String>> propertyGetter) {
+        mapCollection(columnName, DataType.Jsonb, propertyGetter);
+    }
+
     // endregion
 
     // region hstore
