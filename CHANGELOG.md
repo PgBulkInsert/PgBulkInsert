@@ -1,5 +1,9 @@
 # CHANGELOG #
 
+## 8.1.8 ##
+
+* `jsonb[]` support added
+
 ## 8.1.6 ##
 * SimpleRow supports 'null' as values in the Arrays
 
